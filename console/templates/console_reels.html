@@ -1,0 +1,344 @@
+{% extends "console-layout/layout.html" %}
+ 
+{% block page_title %}
+    Reels
+{% endblock  %}
+
+{% block main_body %}
+
+    <span class="text-2xl text-slate-100">Reels</span>
+    <div class="w-full  h-[50px] flex items-center justify-end">
+        <div>
+            <button type="button" class="upload_reels_btn py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                Upload Reels
+              </button>
+              <script>
+
+                function popupFun(){
+                    const popup = document.createElement('div');
+                    popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-6';
+                    popup.innerHTML = `
+                        <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                        </div>
+                        <div class="h-auto w-[500px] p-2 bg-blue-100 video_playback opacity-100 absolute top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-2xl">
+                            <div class='mt-4 mb-2 w-full text-slate-900 flex justify-center text-xl'>Upload Wedding</div>
+                            <div class='error_message capitalize mt-1 mb-3 h-4 w-full text-slate-100 flex justify-center text-md text-red-500 font-bold'></div>
+                            <div class="w-full p-2 flex flex-col items-center">
+                              <div class="w-full h-auto p-1">
+                                <div class="w-full flex">
+                                  <div class="w-1/4 flex items-center select-none">Title</div>
+                                  <div class="w-3/4">
+                                    <input type="text" class="title py-3 px-4 block my-2 w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" placeholder="Title" required>
+                                  </div>
+                                </div>
+                                <div class="w-full h-auto p-1">
+                                  <div class="w-full flex">
+                                    <div class="w-1/4 flex items-center select-none">Description</div>
+                                    <div class="w-3/4">
+                                      <textarea class="description resize-none py-3 px-4 block my-2 w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" rows="3" placeholder="Description"></textarea>
+                                  </div>
+                                </div>
+                                
+                                <div class="w-full flex">
+                                  <div class="w-1/4 flex items-center select-none">Video File</div>
+                                  <div class="w-3/4">
+                                    <input type="file" name="file-input" class="reel_file block my-2 w-full bg-slate-100 border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 file:bg-gray-50 file:border-0 file:bg-gray-100 file:me-4 file:py-3 file:px-4 dark:file:bg-gray-700 dark:file:text-gray-400">
+                                  </div>
+                                </div>
+
+                                <button type="button" class="upload_submit py-3 px-4 m-2 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                                    Upload
+                                  </button>
+                              </div>
+                          </div>
+                        </div>
+
+                        <div class="close_btn_dv h-8 w-8 absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                            <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="/static/assets/images/icons/close_button_black.png">
+                        </div>
+                        `
+                    document.body.prepend(popup)
+                    const close_btn = document.querySelector('.close_btn_dv')
+                    close_btn.addEventListener('click', ()=>{
+                        const popup = document.querySelector('.popup')
+                        popup.remove()
+                    })
+
+                    document.addEventListener('keyup', (e)=>{
+                      if (e.key == 'Escape'){
+                        popup_check = false;
+                        const popup = document.querySelector('.popup');
+                        popup.remove()
+                      }
+                    })
+
+                }
+                    const upload_reels_btn= document.querySelector('.upload_reels_btn');
+                    upload_reels_btn.addEventListener('click', ()=>{
+                        popupFun()
+
+                        let file = document.querySelector('.reel_file');
+                        let description = document.querySelector('.description');
+                        let title = document.querySelector('.title');
+                        const error_message = document.querySelector('.error_message');
+
+                        function success(el, message){
+                            error_message.innerText = message
+                            if (el != 0) {
+                                el.classList.remove('outline')
+                                el.classList.remove('outline-4')
+                                el.classList.remove('outline-red-600')
+                                el.classList.remove('outline-offset-0')
+                            }
+                        }
+                        function failed(el, message){
+                            error_message.innerText = message
+                            if (el != 0) {
+                                el.classList.add('outline')
+                                el.classList.add('outline-4')
+                                el.classList.add('outline-red-600')
+                                el.classList.add('outline-offset-0')
+                            }
+                        }
+
+
+                        file.addEventListener('change', ()=>{
+                            if(file.files[0].type === "video/mp4"){
+                                const error_message = document.querySelector('.error_message');
+                                success(file, '')
+                            } else {
+                                failed(file, 'Only video/mp4 files can be uploaded')
+                            }
+                        })
+
+                        title.addEventListener('blur', ()=>{
+                            console.log(title.value.length)
+                            if (title.value.length < 1) {
+                                failed(title, 'title should not be blank')
+                            } else {
+                                success(title, '')
+                            }
+                        })
+                        description.addEventListener('blur', ()=>{
+                            console.log(description.value.length)
+                            if (description.value.length < 1) {
+                                failed(description, 'description should not be blank')
+                            } else {
+                                success(description, '')
+                            }
+                        })
+
+
+
+                        const upload_submit = document.querySelector('.upload_submit');
+                        upload_submit.addEventListener('click', ()=>{
+                                if(file.files[0].type === "video/mp4" && title.value.length > 0 && description.value.length > 0){
+                                    let formData = new FormData();
+                                    formData.append('file', file.files[0])
+                                    formData.append('title', title.value)
+                                    formData.append('description', description.value) 
+                                    // let token = localStorage.getItem('token')
+                                    let token = getCookies()
+                                    if (token){
+                                        (async function rlUpl(){
+                                            console.log('asdfasdf')
+                                            let a = await fetch('{% url "upload_reels" %}', {method: 'POST', headers:{ 'Authorization': 'Bearer '+ token.access}, body: formData})
+                                            a = await a.json()
+                                            if (a && a.status === 200){
+                                                const popup = document.querySelector('.popup');
+                                                popup.remove()
+                                                const dv = document.createElement('div');
+                                                dv.classList = 'submit_alert w-80 absolute left-[50%] translate-x-[-50%] top-4 overflow-hidden'
+                                                dv.innerHTML= `<div class="bg-teal-50 border-t-2 border-teal-500 rounded-lg p-4 dark:bg-teal-800/30" role="alert">
+                                                    <div class="flex">
+                                                      <div class="flex-shrink-0">
+                                                        <span class="inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-teal-100 bg-teal-200 text-teal-800 dark:border-teal-900 dark:bg-teal-800 dark:text-teal-400">
+                                                          <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                                                        </span>
+                                                      </div>
+                                                      <div class="ms-3">
+                                                        <h3 class="text-gray-800 font-semibold dark:text-white">
+                                                            ${a.message}
+                                                        </h3>
+                                                      </div>
+                                                    </div>
+                                                    <div class="submit_alert_duration bg-green-800 w-[100%] h-[6px] absolute bottom-0 left-0 rounded-b-md"></div>
+                                                  </div>
+                                                  `
+                                                  document.body.prepend(dv)
+                                                  
+                                                  const submit_alert = document.querySelector('.submit_alert');
+                                                  // const submit_alert_duration = submit_alert.querySelector('.submit_alert_duration')
+                                                  setTimeout(()=>{
+                                                    // submit_alert_duration.style.width = Number((submit_alert_duration.style.width).replaceAll('%', '')) - 25+'%'
+                                                    // submit_alert.remove()
+                                                    window.location.reload()
+                                                  },500)
+                                                  
+                                            }
+                                        }())
+                                    }
+                                } else {
+                                    failed(0, 'something went wrong, no issue at the server\'s end')
+                                }
+                        })
+                    })
+
+
+              </script>
+        </div>
+    </div>
+
+    
+    <div>
+        <div class="flex flex-col  bg-slate-100 rounded-xl p-4 mt-4">
+            <div class="-m-1.5 overflow-x-auto">
+              <div class="p-1.5 min-w-full inline-block align-middle">
+                <div class="overflow-hidden">
+                  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Title</th>
+                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Description</th>
+                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Thumbnail</th>
+                        <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+
+                    {% if pages != 'no data' %} {% for r in pages %}
+
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{{ r.title }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ r.description|slice:":50" }} {% if r.description|length > 50 %}...{% endif %}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200"> <a target="blank" href="/static/{{ r.file }}"><video class="w-12 h-16"><source src="/static/{{r.file}}"></video></a></td>
+                        {% comment %} <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 flex"> </td> {% endcomment %}
+                        <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                          <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                            <button type="button" class="py-2 px-2 w-16 flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Edit</button>
+                            <button type="button" data-id={{r.id}} data-file="/static/{{r.file}}" class="delete_reels py-2 px-2 w-16 flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Delete</button>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+
+                      {% else %}
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                        {% comment %} <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 flex"> </td> {% endcomment %}
+                        <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                          <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">{{pages}}</button>
+                        </td>
+                      </tr>
+
+                      {% endif %}
+                      
+                    </tbody>
+                  </table>
+
+
+                  <script src="/static/assets/js/popup_confirm.js"></script>
+                  <script src="/static/assets/js/fetch.js"></script>
+
+                  <script>
+                    const delete_reels = document.querySelectorAll('.delete_reels');
+                    if (delete_reels.length > 0){
+                      delete_reels.forEach(e=>{
+                        e.addEventListener('click', (e)=>{
+                          popupConfirmFun(e.target.getAttribute('data-id'), 'Delete Reel!', 'Are you sure you want to delete this Reel?' ,e.target.getAttribute('data-file'))
+
+                          const confirm = document.querySelector('.confirm');
+                          confirm.addEventListener('click', async (e)=>{
+                            let id = e.target.getAttribute('data-id')
+                            // csrf = JSON.parse(localStorage.getItem('token'))
+                            csrf = getCookies()
+                            
+                            let a = await ftN(`http://localhost:8000/api/delete_reels/${id}`, 'DELETE', {'Content-Type': 'application/json', 'Authorization': 'Bearer '+csrf.access}, JSON.stringify({'data': 'no data'}))
+                            if (a.status == 200){
+                              const dv = document.createElement('div');
+                              dv.classList = 'submit_alert w-80 absolute left-[50%] translate-x-[-50%] top-4 overflow-hidden'
+                              dv.innerHTML= `<div class="bg-teal-50 border-t-2 border-teal-500 rounded-lg p-4 dark:bg-teal-800/30" role="alert">
+                                  <div class="flex">
+                                    <div class="flex-shrink-0">
+                                      <span class="inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-teal-100 bg-teal-200 text-teal-800 dark:border-teal-900 dark:bg-teal-800 dark:text-teal-400">
+                                        <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                                      </span>
+                                    </div>
+                                    <div class="ms-3">
+                                      <h3 class="text-gray-800 font-semibold dark:text-white">
+                                          ${a.message}
+                                      </h3>
+                                    </div>
+                                  </div>
+                                  <div class="submit_alert_duration bg-green-800 w-[100%] h-[6px] absolute bottom-0 left-0 rounded-b-md"></div>
+                                </div>
+                                `
+                                document.body.prepend(dv)
+                                                  
+                                // const submit_alert = document.querySelector('.submit_alert');
+                                // const submit_alert_duration = submit_alert.querySelector('.submit_alert_duration')
+                                setTimeout(()=>{
+                                  // submit_alert_duration.style.width = Number((submit_alert_duration.style.width).replaceAll('%', '')) - 25+'%'
+                                  // submit_alert.remove()
+                                  window.location.reload()
+
+                                },1000)
+                            } else {
+                              const dv = document.createElement('div');
+                              dv.classList = 'submit_alert w-80 absolute left-[50%] translate-x-[-50%] top-4 overflow-hidden'
+                              dv.innerHTML= `<div class="bg-red-50 border-s-4 border-red-500 p-4 dark:bg-red-800/30" role="alert">
+                                <div class="flex">
+                                  <div class="flex-shrink-0">
+                                    <!-- Icon -->
+                                    <span class="inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-red-100 bg-red-200 text-red-800 dark:border-red-900 dark:bg-red-800 dark:text-red-400">
+                                      <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                                    </span>
+                                    <!-- End Icon -->
+                                  </div>
+                                  <div class="ms-3">
+                                    <h3 class="text-gray-800 font-semibold dark:text-white">
+                                      Error!
+                                    </h3>
+                                    <p class="text-sm text-gray-700 dark:text-gray-400">
+                                      ${e.message}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                                </div>
+                                `
+                                document.body.prepend(dv)
+                            }
+
+                            
+
+                            const popup = document.querySelector('.popup')
+                            popup.remove()
+                          })
+
+                        })
+                      })
+                    }
+                  </script>
+
+
+                  {% comment %} {% for p in pages  %} {% endcomment %}
+
+                  {{pages.num_pages}}
+                    
+                  {% comment %} {% endfor %} {% endcomment %}
+
+                  {% if pages != 'no data' %}
+                    {% include 'console-layout/pagination.html' with pages=pages %}
+                  {% endif %} 
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+    </div>
+    
+{% endblock  %}

@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en" class="w-full h-full relative">
+<head>
+    <meta charset="UTF-8">
+
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="static/assets/css/home.css" />
+    {% comment %} <link rel="stylesheet" href="style.css"> {% endcomment %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="{% static "assets/css/tw.css" %}" rel="stylesheet" type="text/css" />
+    <script src="{% static "assets/js/tw.js" %}"></script>
+
+    {% comment %} <link rel="stylesheet" href="{% static 'assets/css/swiper-bundle.min.css' %}">
+    <script src="{% static 'assets/js/swiper-bundle.min.js' %}"></script> {% endcomment %}
+
+    <link rel="stylesheet" href="/static/assets/css/swiper.css"/>
+    <script src="{% static "assets/js/swiper.js" %}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+
+    <title>JRS - Home Page</title>
+
+
+</head>
+
+{% load poll_extras %}
+
+{% with client=request.user|clientObject %}
+
+<body class="w-full h-full relative">
+<header id="custom_header" class="custom_header header__block absolute z-[999] top-0 w-full">
+    <div class="custom-sub--block-header">
+        <div class="lower_header--block sticky-header w-full h-[150px] duration-500">
+            <div class="logo_n_icons w-full h-[70%] flex justify-center items-center">
+                <div class="header_logo w-[30%] h-full flex items-center justify-center">
+                    <a href="">
+                    <span class="logo_text text-[36px] text-white tracking-[7px]">JRS STUDIOS</span>
+                    </a>
+                </div>
+                {% comment %} <div class="header_icons"> {% endcomment %}
+                    {% comment %} <div class="head--icon-link">
+                        <div class="head--user">
+                        <i class="fa-solid fa-user"></i>
+                        </div>
+                    </div> {% endcomment %}
+                {% comment %} </div> {% endcomment %}
+            </div>
+                
+            <div class="nav_links w-full h-[30%]">
+                <nav class="py-[10px] px-0 w-full h-full">
+
+                    <ul class="w-[80%] h-full my-0 mx-auto flex items-center justify-evenly">
+                        {% comment %} <li class="menu_links hover:border-b-[1px] list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-white text-xs uppercase transition-all duration-300 ease-in">
+                            <a href="{% url "cinematic" %}">Cinematic</a>
+                        </li> {% endcomment %}
+                        {% comment %} <li class="menu_links hover:border-b-[1px] list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-white text-sm uppercase transition-all duration-300 ease-in">
+                            <a href="{% url "home" %}">Weddings</a>
+                        </li>
+                        <li class="menu_links hover:border-b-[1px] list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-white text-sm uppercase transition-all duration-300 ease-in">
+                            <a href="{% url "home" %}">Pre Weddings</a>
+                        </li> {% endcomment %}
+                        <li class="menu_links hover:border-b-[1px] hover:text-sky-500 list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-white text-xs uppercase transition-all duration-300 ease-in shop_by_color">
+                            Occasions<i class="fa-solid fa-caret-down text-white text-xs text-[20px] transition-all duration-300 ease-in ml-[5px]"></i>
+
+                            <div class="dropdown_menu bg-[rgba(0,0,0,0.78)] hidden w-[200px] h-auto px-[20px] py-[10px] rounded-xl absolute left-[22px] bottom-[-200px]">
+                            <ul class="dropdown__popup-Links flex flex-col gap-[20px] py-5">
+                                
+
+                                <li class="text-start drop-down-menu hover:underline hover:text-sky-500 text-white text-xs w-[90%] text-left cursor-pointer transition-all duration-300 ease-in list-none"><a href="{% url 'wedding' %}">Wedding</a></li>
+                                <li class="text-start drop-down-menu hover:underline hover:text-sky-500 text-white text-xs w-[90%] text-left cursor-pointer transition-all duration-300 ease-in list-none"><a href="{% url 'pre-wedding' %}">Pre Wedding</a></li>
+                                <li class="text-start drop-down-menu hover:underline hover:text-sky-500 text-white text-xs w-[90%] text-left cursor-pointer transition-all duration-300 ease-in list-none"><a href="{% url 'events' %}">Events</a></li>
+                                <li class="text-start drop-down-menu hover:underline hover:text-sky-500 text-white text-xs w-[90%] text-left cursor-pointer transition-all duration-300 ease-in list-none"><a href="{% url 'reels' %}">Reels</a></li>
+                                {% comment %} <a href="{% url 'wedding' %}"><li class="drop-down-menu">Baby First Shoot</li></a> {% endcomment %}
+                            </ul>
+                            </div>
+                        </li>
+                        <li class="menu_links hover:border-b-[1px] hover:text-sky-500 list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-white text-xs uppercase transition-all duration-300 ease-in">
+                            <a href="{% url "gallery" %}">Image Gallery</a>
+                        </li>
+                        {% comment %} <li class="menu_links hover:border-b-[1px] hover:text-sky-500 list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-whism  transition-all duration-300 ease-in">
+                            <a href="page.php">Blogs</a>
+                        </li> {% endcomment %}
+                        <li class="menu_links hover:border-b-[1px] hover:text-sky-500 list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-white text-xs uppercase transition-all duration-300 ease-in"><a href="{% url "about" %}">About us</a></li>
+                        {% comment %} <li class="menu_links hover:border-b-[1px] hover:text-sky-500 list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-white text-xs uppercase transition-all duration-300 ease-in"><a href="{% url "about" %}">Our Team</a></li> {% endcomment %}
+                        <li class="menu_links hover:border-b-[1px] hover:text-sky-500 list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-white text-xs uppercase transition-all duration-300 ease-in"><a href="{% url "contact" %}">Contact Us</a></li>
+
+                        {% if client %}
+                            {% if client %}
+                                <li class="menu_links list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-white text-xs uppercase transition-all duration-300 ease-in"><a class="hover:text-sky-500 duration-300 flex items-center" href="{% url "client_dashboard" %}"><span class="text-white h-full">My Account</span> <img class="h-5 w-5 ml-2 relative bottom-[2px]" src="{% static "/assets/images/icons/client_login_white.png" %}"> </a></li>
+                                <li class="menu_links list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-white text-xs uppercase transition-all duration-300 ease-in"><a class="hover:text-sky-500 duration-300 flex items-center" href="{% url "logout" %}"><span class="text-white h-full">Logout</span></a></li>
+                            {% endif %}
+                        {% else %}
+                            <li class="menu_links list-none relative p-0 px-[25px] pb-[3] tracking-[0.8px] font-medium cursor-pointer text-white text-xs uppercase transition-all duration-300 ease-in"><a class="hover:text-sky-500 duration-300 flex items-center" href="{% url "login" %}"><span class="text-white h-full">Client Login</span> <img class="h-5 w-5 ml-2 relative bottom-[2px]" src="{% static "/assets/images/icons/client_login_white.png" %}"> </a></li>
+                        {% endif %}
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<section class="video--banner w-full h-auto">
+    <div class="video__elem h-full w-full">
+        <video autoplay muted loop class="h-full w-full">
+            <source src="/media/{{data.file}}" type="video/mp4">
+
+            {% comment %} <source src="/media/banner_video.mp4" type="video/mp4"> {% endcomment %}
+        </video>
+    </div>
+</section>    
+
+<section id="welcome--cont" class="welcome--cont w-[100%] h-auto my-[20px] mx-0 py-[60px]">
+    <div class="main--content h-full w-full">
+        <h2 class="Welcome_Message text-[36px] text-[var(--font)] text-center mb-20 mx-0 opacity-0 duration-1000 relative right-[500px] blur-md tracking-[5px]">Welcome to JRS Photography</h2>
+        <div id="paraNimg" class="paraNimg w-[90%] my-0 mx-auto h-auto p-[10px] flex items-center justify-between flex-row-reverse opacity-0 duration-1000 relative top-[100px] blur-md">
+            <p class="para w-[60%] h-auto; text-[15px] text-justify leading-[25px] tracking-[1.3px]">At JRS Photography, we believe in capturing moments that last a lifetime. With a keen eye for detail and a passion for storytelling, we specialize in turning your precious moments into timeless memories. Whether it's a wedding, a family gathering, or a special event, we're dedicated to providing you with stunning photographs that you'll cherish forever.</br></br>
+                Our team of experienced photographers understands the importance of every moment, and we strive to capture the essence of each occasion in a way that reflects your unique style and personality. From candid shots to posed portraits, we tailor our approach to suit your needs, ensuring that every image tells a beautiful story.</br></br>
+                Browse through our portfolio to see examples of our work and get inspired for your upcoming photo shoot. We're here to guide you through the entire process, from planning and preparation to the final delivery of your stunning photos.</br></br>
+
+                Thank you for choosing JRS Photography to capture your special moments.</br></br><b><i>Let's create memories together!</i></b></p>
+                
+            <div class="img w-[28%] h-auto">
+                <img class="w-full h-full" src="https://img.freepik.com/premium-vector/wild-photography-photo-studio-logo_255467-317.jpg?w=740" alt="photography">
+            </div>
+        </div>
+        
+        {% comment %} <div class="button_elem w-full h-auto text-center">
+            <button class="readMore w-[150px] bg-transparent border-2 text-slate-700 font-semibold transition-all duration-300 ease-ins py-[12px] px-[5px]">Read More</button>
+        </div> {% endcomment %}
+    </div>
+</section>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#welcome--cont',
+        start: 'top 150',
+        //markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+
+            const menu_links = document.querySelectorAll('.menu_links');
+            menu_links.forEach(e=>{
+                e.classList.remove('px-[35px]')
+                e.classList.add('px-[15px]')
+            })
+
+            let header = document.querySelector('div.lower_header--block');
+            header.style.background = 'rgba(0,0,0,0.67)';
+            header.classList.add('flex')
+            header.classList.add('items-center')
+
+            const header_logo = document.querySelector('.header_logo');
+            header_logo.classList.remove('w-[30%]')
+
+            const lower_header = document.querySelector('.lower_header--block');
+            lower_header.classList.remove('h-[150px]')
+            lower_header.classList.add('h-[100px]')
+
+
+            const logo_n_icons = document.querySelector('.logo_n_icons');
+            logo_n_icons.classList.add('flex-[1]')
+
+            const nav_links = document.querySelector('.nav_links')
+            nav_links.classList.add('flex-[3]')
+
+
+                //e.trigger.style.animation="animate 1s ease-in-out 1.3s 1 forwards"
+            //animation: animate 1s ease-in-out 0.6s 1 forwards;  
+        },
+        onLeaveBack: (e)=>{
+            let header = document.querySelector('div.lower_header--block');
+            header.style.background = 'transparent';
+            header.classList.remove('flex')
+            header.classList.remove('items-center')
+
+            const header_logo = document.querySelector('.header_logo');
+            header_logo.classList.add('w-[30%]')
+
+            const lower_header = document.querySelector('.lower_header--block');
+            lower_header.classList.add('h-[150px]')
+            lower_header.classList.remove('h-[100px]')
+
+            const menu_links = document.querySelectorAll('.menu_links');
+            menu_links.forEach(e=>{
+                e.classList.add('px-[35px]')
+                e.classList.remove('px-[15px]')
+            })
+
+            const logo_n_icons = document.querySelector('.logo_n_icons');
+            logo_n_icons.classList.remove('flex-[1]')
+
+            const nav_links = document.querySelector('.nav_links')
+            nav_links.classList.remove('flex-[3]')
+        }
+    })
+
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#welcome--cont',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const Welcome_Message = document.querySelector('.Welcome_Message');
+            Welcome_Message.classList.remove('opacity-0')
+            Welcome_Message.classList.remove('right-[500px]')
+            Welcome_Message.classList.remove('blur-md')
+            Welcome_Message.classList.add('right-0')
+            Welcome_Message.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const Welcome_Message = document.querySelector('.Welcome_Message');
+            Welcome_Message.classList.add('opacity-0')
+            Welcome_Message.classList.add('right-[500px]')
+            Welcome_Message.classList.add('blur-md')
+            Welcome_Message.classList.remove('right-0')
+            Welcome_Message.classList.remove('opacity-100')
+        },
+    })
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#paraNimg',
+        start: 'top center',
+        //markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const paraNimg = document.querySelector('.paraNimg');
+            paraNimg.classList.remove('opacity-0')
+            paraNimg.classList.remove('top-[100px]')
+            paraNimg.classList.remove('blur-md')
+            paraNimg.classList.add('top-0')
+            paraNimg.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const paraNimg = document.querySelector('.paraNimg');
+            paraNimg.classList.add('opacity-0')
+            paraNimg.classList.add('top-[100px]')
+            paraNimg.classList.add('blur-md')
+            paraNimg.classList.remove('top-0')
+            paraNimg.classList.remove('opacity-100')
+        },
+    })
+    
+</script>
+
+{% comment %} <section class="image--slider w-full h-[600px]">
+    <div class="sub-slider-wrapper w-full h-full flex items-center justify-center bg-[url('https://images.pexels.com/photos/1043902/pexels-photo-1043902.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')] bg-no-repeat bg-cover bg-center bg-fixed">
+    </div>
+</section> {% endcomment %}
+
+
+
+    
+
+<section class="book--by--option w-full h-auto py-[60px] px-[20px]">
+    <div id="masterpieces_heading" class="masterpieces_heading text-[36px] text-center mb-20 opacity-0 duration-1000 relative right-[500px] blur-md tracking-[5px]" style="font-family: 'Dancing Script',cursive;">Some of our Masterpieces</div>
+        {% for m in masterpiece %}
+            <div id="select_by_option{{forloop.counter}}" class="select_by_option opacity-0 duration-1000 relative top-[100px] blur-md w-full h-full flex items-center justify-evenly my-8">
+                {% for d in m %}
+
+                <div class=" option_block cursor-pointer shadow-2xl hover:shadow-[25px_25px_30px_-15px_rgba(0,0,0,0.5)] hover:shadow-[25px_25px_30px_-15px_rgba(0,0,0,0.5)] w-[300px] h-[400px] text-center relative flex justify-center items-center rounded-xl overflow-hidden bg-[url('/media/{{d.data.cover_picture}}')] bg-cover bg-center" data-source="{% if d.data.is_youtube_video %}true{% else %}false{% endif %}"  data-href="{% if d.data.is_youtube_video %}{{d.data.video_youtube_link}}{% else %}{{d.data.video_link}}{% endif %}">
+                    <div class="masterpieces_image_cover bg-slate-900 w-full h-full absolute top-0 duration-300 opacity-0"></div>
+                    <div class="masterpieces_image_cover_text w-full h-full absolute top-0 duration-100 text-slate-50 flex items-end justify-center text-2xl">
+                        <div class="masterpieces_image_cover_text_udv w-full h-[1%] duration-500">
+                            <div class="text-slate-50 w-auto border-b">{{d.data.title}}</div>
+                            <p class="text-slate-50 w-auto text-sm">{{d.data.description}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+</section>
+
+
+<script>
+
+    const option_block  = document.querySelectorAll('.option_block');
+    const masterpieces_image_cover = document.querySelectorAll('.masterpieces_image_cover')
+    const masterpieces_image_cover_text = document.querySelectorAll('.masterpieces_image_cover_text')
+    const masterpieces_image_cover_text_udv = document.querySelectorAll('.masterpieces_image_cover_text_udv')
+
+    option_block.forEach((e,i)=>{
+
+        e.addEventListener('click', ()=>{
+            const popup = document.createElement('div');
+            popup.classList.value = 'bg-[rgba(0,0,0,0.5)] fixed top-0 left-0 h-screen w-screen z-[100000000000000]'
+            popup.innerHTML = `
+            <div class="absolute left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%]">
+                <div class="w-auto h-auto bg-white">${e.getAttribute('data-source') === 'false'?`
+                    <video autoplay muted loop class="h-full w-full">
+                        <source src="/media/${e.getAttribute('data-href')}" type="video/mp4">
+                    </video>
+                    
+                    `:`${e.getAttribute('data-href')}`}
+                </div>
+            </div>
+            `
+            document.body.prepend(popup)
+        })
+
+        e.addEventListener('mouseenter', ()=>{
+            // console.log(option_block)
+            masterpieces_image_cover[i].classList.remove('opacity-0')
+            masterpieces_image_cover[i].classList.add('opacity-50')
+            // masterpieces_image_cover_text[i].classList.remove('hidden')
+            masterpieces_image_cover_text_udv[i].classList.remove('h-[1%]')
+            masterpieces_image_cover_text_udv[i].classList.add('h-[30%]')
+        })
+        e.addEventListener('mouseleave', ()=>{
+            masterpieces_image_cover[i].classList.add('opacity-0')
+            masterpieces_image_cover[i].classList.remove('opacity-50')
+            // masterpieces_image_cover_text[i].classList.add('hidden')
+            masterpieces_image_cover_text_udv[i].classList.remove('h-[30%]')
+            masterpieces_image_cover_text_udv[i].classList.add('h-[1%]')
+        })
+    })
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#masterpieces_heading',
+        start: 'top center',
+        //markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const masterpieces_heading = document.querySelector('.masterpieces_heading');
+            masterpieces_heading.classList.remove('opacity-0')
+            masterpieces_heading.classList.remove('right-[500px]')
+            masterpieces_heading.classList.remove('blur-md')
+            masterpieces_heading.classList.add('right-0')
+            masterpieces_heading.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const masterpieces_heading = document.querySelector('.masterpieces_heading');
+            masterpieces_heading.classList.add('opacity-0')
+            masterpieces_heading.classList.add('right-[500px]')
+            masterpieces_heading.classList.add('blur-md')
+            masterpieces_heading.classList.remove('right-0')
+            masterpieces_heading.classList.remove('opacity-100')
+        },
+    })
+
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#select_by_option1',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const select_by_option1 = document.querySelector('#select_by_option1');
+            select_by_option1.classList.remove('opacity-0')
+            select_by_option1.classList.remove('top-[100px]')
+            select_by_option1.classList.remove('blur-md')
+            select_by_option1.classList.add('top-0')
+            select_by_option1.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const select_by_option1 = document.querySelector('#select_by_option1');
+            select_by_option1.classList.add('opacity-0')
+            select_by_option1.classList.add('top-[100px]')
+            select_by_option1.classList.add('blur-md')
+            select_by_option1.classList.remove('top-0')
+            select_by_option1.classList.remove('opacity-100')
+        },
+    })
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#select_by_option2',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const select_by_option2 = document.querySelector('#select_by_option2');
+            select_by_option2.classList.remove('opacity-0')
+            select_by_option2.classList.remove('top-[100px]')
+            select_by_option2.classList.remove('blur-md')
+            select_by_option2.classList.add('top-0')
+            select_by_option2.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const select_by_option2 = document.querySelector('#select_by_option2');
+            select_by_option2.classList.add('opacity-0')
+            select_by_option2.classList.add('top-[100px]')
+            select_by_option2.classList.add('blur-md')
+            select_by_option2.classList.remove('top-0')
+            select_by_option2.classList.remove('opacity-100')
+        },
+    })
+
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#select_by_option3',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const select_by_option3 = document.querySelector('#select_by_option3');
+            select_by_option3.classList.remove('opacity-0')
+            select_by_option3.classList.remove('top-[100px]')
+            select_by_option3.classList.remove('blur-md')
+            select_by_option3.classList.add('top-0')
+            select_by_option3.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const select_by_option3 = document.querySelector('#select_by_option3');
+            select_by_option3.classList.add('opacity-0')
+            select_by_option3.classList.add('top-[100px]')
+            select_by_option3.classList.add('blur-md')
+            select_by_option3.classList.remove('top-0')
+            select_by_option3.classList.remove('opacity-100')
+        },
+    })
+    
+
+</script>
+
+
+{% comment %} <section class="image--slider w-full h-[600px]">
+    <div class="sub-slider-wrapper_a w-full h-full flex items-center justify-center bg-[url('https://images.pexels.com/photos/936554/pexels-photo-936554.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')] bg-no-repeat bg-cover bg-center bg-fixed">
+    </div>
+</section> {% endcomment %}
+
+    
+{% comment %} <section class="card--pro w-full py-[20px] px-[20px] h-auto bg-slate-600"> 
+    <div class="heading_block text-center my-[20px] mx-0">
+        <h2 class="sect_heading text-[36px] mx-0 text-white">Beyond the Frame</h2>
+    </div>
+
+
+    <div class="main_card-grabber w-full h-[90%] p-[20px]">
+        <div class="sub_card w-full h-full my-0 mx-auto flex items-center justify-center gap-[20px] flex-wrap">
+            <div class="card_photo w-[20%] h-[42%]">
+                <img class="w-full h-full" src="https://static.wixstatic.com/media/3519e1_5c5c5ffe62984e458286887f2d426868~mv2_d_1200_1800_s_2.jpg/v1/crop/x_0,y_146,w_1200,h_1509/fill/w_280,h_352,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/4-20-19%20(109).jpg" alt="card--pic" class="card_img">
+                <div class="overlay_cont w-[80%] my-0 mx-auto bg-[#ffffffbf] translate-y-[-50px] text-center p-[15px] px-[10px] rounded-lg">
+                    <h4 class="overlay_heading font-extralight pb-4">Weddings</h4>
+                    <button class="overlay_button py-[7px] px-[10px] rounded-lg font-[12px] cursor-pointer transition-all duration-300 ease-in; rounded-20px border-0 bg-slate-900 text-white hover:bg-slate-200 hover:text-slate-900"><a href="{% url "wedding" %}">see all</a></button>
+                </div>
+            </div>
+            <div class="card_photo w-[20%] h-[42%]">
+                <img class="w-full h-full" src="https://static.wixstatic.com/media/3519e1_74b43709cb6f43d8b0782ccb24b389a9~mv2_d_1200_1800_s_2.jpg/v1/crop/x_0,y_146,w_1200,h_1509/fill/w_280,h_352,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/Cassie%20%26%20Matt%202-25-19%20(390).jpg" alt="card--pic" class="card_img">
+                <div class="overlay_cont w-[80%] my-0 mx-auto bg-[#ffffffbf] translate-y-[-50px] text-center p-[15px] px-[10px] rounded-lg">
+                    <h4 class="overlay_heading font-extralight pb-4">Pre Weddings</h4>
+                    <button class="overlay_button py-[7px] px-[10px] rounded-lg font-[12px] cursor-pointer transition-all duration-300 ease-in; rounded-20px border-0 bg-slate-900 text-white hover:bg-slate-200 hover:text-slate-900"><a href="{% url "pre-wedding" %}">see all</a></button>
+                </div>
+            </div>
+            <div class="card_photo w-[20%] h-[42%]">
+                <img class="w-full h-full" src="https://static.wixstatic.com/media/3519e1_27056cb0f6bc4040ac875ca781b11da2~mv2_d_1200_1800_s_2.jpg/v1/fill/w_280,h_352,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/10-22-18%20(510).jpg" alt="card--pic" class="card_img">
+                <div class="overlay_cont w-[80%] my-0 mx-auto bg-[#ffffffbf] translate-y-[-50px] text-center p-[15px] px-[10px] rounded-lg">
+                    <h4 class="overlay_heading font-extralight pb-4">Events</h4>
+                    <button class="overlay_button py-[7px] px-[10px] font-[12px] rounded-lg cursor-pointer transition-all duration-300 ease-in; rounded-20px border-0 bg-slate-900 text-white hover:bg-slate-200 hover:text-slate-900"><a href="{% url "events" %}">see all</a></button>
+                </div>
+            </div>
+            <div class="card_photo w-[20%] h-[42%]">
+                <img  class="w-full h-full" src="https://static.wixstatic.com/media/3519e1_e293bb3bfa0f455e9ac315da1fc1c30c~mv2_d_1200_1800_s_2.jpg/v1/crop/x_0,y_146,w_1200,h_1509/fill/w_280,h_352,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/10-27-18%20(295).jpg" alt="card--pic" class="card_img">
+                <div class="overlay_cont w-[80%] my-0 mx-auto bg-[#ffffffbf] translate-y-[-50px] text-center p-[15px] px-[10px] rounded-lg">
+                    <h4 class="overlay_heading font-extralight pb-4">Reels</h4>
+                    <button class="overlay_button py-[7px] px-[10px] font-[12px] rounded-lg cursor-pointer transition-all duration-300 ease-in; rounded-20px border-0 bg-slate-900 text-white hover:bg-slate-200 hover:text-slate-900"><a href="{% url "reels" %}">see all</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> {% endcomment %}
+
+
+
+<div class="swiper box-border w-screen h-auto max-w-full sticky bg-slate py-[60px]">
+    <div class="h-[70px] w-full bg-slate flex justify-center items-center mb-20">
+        <span id="handpicked_heading" class="h-full w-auto text-[36px] flex justify-center items-center p-1 capitalize opacity-0 duration-1000 relative right-[500px] blur-md tracking-[5px]" style="font-family: 'Dancing Script', cursive ">Our Handpicked Selection Just for You!</span>
+    </div>  
+    <div id="handpicked_swiper" class=" swiper_cotainer pt-[1%] opacity-0 duration-1000 relative top-[100px] blur-md"  style="animation: animate .5s ease-in-out 0.3s 1 forwards">
+        <div class="swiper-wrapper">
+
+            {% for h in handpicked %}
+            <div class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500 ">
+                <div class="card_play_button cursor-pointer  h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/media/{{h.data.cover_picture}}')] bg-cover">
+                    <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                        <img class="h-[40%] w-[20%] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/media/assets/images/icons/play_button.png %}">
+                    </div>
+                </div>
+                <div class="h-[280px] w-[480px] pt-1 overflow-hidden">
+                    <div class="h-full w-full p-1 flex flex-col ">
+                        <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">{{h.data.title}}</span></div>
+                        <div class="h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">{{h.data.description}}<span class="text-[13px] font-bold">Read more</span> </span></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}            
+        </div>
+        <div class="swiper-button-prev text-slate-900 hover:text-slate-100 hover:bg-slate-900 h-[10%] w-[3%] duration-500 opacity-75 rounded-lg"></div>
+        <div class="swiper-button-next text-slate-900 hover:text-slate-100 hover:bg-slate-900 h-[10%] w-[3%] duration-500 opacity-75 rounded-lg " ></div>
+    </div>  
+    <script>
+    const swiper = new Swiper('.swiper_cotainer', {
+      //direction: 'vertical',
+      loop: true,
+      slidesPerView:2,
+      spaceBetween:20,
+      centeredSlides: true,
+      autoplay: {
+        delay: 3500,
+        disableOnInteraction: false,
+      },
+      // centeredSlides: true,
+    
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+
+
+    });
+
+
+        gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.create({
+            trigger: '#handpicked_heading',
+            start: 'top center',
+            //markers: true,
+            // end: 'top 100px',
+            onEnter: (e)=>{
+                const handpicked_heading = document.querySelector('#handpicked_heading');
+                handpicked_heading.classList.remove('opacity-0')
+                handpicked_heading.classList.remove('right-[500px]')
+                handpicked_heading.classList.remove('blur-md')
+                handpicked_heading.classList.add('right-0')
+                handpicked_heading.classList.add('opacity-100')
+            },
+            onLeaveBack: (e)=>{
+                const handpicked_heading = document.querySelector('#handpicked_heading');
+                handpicked_heading.classList.add('opacity-0')
+                handpicked_heading.classList.add('right-[500px]')
+                handpicked_heading.classList.add('blur-md')
+                handpicked_heading.classList.remove('right-0')
+                handpicked_heading.classList.remove('opacity-100')
+            },
+        })
+
+
+        gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.create({
+            trigger: '#handpicked_swiper',
+            start: 'top center',
+            //markers: true,
+            // end: 'top 100px',
+            onEnter: (e)=>{
+                const handpicked_swiper = document.querySelector('#handpicked_swiper');
+                handpicked_swiper.classList.remove('opacity-0')
+                handpicked_swiper.classList.remove('top-[100px]')
+                handpicked_swiper.classList.remove('blur-md')
+                handpicked_swiper.classList.add('top-0')
+                handpicked_swiper.classList.add('opacity-100')
+            },
+            onLeaveBack: (e)=>{
+                const handpicked_swiper = document.querySelector('#handpicked_swiper');
+                handpicked_swiper.classList.add('opacity-0')
+                handpicked_swiper.classList.add('top-[100px]')
+                handpicked_swiper.classList.add('blur-md')
+                handpicked_swiper.classList.remove('top-0')
+                handpicked_swiper.classList.remove('opacity-100')
+            },
+        })
+
+        
+
+        function popupFun(){
+            const popup = document.createElement('div');
+            popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-6';
+            popup.innerHTML = `
+                <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                </div>
+                <div class="h-[80%] w-[90%] video_playback opacity-100 absolute top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] overflow-hidden">
+                    <video autoplay preload muted loop id="myVideo" class="h-full w-full right-0 top-0 min-w-full min-h-full">
+                        <source src="/static/assets/videos/banner_video.mp4">
+                    </video>
+                </div>
+                <div class="close_btn_dv h-[5%] w-[3%] absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                    <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="static/assets/images/icons/close_button.png">
+                </div>
+                
+                <div id="video_playback_previous_button" class="absolute bg-slate-700 opacity-25 hover:text-slate-100 hover:opacity-100 duration-700 top-2/4 h-[10%] w-[3%] flex justify-center items-center left-[1%] rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="70" viewBox="0 0 60 70" fill="none">
+                        <path d="M34.691 20L21.6001 35L34.691 50L39.6001 44.375L31.4183 35L39.6001 25.625L34.691 20Z" fill="white"/>
+                        </svg>
+                </div>
+                <div id="video_playback_next_button" class="absolute bg-slate-700 opacity-25 hover:text-slate-100 hover:opacity-100 duration-700 top-2/4 h-[10%] w-[3%] flex justify-center items-center right-[1%] rounded-lg" >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="70" viewBox="0 0 60 70" fill="none">
+                        <path d="M27.0909 20L23 25.625L29.8182 35L23 44.375L27.0909 50L38 35L27.0909 20Z" fill="white"/
+                    </svg>
+                </div>
+                `
+            document.body.prepend(popup)
+            const close_btn = document.querySelector('.close_btn_dv')
+            close_btn.addEventListener('click', ()=>{
+                const popup = document.querySelector('.popup')
+                popup.remove()
+            })
+        }
+        const card_play_button = document.querySelectorAll('.card_play_button');
+        const play_button = document.querySelectorAll('.play_button');
+        card_play_button.forEach((e, i)=>{
+            e.addEventListener('click', (e)=>{
+                const recent_card_main = document.querySelectorAll('.recent_card_main');
+                const popupcheck = document.querySelector('.popup');
+                if (!popupcheck){
+                    popupFun()
+                    
+                } else {
+                    popupcheck.remove()
+                }
+            })
+            e.addEventListener('mouseenter', ()=>{
+                play_button[i].classList.remove('hidden')
+            })
+            e.addEventListener('mouseleave', ()=>{
+                play_button[i].classList.add('hidden')
+            })
+        })
+        {% comment %} const recent_cards_previous_button = document.getElementById('recent_cards_previous_button')
+        recent_cards_previous_button.addEventListener('click', ()=>{
+            console.log(recent_cards_previous_button)
+        })
+        const recent_cards_next_button = document.getElementById('recent_cards_next_button')
+        recent_cards_next_button.addEventListener('click', ()=>{
+            console.log(recent_cards_next_button)
+        }) {% endcomment %}
+
+    </script>
+</div>
+
+
+
+
+<section class="insta--feed w-full h-auto py-[60px] px-[10px]">
+    <div class="instafeed_head text-center mt-[10px] mx-0 mb-[40px]">
+        <h2 id="instafeed--heading" class="instafeed--heading text-[36px] mb-20 mx-0 text-slate opacity-0 duration-1000 relative right-[500px] blur-md drop-shadow-lg tracking-[5px]">"Experience the Latest Creations</h2>
+        {% comment %} <p class="Sinstafeed--heading">from instagram <b>@emilygustafsonphotography</b></p> {% endcomment %}
+    </div>
+    
+    {% for lt in latest_creations %}
+    
+    <div id="instafeed--collections{{forloop.counter}}" class="instafeed--collections w-[80%] my-20 m-auto h-full flex items-center justify-center gap-[30px] flex-wrap opacity-0 duration-1000 relative top-[100px] blur-md">
+        {% for l in lt %}
+        <div class="instfeed_main w-[300px] relative cursor-pointer h-[400px] transition-all duration-500 ease-in rounded-2xl bg-[#3F7DB4] shadow-sm hover:shadow-2xl px-3 py-4  duration-300">
+            <div class="instfeed_main_image relative top-0 duration-500">
+                <img class="w-full h-[300px] rounded-2xl " src="/media/{{l.data.cover_picture}}" alt="insta_feedPost">
+                <span class=" h-[80px] flex justify-center items- flex-col">
+                    <span class="text-white text-center text-2xl tracking-[3px] font-bold p-2 capitalize" style="font-family: 'Dancing Script', cursive;" >{{l.data.title}}</span>
+                    <p class="instfeed_main_description text-xs text-center text-white h-0 overflow-hidden duration-500">{{l.data.description}}</p>
+                </span>
+            </div>
+        </div>    
+        {% endfor %}
+    </div>
+
+    {% endfor %}
+
+</section>
+
+<script>
+
+    const instfeed_main = document.querySelectorAll('.instfeed_main');
+    const instfeed_main_image = document.querySelectorAll('.instfeed_main_image');
+    const instfeed_main_description = document.querySelectorAll('.instfeed_main_description');
+
+    instfeed_main.forEach((e,i)=>{
+        e.addEventListener('mouseenter', ()=>{
+            instfeed_main_image[i].classList.add('top-[-50px]')
+            instfeed_main_description[i].classList.add('h-[120px]')
+        })
+        
+        
+        e.addEventListener('mouseleave', ()=>{
+            instfeed_main_image[i].classList.remove('top-[-50px]')
+            instfeed_main_description[i].classList.remove('h-[120px]')
+        })
+
+    })
+
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#instafeed--heading',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const instafeed_heading = document.querySelector('#instafeed--heading');
+            instafeed_heading.classList.remove('opacity-0')
+            instafeed_heading.classList.remove('right-[500px]')
+            instafeed_heading.classList.remove('blur-md')
+            instafeed_heading.classList.add('right-0')
+            instafeed_heading.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const instafeed_heading = document.querySelector('#instafeed--heading');
+            instafeed_heading.classList.add('opacity-0')
+            instafeed_heading.classList.add('right-[500px]')
+            instafeed_heading.classList.add('blur-md')
+            instafeed_heading.classList.remove('right-0')
+            instafeed_heading.classList.remove('opacity-100')
+        },
+    })
+
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#instafeed--collections1',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const instafeed_collections1 = document.querySelector('#instafeed--collections1');
+            instafeed_collections1.classList.remove('opacity-0')
+            instafeed_collections1.classList.remove('top-[100px]')
+            instafeed_collections1.classList.remove('blur-md')
+            instafeed_collections1.classList.add('top-0')
+            instafeed_collections1.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const instafeed_collections1 = document.querySelector('#instafeed--collections1');
+            instafeed_collections1.classList.add('opacity-0')
+            instafeed_collections1.classList.add('top-[100px]')
+            instafeed_collections1.classList.add('blur-md')
+            instafeed_collections1.classList.remove('top-0')
+            instafeed_collections1.classList.remove('opacity-100')
+        },
+    })
+
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#instafeed--collections2',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const instafeed_collections2 = document.querySelector('#instafeed--collections2');
+            instafeed_collections2.classList.remove('opacity-0')
+            instafeed_collections2.classList.remove('top-[100px]')
+            instafeed_collections2.classList.remove('blur-md')
+            instafeed_collections2.classList.add('top-0')
+            instafeed_collections2.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const instafeed_collections2 = document.querySelector('#instafeed--collections2');
+            instafeed_collections2.classList.add('opacity-0')
+            instafeed_collections2.classList.add('top-[100px]')
+            instafeed_collections2.classList.add('blur-md')
+            instafeed_collections2.classList.remove('top-0')
+            instafeed_collections2.classList.remove('opacity-100')
+        },
+    })
+
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#instafeed--collections3',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const instafeed_collections3 = document.querySelector('#instafeed--collections3');
+            instafeed_collections3.classList.remove('opacity-0')
+            instafeed_collections3.classList.remove('top-[100px]')
+            instafeed_collections3.classList.remove('blur-md')
+            instafeed_collections3.classList.add('top-0')
+            instafeed_collections3.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const instafeed_collections3 = document.querySelector('#instafeed--collections3');
+            instafeed_collections3.classList.add('opacity-0')
+            instafeed_collections3.classList.add('top-[100px]')
+            instafeed_collections3.classList.add('blur-md')
+            instafeed_collections3.classList.remove('top-0')
+            instafeed_collections3.classList.remove('opacity-100')
+        },
+    })
+
+
+</script>
+
+
+{% comment %} <section class="image--slider w-full h-[600px]">
+    <div class="sub-slider-wrapper w-full h-full flex items-center justify-center bg-[url('https://images.pexels.com/photos/1043902/pexels-photo-1043902.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')] bg-no-repeat bg-cover bg-center bg-fixed">
+    </div>
+</section> {% endcomment %}
+
+
+<div class="swiper2 box-border w-screen h-auto max-w-full sticky bg-slate py-[60px] overflow-hidden">
+    <div class="h-[70px] w-full bg-slate flex justify-center items-center mb-6">
+        <span id="client_reviews_heading" class="h-full w-auto text-[36px] flex justify-center items-center p-1 capitalize opacity-0 duration-1000 relative right-[500px] blur-md tracking-[5px]" style="font-family: 'Dancing Script', cursive ">The Client Chronicles!</span>
+    </div>  
+    <div id="client_reviews_swiper" class=" swiper_cotainer2 pt-[1%] opacity-0 duration-1000 relative top-[100px] blur-md"  style="animation: animate .5s ease-in-out 0.3s 1 forwards">
+        <div class="swiper-wrapper">
+
+            {% for r in reviews %}
+
+                {% with client=r|clientObjectWithReview %}
+                    <div data="0" class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] shadow-sm hover:shadow-2xl duration-500 rounded-2xl">
+                        <div class="h-[500px] w-[700px] p-20">
+                            <div class="h-full w-full flex items-center flex-col">
+                                <img class="h-32 w-32 rounded-full py-3" src="/media/{{client.user.profile_picture}}">
+                                <span class="text-slate-900 text-lg pt-3 font-bold tracking-[2px]">{{r.title}}</span>
+                                <span class="text-slate-900 text-sm py-3">
+
+                                    {{r.ratings}}
+
+                                    <div class="flex border w-full flex justify-center items-center bg-slate-50 rounded-lg h-8">
+                                        <div class="rating rating-xs">
+                                          <input type="radio" name="rating-{{forloop.counter}}" class="mask mask-star-2 mx-0.5 bg-orange-400" {% if r.ratings == 1 %}checked="checked"{% endif %} />
+                                          <input type="radio" name="rating-{{forloop.counter}}" class="mask mask-star-2 mx-0.5 bg-orange-400" {% if r.ratings == 2 %}checked="checked"{% endif %} />
+                                          <input type="radio" name="rating-{{forloop.counter}}" class="mask mask-star-2 mx-0.5 bg-orange-400" {% if r.ratings == 3 %}checked="checked"{% endif %} />
+                                          <input type="radio" name="rating-{{forloop.counter}}" class="mask mask-star-2 mx-0.5 bg-orange-400" {% if r.ratings == 4 %}checked="checked"{% endif %} />
+                                          <input type="radio" name="rating-{{forloop.counter}}" class="mask mask-star-2 mx-0.5 bg-orange-400" {% if r.ratings == 5 %}checked="checked"{% endif %} />
+                                        </div>
+                                      </div>
+                                      
+                                </span>
+                                <p class="text-slate-900 text-sm p-3 text-center leading-6">{{r.content}}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endwith %}
+
+            {% endfor %}
+
+
+        </div>
+        <div class="swiper-button-prev text-slate-900 hover:text-slate-100 hover:bg-slate-900 h-[10%] w-[3%] duration-500 opacity-75 rounded-lg"></div>
+        <div class="swiper-button-next text-slate-900 hover:text-slate-100 hover:bg-slate-900 h-[10%] w-[3%] duration-500 opacity-75 rounded-lg " ></div>
+    </div>  
+    <script>
+    const swiper2 = new Swiper('.swiper_cotainer2', {
+      //direction: 'vertical',
+      loop: true,
+      slidesPerView:2,
+      spaceBetween:20,
+      centeredSlides: true,
+      autoplay: {
+        delay: 3500,
+        disableOnInteraction: false,
+      },
+      // centeredSlides: true,
+    
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+
+
+    });
+
+
+        gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.create({
+            trigger: '#client_reviews_heading',
+            start: 'top center',
+            //markers: true,
+            // end: 'top 100px',
+            onEnter: (e)=>{
+                const client_reviews_heading = document.querySelector('#client_reviews_heading');
+                client_reviews_heading.classList.remove('opacity-0')
+                client_reviews_heading.classList.remove('right-[500px]')
+                client_reviews_heading.classList.remove('blur-md')
+                client_reviews_heading.classList.add('right-0')
+                client_reviews_heading.classList.add('opacity-100')
+            },
+            onLeaveBack: (e)=>{
+                const client_reviews_heading = document.querySelector('#client_reviews_heading');
+                client_reviews_heading.classList.add('opacity-0')
+                client_reviews_heading.classList.add('right-[500px]')
+                client_reviews_heading.classList.add('blur-md')
+                client_reviews_heading.classList.remove('right-0')
+                client_reviews_heading.classList.remove('opacity-100')
+            },
+        })
+
+
+        gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.create({
+            trigger: '#client_reviews_swiper',
+            start: 'top center',
+            //markers: true,
+            // end: 'top 100px',
+            onEnter: (e)=>{
+                const client_reviews_swiper = document.querySelector('#client_reviews_swiper');
+                client_reviews_swiper.classList.remove('opacity-0')
+                client_reviews_swiper.classList.remove('top-[100px]')
+                client_reviews_swiper.classList.remove('blur-md')
+                client_reviews_swiper.classList.add('top-0')
+                client_reviews_swiper.classList.add('opacity-100')
+            },
+            onLeaveBack: (e)=>{
+                const client_reviews_swiper = document.querySelector('#client_reviews_swiper');
+                client_reviews_swiper.classList.add('opacity-0')
+                client_reviews_swiper.classList.add('top-[100px]')
+                client_reviews_swiper.classList.add('blur-md')
+                client_reviews_swiper.classList.remove('top-0')
+                client_reviews_swiper.classList.remove('opacity-100')
+            },
+        })
+
+    </script>
+</div>
+
+
+
+
+
+{% comment %} <section class="customer--reviews-testimonial w-full h-auto my-[20px] mx-0 py-[20px] px-0">
+    <h2 class="reviews_heading">LOVING WORDS</h2>
+    <div class="reviews_grabber w-full flex items-center justify-center">
+        <div class="left_review">
+            <div class="left_upperReview left_block">
+                <div class="img">
+                    <img src="https://static.wixstatic.com/media/15f3ad_2b75bd3da8034e46ae813d7e7cac1bd7~mv2.jpg/v1/fill/w_158,h_158,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/15f3ad_2b75bd3da8034e46ae813d7e7cac1bd7~mv2.jpg" alt="review">
+                </div>
+                <div class="content">"I chose Aling Wen Photography and I had an absolutely positive experience. Aling is a very talented photographer who knows how to bring out your strengths!
+                    She is truly a professional and she is able to immediately put you at ease.
+                    With her calmness, her patience and above all with her passion for photography she manages to convey joy and fun in every single minute of the shot.Highly recommended.”-- Giulia</div>
+            </div>
+            <div class="left_upperReview left_block">
+                <div class="img">
+                    <img src="https://static.wixstatic.com/media/15f3ad_f516121e8ed1426b80eb231b839a0e00~mv2.jpg/v1/fill/w_158,h_158,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/15f3ad_f516121e8ed1426b80eb231b839a0e00~mv2.jpg" alt="review">
+                </div>
+                <div class="content">"We are so grateful and delighted with our baby photos. Aling was such a natural with our new born it was an absolute pleasure to do our shoot. My baby thought that Aling's assistant as a real laugh and we got gorgeous photos of a laughing baby. Thank you. Highly recommend."-- Emily Family
+
+                </div>
+            </div>
+        </div>
+        <div class="right_review">
+            <div class="right_upperReview right_block">
+                <div class="img">
+                    <img src="https://static.wixstatic.com/media/15f3ad_110cc15aadf440c4ad952e9ec8550701~mv2.jpg/v1/fill/w_158,h_158,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/15f3ad_110cc15aadf440c4ad952e9ec8550701~mv2.jpg" alt="review">
+                </div>
+                <div class="content">My family and I have had the pleasure of working with Aling on two occasions now. From the beginning of the process, Aling was professional and prompt in providing detailed information to help us prepare for the photoshoot. During our session, Aling put us all at ease with her friendly and calm personality. She was able to recognize when the kids needed a change of setting and had many wonderful ideas to keep everyone engaged during the photoshoot. You can tell everyone had a great time and this reflected in the photos, the results speak for themselves."-- Nicole Family</div>
+            </div>
+            <div class="right_lowerReview right_block">
+                <div class="img">
+                    <img src="https://static.wixstatic.com/media/15f3ad_5a22e9522a3d48e1aa769f0d251766f6~mv2.jpg/v1/fill/w_158,h_158,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/15f3ad_5a22e9522a3d48e1aa769f0d251766f6~mv2.jpg" alt="review">
+                </div>
+                <div class="content">"Highly recommend Aling, she is very well prepared, went above and beyond to get us the best shots.
+
+                    Super friendly and easy to get along with, definitely made us feel relaxed and comfortable. Her assistant was super helpful with entertaining our 4 years old too!
+                    
+                    Great experience!”-- Sindy Family</div>
+            </div>
+        </div>
+    </div>
+</section> {% endcomment %}
+
+
+<section class="image--grid--boxes w-full h-auto mx-0 py-[60px] px-0">
+    <h2 id="grid_heading" class="grid_heading text-center text-[34px] mb-6 mx-0 opacity-0 duration-1000 relative right-[500px] blur-md">Step into Our Captivating Image Gallery!</h2>
+    <div class="image_grid w-full h-full flex flex-col items-center">
+
+
+        {% for ig in image_gallery %}
+            <div id="grid--grabber-par{{forloop.counter}}" class="w-full h-auto m-20 w-[95%] my-[5px] mx-auto py-0 mx-[15px] h-auto opacity-0 duration-1000 relative top-[100px] blur-md flex flex-wrap justify-center">
+                {% comment %} <div  class="grid--grabber-par  grid gap-[10px] " style="grid-template-columns: auto auto auto auto; grid-template-rows: 250px 235px 250px;"> {% endcomment %}
+                <div class="flex flex-wrap justify-center">
+                    {% for i in ig %}
+                        <div class="h-[400px] w-[300px] m-2 bg-[rgb(230,230,250)] bg-[url('/media/{{i.data.file}}')] bg-cover bg-center rounded-xl "></div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+            {% comment %} <div  class="grid--grabber-par w-[95%] my-[5px] mx-auto py-0 mx-[15px] h-auto grid gap-[10px] opacity-0 duration-1000 relative top-[100px] blur-md" style="grid-template-columns: auto auto auto auto; grid-template-rows: 250px 235px 250px;"> {% endcomment %}
+
+                    {% comment %} <div class="grid_elem h-[400px] w-[300px] bg-[rgb(230,230,250)] bg-[url('/media/{{i.data.file}}')] bg-cover"></div> {% endcomment %}
+                    {% comment %} <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/pVert.jpeg')] bg-cover row-GR row-[span_2] bg-[rgb(230,230,250)]"></div> {% endcomment %}
+                    {% comment %} <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/PHori.jpeg')] bg-cover row-GR2 col-[3_/_5]"></div> {% endcomment %}
+            
+            {% comment %} </div> {% endcomment %}
+            
+        
+        {% comment %} <div id="grid--grabber-par2" class="grid--grabber-par_2 w-[95%] my-[5px] mx-auto py-0 mx-[15px] h-auto grid gap-[10px] opacity-0 duration-1000 relative top-[100px] blur-md"  style="grid-template-columns: auto auto auto auto; grid-template-rows: 250px 235px 250px;">
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p10.webp')] bg-cover"></div>
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p11.webp')] bg-cover"></div>
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p11.webp')] bg-cover"></div>
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p12.webp')] bg-cover"></div>
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p13.webp')] bg-cover"></div>
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p14.webp')] bg-cover"></div>
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p15.webp')] bg-cover"></div>
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p15.webp')] bg-cover"></div>
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p16.webp')] bg-cover"></div>
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p4.webp')] bg-cover"></div>
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p9.webp')] bg-cover"></div>
+            <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p9.webp')] bg-cover"></div>
+        </div> {% endcomment %}
+        {% comment %} <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/PHori2.jpeg')] bg-center bg-cover row-GR2 col-[1_/_3]"></div> {% endcomment %}
+        {% comment %} <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/pVert2.jpeg')] bg-cover row-GR row-[span_2] bg-[rgb(230,230,250)]"></div> {% endcomment %}
+    </div>
+</section>
+
+<script>
+
+gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+    trigger: '#grid_heading',
+    start: 'top center',
+    // markers: true,
+    // end: 'top 100px',
+    onEnter: (e)=>{
+        const grid_heading = document.querySelector('#grid_heading');
+        grid_heading.classList.remove('opacity-0')
+        grid_heading.classList.remove('right-[500px]')
+        grid_heading.classList.remove('blur-md')
+        grid_heading.classList.add('right-0')
+        grid_heading.classList.add('opacity-100')
+    },
+    onLeaveBack: (e)=>{
+        const grid_heading = document.querySelector('#grid_heading');
+        grid_heading.classList.add('opacity-0')
+        grid_heading.classList.add('right-[500px]')
+        grid_heading.classList.add('blur-md')
+        grid_heading.classList.remove('right-0')
+        grid_heading.classList.remove('opacity-100')
+    },
+})
+
+gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+    trigger: '#grid--grabber-par1',
+    start: 'top center',
+    // markers: true,
+    // end: 'top 100px',
+    onEnter: (e)=>{
+        const grid_grabber_par1 = document.querySelector('#grid--grabber-par1');
+        grid_grabber_par1.classList.remove('opacity-0')
+        grid_grabber_par1.classList.remove('top-[100px]')
+        grid_grabber_par1.classList.remove('blur-md')
+        grid_grabber_par1.classList.add('top-0')
+        grid_grabber_par1.classList.add('opacity-100')
+    },
+    onLeaveBack: (e)=>{
+        const grid_grabber_par1 = document.querySelector('#grid--grabber-par1');
+        grid_grabber_par1.classList.add('opacity-0')
+        grid_grabber_par1.classList.add('top-[100px]')
+        grid_grabber_par1.classList.add('blur-md')
+        grid_grabber_par1.classList.remove('top-0')
+        grid_grabber_par1.classList.remove('opacity-100')
+    },
+})
+
+gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+    trigger: '#grid--grabber-par2',
+    start: 'top center',
+    // markers: true,
+    // end: 'top 100px',
+    onEnter: (e)=>{
+        const grid_grabber_par2 = document.querySelector('#grid--grabber-par2');
+        grid_grabber_par2.classList.remove('opacity-0')
+        grid_grabber_par2.classList.remove('top-[100px]')
+        grid_grabber_par2.classList.remove('blur-md')
+        grid_grabber_par2.classList.add('top-0')
+        grid_grabber_par2.classList.add('opacity-100')
+    },
+    onLeaveBack: (e)=>{
+        const grid_grabber_par2 = document.querySelector('#grid--grabber-par2');
+        grid_grabber_par2.classList.add('opacity-0')
+        grid_grabber_par2.classList.add('top-[100px]')
+        grid_grabber_par2.classList.add('blur-md')
+        grid_grabber_par2.classList.remove('top-0')
+        grid_grabber_par2.classList.remove('opacity-100')
+    },
+})
+
+</script>
+
+
+
+<section class="child--icont w-full h-auto mt-[20px] mx-0 mb-[50px] pt-[20px] pl-0 pb-[150px] pr-0 overflow-hidden">
+    <div class="sub_child-icont w-[80%] m-auto h-full py-10px px-30px relative flex items-center justify-left">
+        <div id="img_block" class="img_block w-[600px] h-[650px] bg-[url('https://static.wixstatic.com/media/15f3ad_17203a24cb054d89b6be97eb22ecb1a6~mv2.jpg/v1/fill/w_598,h_648,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/15f3ad_17203a24cb054d89b6be97eb22ecb1a6~mv2.jpg')] bg-[cover] opacity-0 duration-1000 relative right-[500px] blur-md"></div>
+        <div id="cont_block" class="cont_block w-[600px] h-[450px] absolute right-[-800px] bottom-0 translate-y-[100px] flex items-center justify-center bg-amber-300 opacity-0 duration-1000 relative blur-md">
+            <div class="sub_cont w-[60%] h-full flex leading-[50px] items-center justify-center flex-col">
+            <h2 class="text-[#333] text-[40px] capitalize">Planning Together The Special Day Of Your Life<h2>
+            <p class="font-[16px] leading-[25px] text-[#333] font-extralight my-[20px] mx-0">Let's have a friendly chat! We can explore location ideas, talk about what to wear to ensure your photos look perfect, and any special preferences you might have. Feel free to reach out!</p>
+            <button class="readMore text-[30px]"><a href="{% url "contact" %}" style="font-family: 'Dancing Script',cursive;">Reach Out Now</a></button>
+        </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#img_block',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const img_block = document.querySelector('#img_block');
+            img_block.classList.remove('opacity-0')
+            img_block.classList.remove('right-[500px]')
+            img_block.classList.remove('blur-md')
+            img_block.classList.add('right-0')
+            img_block.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const img_block = document.querySelector('#img_block');
+            img_block.classList.add('opacity-0')
+            img_block.classList.add('right-[500px]')
+            img_block.classList.add('blur-md')
+            img_block.classList.remove('right-0')
+            img_block.classList.remove('opacity-100')
+        },
+    })
+
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#cont_block',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const cont_block = document.querySelector('#cont_block');
+            cont_block.classList.remove('opacity-0')
+            cont_block.classList.remove('right-[-800px]')
+            cont_block.classList.remove('blur-md')
+            cont_block.classList.add('right-[50px]')
+            cont_block.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const cont_block = document.querySelector('#cont_block');
+            cont_block.classList.add('opacity-0')
+            cont_block.classList.add('right-[-800px]')
+            cont_block.classList.add('blur-md')
+            cont_block.classList.remove('right-[50px]')
+            cont_block.classList.remove('opacity-100')
+        },
+    })
+
+</script>
+
+
+
+
+
+
+<section class="view_portfolio w-full h-full my-[10px] mx-0">
+    <div class="main-bg--wrapper w-full h-full bg-[url('https://static.wixstatic.com/media/3513c2_40081629cf01431bae17e9bb3fafdae9~mv2.webp')] bg-cover flex justify-center items-center">
+        <div class="up_content w-auto opacity-0 h-auto p-[10px] transition-all duration-200 ease-in text-center">
+            <h2 id="discover_cont" class="cont text-[60px] font-bold my[20px] mx-0 tracking-wider text-white opacity-0 duration-1000 relative top-[100px] blur-md">"Discover the Heart and Soul Behind Our Lens!"</h2>
+            <a href="{% url "about" %}"><button id="discover_cont_readMore" class="readMore text-white border-2 border-solid border-white hover:border-slate-900 px-6 py-3 opacity-0 duration-1000 relative top-[100px] blur-md ">Know More</button></a>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+    trigger: '#discover_cont',
+    start: 'top center',
+    // markers: true,
+    // end: 'top 100px',
+    onEnter: (e)=>{
+        const discover_cont = document.querySelector('#discover_cont');
+        discover_cont.classList.remove('opacity-0')
+        discover_cont.classList.remove('top-[100px]')
+        discover_cont.classList.remove('blur-md')
+        discover_cont.classList.add('top-0')
+        discover_cont.classList.add('opacity-100')
+    },
+    // onLeaveBack: (e)=>{
+    //     const discover_cont = document.querySelector('#discover_cont');
+    //     discover_cont.classList.add('opacity-0')
+    //     discover_cont.classList.add('top-[100px]')
+    //     discover_cont.classList.add('blur-md')
+    //     discover_cont.classList.remove('top-0')
+    //     discover_cont.classList.remove('opacity-100')
+    // },
+})
+
+gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.create({
+trigger: '#discover_cont_readMore',
+start: 'top center',
+// markers: true,
+// end: 'top 100px',
+onEnter: (e)=>{
+    const discover_cont_readMore = document.querySelector('#discover_cont_readMore');
+    discover_cont_readMore.classList.remove('opacity-0')
+    discover_cont_readMore.classList.remove('top-[100px]')
+    discover_cont_readMore.classList.remove('blur-md')
+    discover_cont_readMore.classList.add('top-0')
+    discover_cont_readMore.classList.add('opacity-100')
+},
+// onLeaveBack: (e)=>{
+//     const discover_cont_readMore = document.querySelector('#discover_cont_readMore');
+//     discover_cont_readMore.classList.add('opacity-0')
+//     discover_cont_readMore.classList.add('top-[100px]')
+//     discover_cont_readMore.classList.add('blur-md')
+//     discover_cont_readMore.classList.remove('top-0')
+//     discover_cont_readMore.classList.remove('opacity-100')
+// },
+})
+
+
+
+
+
+</script>
+
+
+<footer class="footer footer-center p-10 bg-base-200 text-base-content rounded sticky">
+    <nav class="grid grid-flow-col gap-4">
+      <a href="/wedding" class="link link-hover">Wedding</a>
+      <a href="/pre-wedding" class="link link-hover">Pre Wedding</a>
+      <a href="/events" class="link link-hover">Events</a>
+      <a href="/team" class="link link-hover">Team</a>
+      <a href="/articles" class="link link-hover">Articles</a>
+      <a href="/contact" class="link link-hover">Contact Us</a>
+    </nav> 
+    <nav>
+      <div class="grid grid-flow-col gap-4">
+        <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg></a>
+        <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path></svg></a>
+        <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg></a>
+      </div>
+    </nav> 
+    <aside>
+      <p>Copyright © 2024 - All right reserved by Jrs Studios</p>
+    </aside>
+  </footer>
+
+
+{% comment %} <footer class="custom_footer footer_block w-full h-[400px] bg-[#232323]">
+    <div class="sub--footer-an w-full h-full p-[20px] flex items-center justify-evenly">
+        <div class="footer-logo w-[25%] h-full">
+            <div class="footer-logo-div w-auto h-[120px] text-center tracking-1">
+                <div class="mb-6">
+                    <a href="{% url "home" %}" style="font-family: 'Dancing Script', cursive;" class="text-[20px] text-white font-[var(--font)]">JRS STUDIOS</a>
+                </div>
+                <div>
+                    <p class="footer-about text-white font-medium leading-[30px] my-20px mx-auto text-center font-[sans-serif] text-[13px]">At Jrs Studios, we craft moments of warmth and elegance through our exquisite photography. Embrace the glow of perfection. Illuminate your world with our passion for quality and style.</p>
+
+                </div>
+            </div>
+        </div>
+        <div class="footer-navLinks w-[20%] h-full py-[20px] px-[25px]">
+            <h4 class="footer--menu-heading text-white uppercase leading-[1.4px] my-[20px] mx-0 font-bold">Quick Links</h4>
+            <ul>
+                <li class="footer--link text-white py-2 px-[0] cursor-pointer list-none text-sm hover:underline">
+                    <a href="#">Cinematic</a>
+                </li>
+                <li class="footer--link text-white py-2 px-[0] cursor-pointer list-none text-sm hover:underline">
+                    <a href="#">Weddings</a>
+                </li>
+                <li class="footer--link text-white py-2 px-[0] cursor-pointer list-none text-sm hover:underline">
+                    <a href="#">Pre Weddings</a>
+                </li>
+                <li class="footer--link text-white py-2 px-[0] cursor-pointer list-none text-sm hover:underline">
+                    <a href="#">Reels</a>
+                </li>
+                <li class="footer--link text-white py-2 px-[0] cursor-pointer list-none text-sm hover:underline">
+                    <a href="#">About us</a>
+                </li>
+                <li class="footer--link text-white py-2 px-[0] cursor-pointer list-none text-sm hover:underline">
+                    <a href="#">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+        <div class="footer-navLinks w-[20%] h-full py-[20px] px-[25px]">
+        <h4 class="footer--menu-heading text-white uppercase leading-[1.4px] my-[20px] mx-0">Informational Links</h4>
+            <ul>
+                <li class="footer--link text-white py-2 px-[0] cursor-pointer list-none hover:underline">
+                    <a href="#">About us</a>
+                </li>
+                <li class="footer--link text-white py-2 px-[0] cursor-pointer list-none hover:underline">
+                    <a href="#">Privacy Policy</a>
+                </li>
+                <li class="footer--link text-white py-2 px-[0] cursor-pointer list-none hover:underline">
+                    <a href="#">Shipping Policy</a>
+                </li>
+                <li class="footer--link text-white py-2 px-[0] cursor-pointer list-none hover:underline">
+                    <a href="#">Terms & Conditions</a>
+                </li>
+                <li class="footer--link text-white py-2 px-[0] cursor-pointer list-none hover:underline">
+                    <a href="#">Return Policy</a>
+                </li>
+            </ul>
+        </div>
+        <div class="footer-newsletter py-[20px] px-[25px] w-[30%] h-full">
+            <h4 class="footer-form uppercase text-white my-[20px] mx-0 text-center">Subscribe Us</h4>
+            <p class="footer-subscribe text-center text-[13px] my-[20px] mx-0 tracking-[1.4px] leading-[30px] capitalize text-white">Subscribe to our newsletter for exclusive updates, special offers, and a touch of candlelit joy delivered to your inbox.</p>
+            <form class="w-full my-[20px] mx-0" action="#">
+                <input type="text" class="footer_inp w-[70%] border-1 border-solid border-[white]; p-[10px] bg-transparent" name="a" placeholder="Subscribe us with our Email">
+                <input type="submit"  class="footer_btn border-1 border-solid border-[white] cursor-pointer w-[28%] font-[12px] font-bold transition-all duration-300 ease-in uppercase p-[10px] pt-[11px] hover:bg-transparent text-white"value="Subscribe">
+            </form>
+        </div>
+    </div>
+</footer> {% endcomment %}
+
+
+
+
+
+<script src="static/assets/js/home.js">
+
+</script>
+</body>
+
+{% endwith %}
+
+</html>

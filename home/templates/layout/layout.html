@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% comment %} <link href="https://cdn.jsdelivr.net/npm/daisyui@4.5.0/dist/full.min.css" rel="stylesheet" type="text/css" /> {% endcomment %}
+    {% load static %}
+    {% comment %} <link href="{{static}}assets/css/tw.css" rel="stylesheet" type="text/css" /> {% endcomment %}
+    
+    <link href="{% static 'assets/css/tw.css' %}" rel="stylesheet" type="text/css" />
+    <script src="{% static 'assets/js/tw.js' %}"></script>
+    
+    {% comment %} <script src="https://cdn.tailwindcss.com"></script> {% endcomment %}
+    
+    <link rel="stylesheet" href="/static/assets/css/swiper.css"/>
+    <script src="/static/assets/js/swiper.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+    {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script> {% endcomment %}
+
+    <style>
+
+      .card_description_dv::-webkit-scrollbar{
+        display: none;
+      }
+
+      @keyframes animate {
+        from{
+            opacity: 0;
+            transform: translate(0, 100px);
+            filter: blur(33px);
+        }
+        to{
+            opacity: 1;
+            transform: translate(0);
+            filter: blur(0);
+        }
+    }
+
+    @keyframes scroll_animation{
+      to {scale:1; opacity:1;}
+    }
+    </style>
+    
+    {% comment %} <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/> {% endcomment %}
+    {% comment %} <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script> {% endcomment %}
+    
+    <title>{% block page_title %}{% endblock  %}</title>
+
+</head>
+
+{% load poll_extras %}
+
+{% with client=request.user|clientObject %}
+<body class="m-0 p-0 border-box">
+
+<div class="h-20 w-screen max-w-full md:flex md:justify-center sticky top-0 z-[5000] bg-white shadow-xl">
+    <header id="header" class="md:h-20 md:flex md:items-center md:p-5 md:top-0 md:left-0 md:w-full md:max-w-[1600px]">
+      <div id="logo_dv" class="md:h-full md:flex-1 md:flex md:justify-center md:flex-initial md:w-2/5 md:items-center md:max-w-[1600px]">
+          <h1 class="logo p-1 mx-3 md:text-[25px] text-slate-900 md:flex md:items-center relative tracking-[5px]" style="font-family: 'Dancing Script', cursive"><a href="/">JRS STUDIOS</a></h1>
+      </div>
+      <div class="md:flex-2 md:flex md:items-center md:flex-initial md:w-3/5 md:justify-center">
+          <ul class="navbar md:flex md:justify-center">
+              {% if request.user.id == None %}
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a href="{% url 'gallery' %}">Image Gallery</a></li>
+                {% comment %} <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a href="{% url 'cinematic' %}">Cinematic</a></li> {% endcomment %}
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a href="{% url 'wedding' %}">Wedding</a></li>
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a href="{% url 'pre-wedding' %}">Pre Wedding</a></li>
+                {% comment %} <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a href="{% url 'events' %}">Event</a></li> {% endcomment %}
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a href="{% url 'reels' %}">Reels</a></li>
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a href="{% url 'about' %}">About</a></li>
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a href="{% url 'contact' %}">Contact Us</a></li>
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a class="hover:text-sky-500 duration-300" href="{% url "login" %}">Client Login</a></li>
+              {% else %}
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a class="hover:text-sky-500 duration-300" href="{% url "client_dashboard" %}">Dashboard</a></li>
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a class="hover:text-sky-500 duration-300" href="{% url "client_bookings" %}">Bookings</a></li>
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a class="hover:text-sky-500 duration-300" href="{% url "client_payment" %}">Payments</a></li>
+                {% comment %} <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"><a class="hover:text-sky-500 duration-300" href="{% url "client_info" client_id=client.first.id booking_id=data.id client_token=client.first.client_token %}">My Info</a></li> {% endcomment %}
+
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center">                  
+                  <div class="relative navitems_menu_btn w-10 h-10 rounded-full bg-[url('/media/{{client.user.profile_picture}}')] bg-cover bg-center border cursor-pointer ">
+                    <div class="nav_menu_div hidden w-32 h-20 bg-white border absolute top-full left-0">
+                      <div class="h-10 border-b"><a class="h-full w-full flex justify-center items-center hover:text-sky-500 duration-300" href="{% url "settings" %}">Settings</a></div>
+                      <div class="h-10 "><a class="h-full w-full flex justify-center items-center hover:text-sky-500 duration-300" href="{% url "logout" %}">Logout</a></div>
+                    </div>
+                  </div>
+                </li>
+
+                <li class=" navitems p-1 md:w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer md:text-sm text-slate-900 md:flex md:items-center"></li>
+              {% endif %} 
+  
+          </ul> 
+
+          <script>
+            const navitems_menu_btn = document.querySelector('.navitems_menu_btn');
+            const nav_menu_div = document.querySelector('.nav_menu_div');
+            if (navitems_menu_btn){
+
+              navitems_menu_btn.addEventListener('click',()=>{
+                if (nav_menu_div.classList.value.includes('hidden')) {
+                  nav_menu_div.classList.remove('hidden')
+                } else {
+                  nav_menu_div.classList.add('hidden')
+                }
+                
+              })
+            }
+          </script>
+      </div>
+  </header>
+</div>
+
+    <div class='container-xl w-screen h-auto max-w-full z-1 bg-slate-100 flex justify-center overflow-hidden'>
+        <div class=" w-full h-auto relative border border-solid border-slate-300 shadow-lg">
+            <div class="w-full overflow-hidden">
+                {% block main_body %}{% endblock  %}
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+    {% comment %} <div class="navbar bg-base-100">
+        <div class="flex-none">
+          <button class="btn btn-square btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
+        </div>
+        <div class="flex-1">
+          <a class="btn btn-ghost text-xl">daisyUI</a>
+        </div>
+        <div class="flex-none">
+          <button class="btn btn-square btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+          </button>
+        </div>
+      </div> {% endcomment %}
+
+
+
+
+    <footer class="footer footer-center p-10 bg-base-200 text-base-content rounded sticky">
+        <nav class="grid grid-flow-col gap-4">
+          <a href="/wedding" class="link link-hover">Wedding</a>
+          <a href="/pre-wedding" class="link link-hover">Pre Wedding</a>
+          <a href="/events" class="link link-hover">Events</a>
+          <a href="/team" class="link link-hover">Team</a>
+          <a href="/articles" class="link link-hover">Articles</a>
+          <a href="/contact" class="link link-hover">Contact Us</a>
+        </nav> 
+        <nav>
+          <div class="grid grid-flow-col gap-4">
+            <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg></a>
+            <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path></svg></a>
+            <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg></a>
+          </div>
+        </nav> 
+        <aside>
+          <p>Copyright © 2024 - All right reserved by Jrs Studios</p>
+        </aside>
+      </footer>
+
+</body>
+{% endwith %}
+</html>

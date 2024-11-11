@@ -1,0 +1,165 @@
+{% extends "layout/layout.html" %}
+
+{% block main_body %}
+
+{% load static %}
+{% load poll_extras %}
+
+<!--
+  This example requires some changes to your config:
+  
+  ```
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/forms'),
+    ],
+  }
+  ```
+-->
+
+{% with client=request.user|clientObject %}
+
+<script src="{% static "assets/js/loader.js" %}"></script>
+<script src="{% static "assets/js/poper.js" %}"></script>
+<script src="{% static "assets/js/cookies.js" %}"></script>
+
+           <div class="h-auto w-full flex justify-center items-center p-2 flex-col">
+            <div class="relative profile_div w-24 h-24 rounded-full bg-[url('/media/{{client.user.profile_picture}}')] bg-cover bg-center overflow-hidden border">
+              <div class="profile absolute bottom-0 left-0 w-full h-full bg-slate-900 text-slate-100 text-xs flex justify-center items-center opacity-0 hover:opacity-80 duration-300 cursor-pointer">update picture</div>
+            </div>
+            <input class="update_profile_picture hidden" data-key="{{key}}" type="file">
+            <span class="capitalize">{{data.name}}</span>
+          </div>
+
+
+          <div class="hero bg-base-200 w-full">
+            <div class="hero-content flex flex-col w-full">
+
+              <div class="card shrink-0 shadow-2xl bg-base-100 w-full">
+                <form class="card-body info booking_tabs">
+
+                  
+
+                  
+                  {% comment %} {% for c in client %} {% endcomment %}
+                    {% comment %} {{c}} {% endcomment %}
+                    {% if k != 'id'  %}
+                      <div class="form-control flex flex-row">
+                        <label class="label w-[30%]">
+                          <span class="label-text capitalize text-xs">Name</span>
+                        </label>
+                        <input disabled type="name" data-key="name" placeholder="Name" class="input input-bordered w-[70%] inp_data h-10" value="{{client.user.name}}" required />
+                      </div>
+                      <div class="form-control flex flex-row">
+                        <label class="label w-[30%]">
+                          <span class="label-text capitalize text-xs">Contact Number</span>
+                        </label>
+                        <input disabled type="name" data-key="contact_number" placeholder="Contact Number" class="input input-bordered w-[70%] inp_data h-10" value="{{client.user.contact_number}}" required />
+                      </div>
+                      <div class="form-control flex flex-row">
+                        <label class="label w-[30%]">
+                          <span class="label-text capitalize text-xs">email</span>
+                        </label>
+                        <input disabled type="name" data-key="email" placeholder="" class="input input-bordered w-[70%] inp_data h-10" value="{{client.user.email}}" required />
+                      </div>
+                    {% endif %}
+                  {% comment %} {% endfor %} {% endcomment %}
+        
+                </form>
+              <div>
+
+            </div>
+          </div>
+
+          <div class="flex justify-center my-2">
+            <button type="button" class="update hidden py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Update</button>
+            {% comment %} <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-white/10 dark:hover:bg-white/20 dark:text-white dark:hover:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Cancle</button> {% endcomment %}
+          </div>
+
+          <script>
+
+
+            const update = document.querySelector('.update');
+            update.addEventListener('click', ()=>{
+              addLoader()
+              const inp_data = document.querySelectorAll('.inp_data')
+              let formData = new FormData()
+
+              const profile = document.querySelector('.update_profile_picture');
+              formData.append('profile_picture', profile.files[0])
+          
+                // let token = localStorage.getItem('token')
+                // if (token){
+                    (async function rlUpl(){
+                      let url = "{% url 'update_user_profile_picture' user_id=request.user.id %}";
+                        let a = await fetch(url, {method: 'PUT', headers:{ 'Authorization': `Bearer ${getCookies().access}`}, body: formData})
+                        a = await a.json()
+                        if (a && a.status === 200){
+                          removeLoader()
+                            // const popup = document.querySelector('.popup');
+                            // popup.remove()
+                            poperFunction(a.status,a.message,true)
+                          }  else {
+                            removeLoader()
+                            poperFunction(a.status,a.message,true)
+                        } 
+                    }())
+                  //}
+            })
+
+
+
+
+
+            const update_profile_picture = document.querySelector('.update_profile_picture');
+            update_profile_picture.addEventListener('change', ()=>{
+              const update = document.querySelector('.update');
+              update.classList.remove('hidden')
+            })
+
+
+
+            const profile = document.querySelector('.profile');
+            profile.addEventListener('click', ()=>{
+              const update_profile_picture = document.querySelector('.update_profile_picture');
+              // console.log('working', update_profile_picture)
+              //update_booking_status.addEventListener('click',()=>{
+              //  const profile_div = document.querySelector('.profile_div');
+              //  console.log('profile_div',profile_div)
+              //})
+
+              // const update_profile_picture = document.querySelector('.update_profile_picture');
+              // console.log('update_profile_picture',update_profile_picture)
+              // update_booking_status.addEventListener('click',()=>{
+              //   const profile_div = document.querySelector('.profile_div');
+              //   console.log('profile_div',profile_div) // })
+
+              update_profile_picture.click()
+              update_profile_picture.addEventListener('change',()=>{
+                let bloburl = URL.createObjectURL(update_profile_picture.files[0])
+                const profile_div = document.querySelector('.profile_div');
+                profile_div_class_string = profile_div.classList.value.split(' ')
+                profile_div_class_string.forEach((e,i)=>{
+                  if (e.includes('bg-[')){
+                    profile_div_class_string[i] = `bg-[url('${bloburl}')]`
+                  }
+                })
+
+                profile_div.classList.value = profile_div_class_string.join(' ')
+
+                {% comment %} const a = profile_div.classList.value.indexOf("bg-[");
+                const b = profile_div.classList.value.indexOf("]", a); {% endcomment %}
+                {% comment %} console.log(a,b ,profile_div.classList.value.splice(a,b,`bg-[url(${bloburl})]`) ) {% endcomment %}
+                {% comment %} profile.src = bloburl {% endcomment %}
+              })
+            })
+
+          </script>
+  
+
+{% endwith %}
+
+{% endblock  %}

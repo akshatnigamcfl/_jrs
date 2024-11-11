@@ -1,0 +1,215 @@
+{% extends "layout/layout.html" %}
+
+
+{% block main_body %}
+
+{% load poll_extras %}
+{% load static %}
+
+{% comment %} <div class="w-full h-auto overflow-hidden p-2"> {% endcomment %}
+
+  {% comment %} <div class='w-full h-auto flex justify-between flex-col my-4'> {% endcomment %}
+    {% comment %} {% for key, value in data.items %}
+      {% if key != 'id' and key != 'profile' %}
+      <span class="w-full h-12 min-w-[350px] p-1 flex justify-start items-center flex-wrap"><span class="w-1/4 h-full flex items-center capitalize">{{ key }}</span><input class="inp_data rounded-xl w-3/4 h-full px-2" data-key="{{key}}" type="{% if 'date' in key %}date{% else %}text{% endif %}" value="{% if value is None %}{% else %}{{value}}{% endif %}"></span>
+      {% endif %}
+    {% endfor %} {% endcomment %}
+  {% comment %} </div> {% endcomment %}
+
+<script src="{% static "assets/js/number_with_commas.js" %}"></script>
+<script src="{% static "assets/js/cookies.js" %}"></script>
+<script src="{% static "assets/js/poper.js" %}"></script>
+
+{% comment %} <div class="flex justify-center p-2">
+  <div role="tablist" class="tabs tabs-bordered w-2/4">
+    <a role="tab" name="info" class="booking_info_tab tab tab-active">Info</a>
+    <a role="tab" name="booking" class="booking_info_tab tab">Booking</a>
+    <a role="tab" name="payment" class="booking_info_tab tab">Payment</a>
+  </div>
+</div> {% endcomment %}
+
+<div class="hero bg-base-200 w-full">
+    <div class="hero-content flex flex-col w-full">
+
+
+      {% comment %} <div class="text-center lg:text-left"> {% endcomment %}
+        {% comment %} <h1 class="text-5xl font-bold">Get a Call back!</h1> {% endcomment %}
+        {% comment %} <p class="py-6">Fill up the details to get a call back, or contact us <a class="text-blue-500 underline hover:text-blue-900" href="#">here</a>.</p> {% endcomment %}
+      {% comment %} </div> {% endcomment %}
+
+      {% if data != 'no data' %}
+
+
+      <div class="card shrink-0 shadow-2xl bg-base-100 w-full">
+        <div class="card-body info booking_tabs">
+
+            {% if booking.review == None %}
+
+              <div class="flex flex-col items-center">
+                <div class="capitalize text-xl font-bold text-center my-3">share your experience</div>
+                {% comment %} <textarea class="capitalize h-32 w-96 border"></textarea> {% endcomment %}
+                <div class="flex flex-col my-2 w-96">
+                  <span class="text-slate-700 w-full my-2">Give your review a title</span>
+                  <div class="flex border w-full flex justify-center items-center bg-slate-50 rounded-lg h-12">
+                    <div class="rating rating-2xl my-2">
+                      <input type="radio" name="rating-2" class="mask mask-star-2 mx-0.5 bg-orange-400" />
+                      <input type="radio" name="rating-2" class="mask mask-star-2 mx-0.5 bg-orange-400" />
+                      <input type="radio" name="rating-2" class="mask mask-star-2 mx-0.5 bg-orange-400" />
+                      <input type="radio" name="rating-2" class="mask mask-star-2 mx-0.5 bg-orange-400" />
+                      <input type="radio" name="rating-2" class="mask mask-star-2 mx-0.5 bg-orange-400" checked="checked" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="flex flex-col my-2 w-96">
+                  <span class="text-slate-700 w-full my-2">Give your review a title</span>
+                  <input type="text" data-key="title" placeholder="Give your review a title" class="input inp_data w-full input-bordered w-full text-sm h-12" value="{% if not booking.review == None %}{{booking.review.title}}{% endif %}" />
+                  <span class="text-xs text-slate-500 w-full px-2">(max 50 characters)</span>
+                </div>
+
+                <div class="flex flex-col my-2 w-96">
+                  <span class="text-slate-700 w-full my-2">Write your review here</span>
+                  <textarea data-key="content" class="textarea inp_data textarea-bordered w-full h-32 text-sm resize-none" placeholder="Write a review here">{% if not booking.review == None %}{{booking.review.content}}{% endif %}</textarea>
+                  <span class="text-xs text-slate-500 w-full px-2">(max 1000 characters)</span>
+                </div>
+              </div>
+
+              <div class="flex justify-center">
+                <button type="button" class="submit py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 select-none">Submit Review</button>
+                {% comment %} <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-white/10 dark:hover:bg-white/20 dark:text-white dark:hover:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Cancle</button> {% endcomment %}
+              </div>
+
+              {% else %}
+                <a href="{% url "client_bookings" %}"><div class="text-xs">Go back</div></a>
+
+                <div class="flex justify-center select-none my-1"><img class="w-10" src="{% static "assets/gif/confirmed1.gif" %}"></div>
+
+                <div class="text-center select-none">We are glad to receive your feedback</div>
+                <div class="text-center select-none">Thank you!</div>
+              {% endif %}
+
+          </div>
+        </div>
+
+        <script>
+
+
+          const inp_data = document.querySelectorAll('.inp_data')
+          inp_data.forEach(e=>{
+            e.addEventListener('blur',()=>{
+              let limit;
+              if (e.getAttribute('data-key') === 'content') {
+                limit = 1000
+              } else if(e.getAttribute('data-key') === 'title') {
+                limit = 50
+                
+              }
+
+              if (e.value.length>limit){
+                e.classList.add('outline')
+                e.classList.add('outline-red-500')
+              }
+
+            })
+          })
+
+
+          const submit = document.querySelector('.submit');
+          submit.addEventListener('click', ()=>{
+            let data = new FormData()
+      
+            const inp_data = document.querySelectorAll('.inp_data')
+            inp_data.forEach(e=>{
+              data.append(e.getAttribute('data-key').replaceAll(' ', '_'), e.value.toLocaleLowerCase())
+            })
+      
+            const rating = document.querySelector('.rating');
+            Array.from(rating.children).forEach((e,i)=>{
+              if (e.checked){
+                data.append('ratings', i+1)
+              }
+            })
+      
+            (async function rlUpl(){
+                let a = await fetch('{% url "create_reviews" booking_id=0 %}'.replaceAll('0', {{booking.id}}) , {method: 'POST', headers: { 'Authorization': `Bearer ${getCookies().access}` }, body: data})
+                a = await a.json()  
+                console.log('a.message'. a.message)
+                if (a){
+                    poperFunction(a.status, a.message, a.status===200?true:false)
+                }
+            }())
+      
+          })
+        </script>
+
+
+      {% else %}
+        <span class="capitalize font-bold text-lg">no user found</span>
+      {% endif %}
+
+    </div>
+  </div>
+
+{% comment %} </div> {% endcomment %}
+
+
+
+
+
+{% comment %} <div class=" min-h-[calc(100vh / 2)] bg-base-200"> {% endcomment %}
+    {% comment %} <div id="crew-1" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Shubham Nigam</h2>
+          <p class="crew_designation my-1">Cinematic Videographer</p>
+          <p class="crew_short_description my-1">This is the short description of the crew member. Keep it short</p>
+
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-2" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body w-20">
+          <h2 class="card-title">Jayesh Nigam</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-3" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Person three</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-4" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Person Four</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div> {% endcomment %}
+{% comment %} </div> {% endcomment %}
+
+
+{% comment %} <div class="relative w-full h-96"> {% endcomment %}
+  {% comment %} <iframe class="absolute top-0 left-0 w-full h-full"
+      src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12080.73732861526!2d-74.0059418!3d40.7127847!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM40zMDA2JzEwLjAiTiA3NMKwMjUnMzcuNyJX!5e0!3m2!1sen!2sus!4v1648482801994!5m2!1sen!2sus"
+      frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0">
+  </iframe> {% endcomment %}
+
+  {% comment %} <iframe width="600" height="450" style="border:0" loading="lazy" allowfullscreen
+src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJOV1-ngP-YjkRTL2CB41sJso&key=..."></iframe>
+</div> {% endcomment %}
+
+
+
+
+
+{% endblock  %}

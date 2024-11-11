@@ -1,0 +1,286 @@
+{% extends "layout/layout.html" %}
+
+
+{% block main_body %}
+
+{% load poll_extras %}
+{% load static %}
+
+{% comment %} <div class="w-full h-auto overflow-hidden p-2"> {% endcomment %}
+
+  {% comment %} <div class='w-full h-auto flex justify-between flex-col my-4'> {% endcomment %}
+    {% comment %} {% for key, value in data.items %}
+      {% if key != 'id' and key != 'profile' %}
+      <span class="w-full h-12 min-w-[350px] p-1 flex justify-start items-center flex-wrap"><span class="w-1/4 h-full flex items-center capitalize">{{ key }}</span><input class="inp_data rounded-xl w-3/4 h-full px-2" data-key="{{key}}" type="{% if 'date' in key %}date{% else %}text{% endif %}" value="{% if value is None %}{% else %}{{value}}{% endif %}"></span>
+      {% endif %}
+    {% endfor %} {% endcomment %}
+  {% comment %} </div> {% endcomment %}
+
+<script src="{% static "assets/js/number_with_commas.js" %}"></script>
+<script src="{% static "assets/js/cookies.js" %}"></script>
+<script src="{% static "assets/js/poper.js" %}"></script>
+
+<div class="flex justify-center p-2">
+  <div role="tablist" class="tabs tabs-bordered w-2/4">
+    <a role="tab" name="info" class="booking_info_tab tab tab-active">Info</a>
+    <a role="tab" name="booking" class="booking_info_tab tab">Booking</a>
+    <a role="tab" name="payment" class="booking_info_tab tab">Payment</a>
+  </div>
+</div>
+
+
+<div class="hero bg-base-200 w-full">
+    <div class="hero-content flex flex-col w-full">
+      {% comment %} <div class="text-center lg:text-left"> {% endcomment %}
+        {% comment %} <h1 class="text-5xl font-bold">Get a Call back!</h1> {% endcomment %}
+        {% comment %} <p class="py-6">Fill up the details to get a call back, or contact us <a class="text-blue-500 underline hover:text-blue-900" href="#">here</a>.</p> {% endcomment %}
+      {% comment %} </div> {% endcomment %}
+
+      {% if data != 'no data' %}
+
+      <div class="card shrink-0 shadow-2xl bg-base-100 w-full">
+        <form class="card-body info booking_tabs">
+
+          {% comment %} <div class="h-auto w-full flex justify-center items-center p-2 flex-col">
+            <div class="relative w-24 h-24 rounded-full bg-[url('/static/{{client.user.profile_picture}}')] bg-cover bg-center overflow-hidden border">
+              <div class="profile absolute bottom-0 left-0 w-full h-full bg-slate-900 text-slate-100 text-xs flex justify-center items-center opacity-0 hover:opacity-80 duration-300 cursor-pointer">update picture</div>
+            </div>
+            <input class="update_profile_picture hidden" data-key="{{key}}" type="file">
+            <span class="capitalize">{{data.name}}</span>
+          </div> {% endcomment %}
+
+          {%for k,v in data.items%}
+          <div class="form-control flex flex-row">
+            {% if k != 'id'  %}
+              <label class="label w-[30%]">
+                <span class="label-text capitalize text-xs">{{k|customreplacespace:'_'}}</span>
+              </label>
+            {% endif %}
+            {% if k == 'wedding_date' or k == 'groom_date_of_birth' or k == 'bride_date_of_birth' %}
+              <input {% if booking.first.booking_status.title != 'in progress' %}disabled{% endif %}  type="date" data-key="{{k}}" placeholder="{{k|customreplacespace:'_'}}" class="input input-bordered w-[70%] inp_data h-10" value="{{v}}" required />
+              {% elif k != 'id' %}
+              <input {% if booking.first.booking_status.title != 'in progress' %}disabled{% endif %} type="name" data-key="{{k}}" placeholder="{{k|customreplacespace:'_'}}" class="input input-bordered w-[70%] inp_data h-10" value="{% if v != None %}{{v}}{% endif %}" required />
+            {% endif %}
+            </div>
+          {% endfor %}
+
+          <div class="flex justify-center">
+            <button type="button" class="save py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Update</button>
+            <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-white/10 dark:hover:bg-white/20 dark:text-white dark:hover:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Cancle</button>
+          </div>
+          
+          {% comment %} <div class="form-control flex flex-row">
+            <label class="label w-1/4">
+              <span class="label-text">Contact Number</span>
+            </label>
+            <input type="text" placeholder="text" class="input input-bordered w-3/4" required />
+          </div>
+          <div class="form-control flex flex-row">
+            <label class="label w-1/4">
+              <span class="label-text">Email id</span>
+            </label>
+            <input type="email" placeholder="Email Id" class="input input-bordered w-3/4" required />
+          </div>
+          <div class="form-control flex flex-row">
+            <label class="label w-1/4">
+              <span class="label-text">Wedding Date</span>
+            </label>
+            <input type="date" placeholder="Wedding Date" class="input input-bordered w-3/4" required />
+          </div>
+          <div class="form-control mt-6">
+            <button class="btn btn-primary">Submit</button>
+          </div> {% endcomment %}
+        </form>
+
+        <div class="booking_tabs hidden p-6">
+
+          {% for t in title_list %}
+            {% for key,value in t.items %}
+                <div class='w-full h-auto flex justify-between flex-col'>
+                  <div class="my-2 border-b">
+                  <span class="p-1 text-sm font-medium capitalize">{{key}}</span>
+                  {% for v in value %}
+                    <div class="flex justify-start md:min-w-[350px] my-2">
+                      <div class="md:w-1/4 px-1 w-36 text-xs capitalize">
+                        {{v}}
+                      </div>
+                      <div class="md:w-3/4">
+                        <div id="selected_package_cont" class="relative w-auto h-full flex items-center">
+                          {% comment %} {% if key == 'package info' %} {% endcomment %}
+                            {% if v == 'package' %}
+                              <span id="selected_package" class="text-xs capitalize">{{booking.first.package}}</span>
+                            {% elif v == 'price' %}
+                              <span id="additional_price" class="text-xs capitalize"></span>
+                              <script>
+                                const additional_price = document.querySelector('#additional_price');
+                                additional_price.innerText =  {% if booking.first.package %}numberWithCommas({{booking|bookingTotalPriceObject}}){% else %}'None'{% endif %}
+                              </script>
+                            {% endif %}
+                          {% comment %} {% endif %} {% endcomment %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                  </div>
+                </div>
+                <script>
+
+                </script>
+
+            {% endfor %}
+          {% endfor %}
+
+
+
+        </div>
+
+        <div class=" booking_tabs hidden">
+          <div class="bg-white my-4 rounded-2xl">
+            <table class="table table-zebra">
+              <!-- head -->
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Payment Date</th>
+                  <th>Amount</th>
+                  <th>Mode</th>
+                  <th>Booking</th>
+                </tr>
+              </thead>
+              <tbody>
+  
+                {% for p in payment %}
+                  <tr>
+                    <th>{{forloop.counter}}</th>
+                    <td>{{p.date}}</td>
+                    <td>{{p.amount}}</td>
+                    <td>{{p.payment_mode}}</td>
+                    <td class="capitalize">{{p.booking.groom_name}} & {{p.booking.bride_name}}</td>
+                  </tr>
+                {% endfor %}
+  
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+      {% else %}
+        <span class="capitalize font-bold text-lg">no user found</span>
+      {% endif %}
+
+    </div>
+  </div>
+
+
+  <script>
+
+    const booking_info_tab = document.querySelectorAll('.booking_info_tab');
+    const booking_tabs = document.querySelectorAll('.booking_tabs');
+    booking_info_tab.forEach((e,i)=>{
+      e.addEventListener('click',()=>{
+        booking_info_tab.forEach((e,i)=>{
+          e.classList.remove('tab-active')
+          booking_tabs[i].classList.add('hidden')
+        })
+        e.classList.add('tab-active')
+
+        booking_tabs[i].classList.remove('hidden')
+
+      })
+    })
+
+    const save = document.querySelector('.save');
+    save.addEventListener('click', ()=>{
+      const inp_data = document.querySelectorAll('.inp_data')
+      let formData = new FormData()
+      inp_data.forEach(e=>{
+        //  result = formValidation()
+        formData.append(e.getAttribute('data-key').replaceAll(' ', '_'), e.value.toLocaleLowerCase());
+      })
+        // const profile = document.querySelector('.update_profile_picture');
+        // formData.append('profile', profile.files[0])
+        
+        // let token = localStorage.getItem('token')
+      // console.log('token', token)
+        //if (token){
+        console.log(getCookies().access)
+            (async function rlUpl(){
+                let a = await fetch('{% url "edit_booking_user_edit" booking_id=data.id %}', {method: 'PUT', headers: { 'Authorization': `Bearer ${getCookies().access}` }, body: formData})
+                a = await a.json()  
+                if (a){
+                    poperFunction(a.status, a.message, a.status===200?true:false)
+                }
+            }())
+          // }
+    })
+    // const profile = document.querySelector('.profile');
+    // profile.addEventListener('click', ()=>{
+    //   const update_profile_picture = document.querySelector('.update_profile_picture');
+    //   update_profile_picture.click()
+    // })
+  </script>
+
+{% comment %} </div> {% endcomment %}
+
+
+
+
+
+{% comment %} <div class=" min-h-[calc(100vh / 2)] bg-base-200"> {% endcomment %}
+    {% comment %} <div id="crew-1" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Shubham Nigam</h2>
+          <p class="crew_designation my-1">Cinematic Videographer</p>
+          <p class="crew_short_description my-1">This is the short description of the crew member. Keep it short</p>
+
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-2" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body w-20">
+          <h2 class="card-title">Jayesh Nigam</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-3" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Person three</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-4" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Person Four</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div> {% endcomment %}
+{% comment %} </div> {% endcomment %}
+
+
+{% comment %} <div class="relative w-full h-96"> {% endcomment %}
+  {% comment %} <iframe class="absolute top-0 left-0 w-full h-full"
+      src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12080.73732861526!2d-74.0059418!3d40.7127847!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM40zMDA2JzEwLjAiTiA3NMKwMjUnMzcuNyJX!5e0!3m2!1sen!2sus!4v1648482801994!5m2!1sen!2sus"
+      frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0">
+  </iframe> {% endcomment %}
+
+  {% comment %} <iframe width="600" height="450" style="border:0" loading="lazy" allowfullscreen
+src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJOV1-ngP-YjkRTL2CB41sJso&key=..."></iframe>
+</div> {% endcomment %}
+
+
+
+
+
+{% endblock  %}

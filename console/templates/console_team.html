@@ -1,0 +1,775 @@
+{% extends "console-layout/layout.html" %}
+
+{% block page_title %}Team{{data.name}} {% endblock  %}
+
+{% block main_body %}
+{% load poll_extras %}
+
+{% comment %} {{token}} {% endcomment %}
+<script>
+  var popup_check=false;
+  var package_data;
+</script>
+<script src="/static/assets/js/number_with_commas.js"></script>
+
+
+{% with sec=request.GET.sec %}
+<div class="text-lg text-slate-900 border-b select-none w-full text-start p-2 flex justify-between">
+    <span>Team</span>
+    {% if sec == 'payments' %}
+    {% elif sec == 'members' %}
+      <button type="button" class="add_team_member_btn border py-1 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border text-gray-800 bg-white hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Add Member</button>
+    {% endif %}
+</div>
+{% endwith %}
+
+{% comment %} <div class="text-lg text-slate-900 border-b select-none w-full text-start p-2">Team</div> {% endcomment %}
+{% comment %} <div class="w-full h-[50px] flex items-center justify-end"> {% endcomment %}
+
+<div class="flex flex-col h-full bg-white w-full rounded-xl p-4 pb-0 mt-4">
+  <div class="-m-1.5 overflow-x-auto">
+    <div class="border-b-2 border-gray-200 dark:border-gray-700 shadow-md">
+      <nav>
+        {% comment %} {{request.GET.get(sec)}} {% endcomment %}
+        {% for r,v in request.GET.items %}
+          {% if r == 'sec' %}
+
+              {% with active='client_nav py-4 px-1 inline-flex items-center gap-2 border-b-2 border-blue-500 text-xs font-medium whitespace-nowrap text-blue-600 focus:outline-none focus:text-blue-800' inactive='client_nav py-4 px-1 inline-flex items-center gap-2 border-b-2 border-transparent text-xs whitespace-nowrap text-gray-500 hover:text-blue-600 focus:outline-none focus:text-blue-600' %}
+
+              <a class="{% if v == 'payments' %}{{active}}{% else %}{{inactive}}{% endif %}" data-status='inactive' name='payments' href="#" aria-current="page">
+                <img class="h-[20px] w-[20px]" src="/static/assets/images/icons/payments_gray.png">
+                Payments
+              </a>
+                <a class="{% if v == 'members' %}{{active}}{% else %}{{inactive}}{% endif %}" data-status='active' name='members' href="#">
+                  <img class="h-[20px] w-[20px]" src="/static/assets/images/icons/member_gray.png">
+                  Members
+                </a>
+
+ 
+              {% endwith %}
+
+        {% endif %}
+        {% endfor %}
+      </nav>
+    </div>
+
+    <script>
+      let url = window.location.search
+      url = new URLSearchParams(url)
+      if (!url.get('sec')){
+        url.set('sec','payments')
+        window.location.href = window.location.pathname+'?'+url.toString()
+      }
+    </script>
+
+    
+    <div class="main_container p-1.5 min-w-full inline-block align-middle">
+      {%for k,v in request.GET.items%}
+        {% if k == 'sec' %}
+          {% if v == 'payments' %}
+
+            <div>
+              <div class="flex flex-col w-44 rounded-xl border-b px-1">
+                <div class="overflow-x-auto h-full w-full">
+
+                  {% comment %} <div class="p-2 border-b w-full"> {% endcomment %}
+                    <select class="select_team_member p-1 rounded-md h-10 w-full capitalize text-xs">
+                      {% if not request.GET.team_mate%}
+                        <option value="null" disabled selected>Select Team Member</option>
+                      {% endif %}
+
+                      {% if data_indv != 'no data' and data_indv %}
+                        <option value={{data_indv.first.id}} disabled selected>{{data_indv.first.user.name}}</option>
+                      {% endif %}
+
+                      {% for d in data  %}
+                      <option value={{d.id}}>
+                        {{d.user.name}}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {% if request.GET.team_mate %}
+              
+              <div class="w-full flex items-center flex-col mb-10"  >
+                <span class="mb-2 text-md capitalize tracking-wide">{{data_indv.first.user.name}}</span>
+                <div class="stats bg-ghost text-primary-content border">  
+
+                  <div class="stat w-52 flex flex-col items-center">
+                    <div class="stat-title text-slate-600 text-sm">Remaining Balance</div>
+                    <div class="stat-value text-slate-700 text-2xl">&#8377; <span class="total_balance_dv"></span></div>
+                    <div class="stat-actions">
+                      <button class="add_funds btn btn-sm btn-success text-white">Add funds</button>
+                      {% comment %} <div class="w-40 h-12 bg-white border rounded-xl absolute"></div> {% endcomment %}
+                    </div>
+                  </div>
+                  
+                  <div class="stat w-52 flex flex-col items-center">
+                    <div class="stat-title text-slate-600 text-sm">Total Paid</div>
+                    <div class="stat-value text-slate-700 text-2xl">&#8377; <span class="total_paid_dv"></span></div>
+                    <div class="stat-actions">
+                      <button class="deposite btn btn-sm">Deposit</button>
+                      {% comment %} <button class="btn btn-sm">Withdrawal</button>  {% endcomment %}
+                    </div>
+                  </div>
+
+                  <div class="stat w-52 flex flex-col items-center">
+                    <div class="stat-title text-slate-600 text-sm">Total Funds</div>
+                    <div class="stat-value text-slate-700 text-2xl">&#8377; <span class="total_funds_dv"></span></div>
+                    <div class="stat-actions h-8">
+                      {% comment %} <button class="deposite btn btn-sm">Deposit</button> {% endcomment %}
+                      {% comment %} <button class="btn btn-sm"></button>  {% endcomment %}
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+
+              
+              <div role="tablist" class="tabs tabs-boxed w-60 bg-white">
+              {% with request.GET|length as dict_length %}
+
+                <a href="?tab=fund_history{% if dict_length > 0%}{% for k,v in request.GET.items %}{% if k != 'tab' %}&{{k}}={{v}}{% endif %}{% endfor %}{% endif %}" role="tab" class="tab text-xs {% if not request.GET.tab %}tab-active{% elif request.GET.tab == 'fund_history'  %}tab-active{% endif %}">Fund History</a>
+                <a href="?tab=payment_history{% if dict_length > 0%}{% for k,v in request.GET.items %}{% if k != 'tab' %}&{{k}}={{v}}{% endif %}{% endfor %}{% endif %}" role="tab" class="tab text-xs {% if request.GET.tab == 'payment_history' %}tab-active{% endif %}">Payment History</a>
+
+              {% endwith %}
+              </div>
+
+                <div class="my-4">
+                  <span class="mx-6 font-bold">{% if request.GET.tab == 'payment_history' %}Payment History{% elif request.GET.tab == 'fund_history' %}Fund History{% endif %}</span>
+                  <div class="overflow-x-auto my-4">
+                    <table class="table table-zebra bg-white text-xs">
+                      <!-- head -->
+                      <thead>
+                        <!-- row 1 -->
+
+                        {% if not request.GET.tab or request.GET.tab == 'fund_history' %}
+
+                          <tr>
+                            <th>Date</th>
+                            <th>Booking</th>
+                            <th>Title</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+
+                          <!-- row 2 -->
+                          {% for t in payment.fund_history %}
+                            <tr>
+                              <td>{{t.date}}</td>
+                              <td>{{t.booking}}</td>
+                              <td>{% if t.note %}{{t.note}}{% else %}-{% endif %}</td>
+                              <td>{{t.amount}}</td>
+                            </tr>
+                          {% endfor %}
+                        
+                        {% elif request.GET.tab == 'payment_history' %}
+
+                          <tr>
+                            <th>Date</th>
+                            <th>Title</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+
+
+                          {% for t in payment.payment_history %}
+                            <tr>
+                              <td>{{t.date}}</td>
+                              <td>{% if t.note %}{{t.note}}{% else %}-{% endif %}</td>
+                              <td>{{t.amount}}</td>
+                            </tr>
+                          {% endfor %}
+                        
+                        {% endif %}
+
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+            </div>
+
+
+              <script>
+
+                let total_paid = [
+                  {% for p in payment.payment_history %}{{p.amount}},
+                  {% endfor %}
+                ];
+                if (total_paid.length > 0){
+                  total_paid = total_paid.reduce((a, b) => a + b)
+                } else {
+                  total_paid = 0
+                }
+
+                let total_balance = [
+                  {% for p in payment.fund_history %}{{p.amount}},
+                  {% endfor %}
+                ];
+
+                if (total_balance.length > 0){
+                  total_balance = total_balance.reduce((a, b) => a + b)
+                } else {
+                  total_balance = 0
+                }
+
+                {% comment %} total_balance = total_balance.reduce((a, b) => a + b) {% endcomment %}
+
+                const total_funds_dv = document.querySelector('.total_funds_dv');
+                total_funds_dv.innerText = numberWithCommas(total_balance);
+
+                total_balance -=total_paid
+
+                const total_balance_dv = document.querySelector('.total_balance_dv');
+                const total_paid_dv = document.querySelector('.total_paid_dv');
+
+                total_balance_dv.innerText = numberWithCommas(total_balance);
+                total_paid_dv.innerText = numberWithCommas(total_paid);
+
+              </script>
+
+
+            {% endif %}
+
+          {% elif v == 'members' %}
+
+                {% comment %} <div class="w-full  h-[50px] flex items-center justify-end">
+                  <div>
+                      <button type="button" class="add_team_member_btn border py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                          Add Member
+                      </button>
+                  </div>
+                </div> {% endcomment %}
+
+                {% comment %} <div class="team_memberform h-0 w-full bg-slate-900"></div> {% endcomment %}
+
+                <div>
+                  <div class="flex flex-col w-full rounded-xl">
+                      <div class="my-1.5 overflow-x-auto w-full">
+                        <div class="py-1.5 min-w-full inline-block align-middle">
+                          <div class="overflow-hidden border p-2 py-3">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs">
+                              <thead>
+                                <tr>
+                                  <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Name</th>
+                                  <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Contact Number</th>
+                                  <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Email Id</th>
+                                  <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+
+                                
+                              {% if data != 'no data' %} {% for r in data %}
+                                <tr>
+                                  <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800 dark:text-gray-200">{{ r.user.name }}</td>
+                                  <td class="px-6 py-2 whitespace-nowrap text-gray-800 dark:text-gray-200">{{ r.user.contact_number }}</td>
+                                  <td class="px-6 py-2 whitespace-nowrap text-gray-800 dark:text-gray-200">{{ r.user.email }}</td>
+                                  {% comment %} <td class="px-6 py-2 whitespace-nowrap text-gray-800 dark:text-gray-200 flex"> </td> {% endcomment %}
+                                  <td class="px-6 py-2 whitespace-nowrap font-medium">
+                                    {% comment %} <button type="button" class="inline-flex items-center gap-x-2 font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"> {% endcomment %}
+                                      {% comment %} <button type="button" data-id={{r.id}} class=" py-2 px-2 w-16 flex justify-center items-center inline-flex items-center gap-x-2 font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Edit</button> {% endcomment %}
+                                      <span class="flex justify-center items-center">
+                                        <button data-id="{{r.id}}" class="edit btn btn-xs bg-blue-700 hover:bg-blue-900 duration-300 text-xs text-white">Edit</button>
+                                      {% if r.trash == False %}
+                                      <img class="delete_team_member h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-100 duration-300" data-id="{{r.id}}" src="/static/assets/images/icons/delete_gray.png" ></span>
+                                      {% comment %} <button  class=" btn btn-xs bg-red-700  text-white">Move to Trash</button> {% endcomment %}
+                                      {% comment %} <button type="button" data-id={{r.id}} class="py-2 px-2 w-16 flex justify-center items-center inline-flex items-center gap-x-2 font-semibold rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Delete</button> {% endcomment %}
+                                      {% elif r.trash == True %}
+                                        {% comment %} <span class="btn btn-xs bg-slate-300 text-white text-xs">In Trash</span> {% endcomment %}
+                                        <img class="h-6 w-6 opacity-25" data-id="{{r.id}}" src="/static/assets/images/icons/delete_gray.png" ></span>
+
+                                      {% endif %}
+                                  {% comment %} </button> {% endcomment %}
+                                  </td>
+                                </tr>
+                                {% endfor %}
+                              
+                                {% else %}
+                                <tr>
+                                  <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                                  {% comment %} <td class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-200 flex"> </td> {% endcomment %}
+                                  <td class="px-6 py-4 whitespace-nowrap text-end font-medium">
+                                    <button type="button" class="inline-flex items-center gap-x-2 font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">{{pages}}</button>
+                                  </td>
+                                </tr>
+                              
+                                {% endif %}
+
+                              </tbody>
+                            </table>
+                          
+                            <script src="/static/assets/js/popup_confirm.js"></script>
+                            <script src="/static/assets/js/fetch.js"></script>
+                          
+                            <script>
+                              const delete_team_member = document.querySelectorAll('.delete_team_member');
+                              if (delete_team_member.length > 0){
+                                delete_team_member.forEach(e=>{
+                                  e.addEventListener('click', (e)=>{
+                                    popupConfirmFun(e.target.getAttribute('data-id'), 'Archive Team Member!', 'Are you sure you want to move this user to trash?' ,null)
+                                  
+                                    const confirm = document.querySelector('.confirm');
+                                    confirm.addEventListener('click', async (e)=>{
+                                      // csrf = JSON.parse(localStorage.getItem('token'))
+                                      csrf = getCookies()
+                                      let url = '{% url "delete_team_member_admin" id=0 %}';
+                                      url = url.replaceAll(0,e.target.getAttribute('data-id'))
+
+                                      let a = await ftN(url, 'DELETE', {'Content-Type': 'application/json', 'Authorization': 'Bearer '+csrf.access}, JSON.stringify({'data': 'no data'}))
+                                      if (a.status == 200){
+                                      
+                                        // const popup = document.querySelector('.popup');
+                                        // popup.remove()
+                                        poperFunction(a.status, a.message, true); 
+                                      
+                                      } else {
+                                        poperFunction(a.status, a.message, false);
+                                      }
+                                    
+                                    })
+                                  
+                                  })
+                                })
+                              }
+                            
+                            
+                              const edit = document.querySelectorAll('.edit');
+                              edit.forEach(e=>{
+                                e.addEventListener('click', async (f)=>{
+                                  // let token = JSON.parse(localStorage.getItem('token')).access
+                                  let token = getCookies().access
+                                  let url = '{% url "get_team_member_indv_admin" id=0 %}';
+                                  url = url.replaceAll(0,f.target.getAttribute('data-id'))
+                                  console.log(url)
+                                    let a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': 'Bearer '+token})
+                                    if (a.status === 200){
+                                    
+                                      const ftData = a.data
+                                      let popup = await memberPopupFun('Update Member');
+                                      if (popup){
+
+                                        const title = document.querySelector('.title')
+                                        const contact_number = document.querySelector('.contact_number')
+                                        const email_id = document.querySelector('.email_id')
+                                        let trash_cont = document.querySelector('.trash_cont')
+                                        const skills = document.querySelectorAll('.skills')
+                                        if (trash_cont.checked){
+                                          trash_cont = true
+                                        } else {
+                                          trash_cont = false
+                                        }
+
+                                      
+                                        title.value = a.data.user.name;
+                                        contact_number.value = a.data.user.contact_number;
+                                        email_id.value = a.data.user.email;
+
+                                        skills.forEach(e=>{
+                                          a.data.skills.forEach(f=>{
+                                            if (Number(e.getAttribute('data-service-id')) === f){
+                                              e.checked = true
+                                            }
+                                          })
+                                        })
+
+                                        if (a.data.trash){
+                                          const trash_cont = document.querySelector('.trash_cont');
+                                          trash_cont.innerHTML = `
+                                            <span class="text-slate-900 text-xs w-[40%] text-start flex items-center">Trash</span><span class="w-[60%] flex justify-start"><input class="service_trash p-2 shadow-2xl rounded-md h-8 text-slate-900" type="checkbox" checked></span>
+                                          `
+                                        }
+                                      
+                                      
+
+                                        const submit = document.querySelector('.submit');
+
+                                        submit.addEventListener('click', async ()=>{
+                                          let url = '{% url "update_team_member_admin" id=0 %}'
+                                          url = url.replaceAll(0, f.target.getAttribute('data-id'))
+                                        
+                                          validateUploadForm()
+
+                                          let skills_list = []
+                                          skills.forEach(e=>{
+                                            if (e.checked){
+                                              skills_list.push(e.getAttribute('data-service-id'))
+                                            }
+                                          })
+
+                                          let a = await ftN(url, 'PUT', {'Content-Type': 'application/json','Authorization': 'Bearer '+token}, JSON.stringify({'name': title.value, 'contact_number': contact_number.value, 'email': email_id.value, 'trash': trash_cont, 'skills': skills_list }))
+                                          if (a.status == 200 ){
+                                            poperFunction(a.status, a.message, true)
+                                          } else {
+                                            poperFunction(a.status, a.message, false)
+                                          }  
+                                        })
+                                      }
+                                    
+                                    } else {
+                                      poperFunction(a.status, a.message, false)
+                                    }
+                                })
+                              })
+                            
+                            
+                            </script>
+                          
+                            {{data.num_pages}}
+
+                          {% if data != 'no data' %}
+                            {% include 'console-layout/pagination.html' with pages=data %}
+                          {% endif %} 
+                          
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  
+              </div>
+
+
+                        <script src="/static/assets/js/poper.js"></script>
+                        <script src="/static/assets/js/upload_team_member.js"></script>
+                      
+                        <script>
+                          function validateUploadForm(){
+                            let title = document.querySelector('.title');
+                            let contact_number = document.querySelector('.contact_number');
+                            let email_id = document.querySelector('.email_id');
+                            const error_message = document.querySelector('.error_message');
+                          
+                            function success(el, message){
+                                error_message.innerText = message
+                                if (el != 0) {
+                                    el.classList.remove('outline')
+                                    el.classList.remove('outline-1')
+                                    el.classList.remove('outline-red-600')
+                                    el.classList.remove('outline-offset-0')
+                                }
+                            }
+                            function failed(el, message){
+                                error_message.innerText = message
+                                if (el != 0) {
+                                    el.classList.add('outline')
+                                    el.classList.add('outline-1')
+                                    el.classList.add('outline-red-600')
+                                    el.classList.add('outline-offset-0')
+                                }
+                            }
+                          
+                            title.addEventListener('blur', ()=>{
+                                if (title.value.length < 1) {
+                                    failed(title, 'title should not be blank')
+                                } else {
+                                    success(title, '')
+                                }
+                            })
+                          
+                            contact_number.addEventListener('blur', ()=>{
+                                if (contact_number.value.length < 10) {
+                                    failed(contact_number, 'contact number should not be blank')
+                                } else {
+                                    success(contact_number, '')
+                                }
+                            })
+
+                            email_id.addEventListener('blur', ()=>{
+                              if (email_id.value.length < 1) {
+                                  failed(email_id, 'email id should not be blank')
+                              } else {
+                                  success(email_id, '')
+                              }
+                          })
+                          }
+                        
+                        </script>
+                        <script>
+                              const add_team_member_btn= document.querySelector('.add_team_member_btn');
+                              add_team_member_btn.addEventListener('click', async ()=>{
+                                  let popup = await memberPopupFun('Add Member')
+                                  if (popup){
+                                    console.log(popup)
+                                    validateUploadForm()
+                              
+                                  const submit = document.querySelector('.submit');
+                                  submit.addEventListener('click', ()=>{
+                                    
+                                    let title = document.querySelector('.title');
+                                    let contact_number = document.querySelector('.contact_number');
+                                    let email_id = document.querySelector('.email_id');
+                                    let skills_list = []
+                                    let skills = document.querySelectorAll('.skills');
+                                    skills.forEach(e=>{
+                                      if (e.checked){
+                                        skills_list.push(e.getAttribute('data-service-id'))
+                                      }
+                                    })
+
+                                        if(title.value.length > 0 && contact_number.value.length >= 10 && email_id.value.length > 0 ){
+                                              let token = getCookies()
+                                              if (token){
+                                                  (async function rlUpl(){
+                                                      let a = await fetch('{% url "add_team_member_admin" %}', {method: 'POST', headers:{ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+ token.access}, body: JSON.stringify({'name': title.value, 'contact_number': contact_number.value, 'email': email_id.value, 'skills': skills_list })})
+                                                      a = await a.json()
+                                                      if (a && a.status === 200){
+                                                          const popup = document.querySelector('.popup');
+                                                          popup.remove()
+                                                          poperFunction(a.status, a.message, true);
+                                                      } else {
+                                                        poperFunction(a.status, a.message, false)
+                                                      }
+                                                  }())
+                                              }
+                                          } else {
+                                              failed(0, 'something went wrong, no issue at the server\'s end')
+                                          }
+                                  })
+                                }
+                              })
+                            
+                        </script>
+
+  
+
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+          <script src="/static/assets/js/team_add_fund.js"></script>
+          <script src="/static/assets/js/fetch.js"></script>
+          <script src="/static/assets/js/poper.js"></script>
+
+              <script>
+                const client_nav = document.querySelectorAll('.client_nav');
+                client_nav.forEach(e=>{
+                  e.addEventListener('click', ()=>{
+                    client_nav.forEach(f=>{
+                      if (f.getAttribute('data-status') ==='active'){
+                        f.classList.value = 'py-4 px-1 inline-flex items-center gap-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-blue-600 focus:outline-none focus:text-blue-600';  
+                        f.setAttribute('data-status','inactive');
+                      };
+                    })
+                    e.classList.value = 'py-4 px-1 inline-flex items-center gap-2 border-b-2 border-blue-500 text-sm font-medium whitespace-nowrap text-blue-600 focus:outline-none focus:text-blue-800';
+                    e.setAttribute('data-status','active');
+                    let url = window.location.search
+                    url = new URLSearchParams(url);
+                    console.log('url', e.name)
+                    url.set('sec', e.name);
+                    console.log(url.toString())
+                    window.location.href = window.location.pathname+'?'+url.toString()
+                  })
+                })
+
+
+                const select_team_member = document.querySelector('.select_team_member');
+                if (select_team_member){
+                  select_team_member.addEventListener('change',()=>{
+                    let url = window.location.search
+                    url = new URLSearchParams(url);
+                    console.log('url', select_team_member.value)
+                    url.set('team_mate', select_team_member.value);
+                    console.log(url.toString())
+                    window.location.href = window.location.pathname+'?'+url.toString()   
+                  })
+                }
+                  
+                const add_funds = document.querySelector('.add_funds');
+                const deposite = document.querySelector('.deposite');
+
+                if (add_funds){ 
+                  add_funds.addEventListener('click',()=>{
+                    teamAddFund('add fund')
+                  
+
+                    const booking = document.querySelector('.booking');
+                    booking.addEventListener('input', async()=>{
+                      let token = getCookies().access
+                      let url = '{% url "get_booking_ajax" %}'
+                      let a = await ftN(url, 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'booking': booking.value}))
+
+                      const ajax_res = document.querySelector('.ajax_res');
+
+                        if (booking.value === ''){
+                          ajax_res.remove()
+                        }
+
+                        if (!ajax_res){
+                          const booking_main_div = document.querySelector('.booking_main_div')
+                          const div = document.createElement('div');
+                          div.setAttribute('class', 'ajax_res bg-white w-96 h-56 absolute top-[40px] shadow-2xl border rounded-lg')
+                          div.innerHTML = `
+                            <ul class="w-full h-full booking_list_ajax overflow-y-scroll">
+                            </ul>
+                          `
+                          booking_main_div.append(div)
+                        }
+
+
+                        if (a && a.data){
+                          if ( a.data.length ===0 ){
+                            ajax_res.remove()
+                          } else{
+
+                            const booking_list_ajax = document.querySelector('.booking_list_ajax');
+                            booking_list_ajax.innerText='';
+
+                            a.data.forEach(e=>{
+                              const li = document.createElement('li')
+                              li.setAttribute('class', 'w-full h-12 border flex hover:bg-sky-600 hover:text-white duration-200 flex items-center px-4')
+                              li.setAttribute('data-booking-id', e.id)
+                              li.setAttribute('data-booking-name', e.name)
+                              li.innerHTML = `<div class="w-[40%]">${e.date}</div><div class="w-[60%] capitalize">${e.name}</div>`
+                              booking_list_ajax.append(li)
+
+                              li.addEventListener('click', ()=>{
+                                SelectBookingAjaxFun(li, e.id, e.name)
+                              })
+                            })
+                          }
+                          }
+
+                          function SelectBookingAjaxFun(e, id, name) {
+                            const booking_id = document.querySelector('.booking_id');
+                            booking_id.value=id
+
+                            const booking = document.querySelector('.booking');
+                            booking.value = name
+
+                            const ajax_res = document.querySelector('.ajax_res');
+                            ajax_res.remove()
+
+                          }
+                        
+                    })
+
+
+
+                    const save = document.querySelector('.save');
+                    save.addEventListener('click', async()=>{
+
+                      const amount = document.querySelector('.amount')
+                      const booking_id = document.querySelector('.booking_id')
+                      const notes = document.querySelector('.notes')
+
+                      if (amount.value ==='' || Number(amount.value) === 0){
+                        amount.classList.add('border-2')
+                        amount.classList.add('border-[#fc0324]')
+                      } else {
+
+                        let data = {}
+                        if (booking.value !== ''){
+                          if (booking_id.value !== ''){
+                            data['booking_id'] = (booking.value)
+                          }
+                        }
+                        if (notes.value !== ''){
+                          data['notes'] = notes.value
+                        }
+
+                        team_mate_id = {% if request.GET.team_mate %}{{request.GET.team_mate}}{% else %}null{% endif %}
+
+                        let token = getCookies().access
+                        let a = await ftN('{% url "team_add_fund" %}', 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'amount': Number(amount.value), 'booking_id': Number(booking_id.value), 'notes': notes.value, 'team_mate_id': Number(team_mate_id) }))
+                        if (a.status === 200){
+                          poperFunction(a.status, a.message, true)
+                          console.log(a.data)
+                        }  else {
+                          poperFunction(a.status, a.message, false)
+                        }
+
+                      }
+
+                    })
+                  })
+                }
+
+                if (deposite){
+                  deposite.addEventListener('click',()=>{
+                    teamAddFund('deposite')
+                    const booking_main_div = document.querySelector('.booking_main_div');
+                    booking_main_div.classList.add('hidden')
+
+                    {% comment %} const team_deposite = document.querySelector('.team_deposite'); {% endcomment %}
+
+
+                    const save = document.querySelector('.save');
+                    save.addEventListener('click', async()=>{
+
+                      const amount = document.querySelector('.amount')
+                      const notes = document.querySelector('.notes')
+
+                      if (amount.value ==='' || Number(amount.value) === 0){
+                        amount.classList.add('border-2')
+                        amount.classList.add('border-[#fc0324]')
+                      } else {
+
+                        let data = {}
+                      
+                        if (notes.value !== ''){
+                          data['notes'] = notes.value
+                        }
+
+                        team_mate_id = {% if request.GET.team_mate %}{{request.GET.team_mate}}{% else %}null{% endif %}
+
+
+                        let token = getCookies().access
+                        let a = await ftN('{% url "team_deposite" %}', 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'amount': Number(amount.value), 'notes': notes.value, 'team_mate_id': team_mate_id }))
+                        if (a.status === 200){
+                          poperFunction(a.status , a.message, true)
+                          console.log(a.data)
+                        } else {
+                          poperFunction(a.status , a.message, false)
+                        }
+
+                      }
+
+                    })
+                  })
+                }
+              </script>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+  {% comment %} <div>
+    <div class="flex flex-col  bg-slate-100 rounded-xl p-4 mt-4">
+      <div class="-m-1.5 overflow-x-auto">
+        <div class="p-1.5 min-w-full inline-block align-middle">
+          <div class="w-full h-auto overflow-hidden p-2">
+            <div class='w-full h-auto bg-slate-400 flex justify-between items-center flex-wrap'>
+              {% for key, value in data.items %}
+              <span class="w-2/4 h-12 min-w-[350px] p-1 flex justify-start items-center flex-wrap"><span class="w-2/4 h-full flex items-center capitalize">{{ key }}</span><input class="rounded-xl w-2/4 h-full px-2" type='text' value="{{value}}" placeholder="name"></span>
+              {% endfor %}
+              
+          </div>
+        </div>
+      </div>
+  </div> {% endcomment %}
+
+
+
+{% comment %} </div> {% endcomment %}
+
+
+  
+  
+{% endblock  %}
+  
+  

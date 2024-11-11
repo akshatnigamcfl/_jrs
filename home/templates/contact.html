@@ -1,0 +1,166 @@
+{% extends "layout/layout.html" %}
+
+
+{% block main_body %}
+
+{% load static %}
+
+<script src="{% static "assets/js/cookies.js" %}"></script>
+
+<div class="hero bg-base-200 p-10">
+    <div class="hero-content flex-col lg:flex-row-reverse">
+      <div class="text-center lg:text-left">
+        <h1 class="text-5xl font-bold">Get a Call back!</h1>
+        <p class="py-6">Fill up the details to get a call back, or contact us <a class="text-blue-500 underline hover:text-blue-900" href="#">here</a>.</p>
+      </div>
+      <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+        <form class="card-body">
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Name</span>
+            </label>
+            <input type="name" placeholder="Name" class="name input input-bordered" required />
+          </div>
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Contact Number</span>
+            </label>
+            <input type="number" placeholder="Contact Number" class="contact_number input input-bordered" required />
+          </div>
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Email</span>
+            </label>
+            <input type="email" placeholder="Email" class="email input input-bordered" required />
+          </div>
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Wedding Date</span>
+            </label>
+            <input type="date" placeholder="Wedding Date" class="wedding_date input input-bordered" required />
+          </div>
+          <div class="form-control mt-6">
+            <button class="btn btn-primary submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="/static/assets/js/fetch.js"></script>
+  <script src="/static/assets/js/poper.js"></script>
+
+  <script>
+
+    const name = document.querySelector('.name')
+    const contact_number = document.querySelector('.contact_number')
+    const email = document.querySelector('.email')
+    const wedding_date = document.querySelector('.wedding_date')
+    const submit = document.querySelector('.submit')
+
+
+
+
+    submit.addEventListener('click', async (e)=>{
+      e.preventDefault()
+
+      function formValidation(){
+        if (name.value === ''){
+          name.classList.add('border-2')
+          name.classList.add('border-[#ad0202]')
+        }
+
+        if (contact_number.value === ''){
+          contact_number.classList.add('border-2')
+          contact_number.classList.add('border-[#ad0202]')
+        }
+
+        if (email.value === ''){
+          email.classList.add('border-2')
+          email.classList.add('border-[#ad0202]')
+        }
+
+        if (wedding_date.value === ''){
+          wedding_date.classList.add('border-2')
+          wedding_date.classList.add('border-[#ad0202]')
+        }
+      }
+      
+      if (name.value !== '' && contact_number.value !== '' && email.value !== '' && wedding_date.value !== ''){
+        let a = await ftN('{% url "create_walkin_client" %}', "POST", {'Content-Type': 'application/json', 'Authorization': `Bearer ${getCookies().access}` }, JSON.stringify({'name': name.value, 'contact_number': contact_number.value, 'email': email.value, 'wedding_date': wedding_date.value}))
+        console.log(a)
+        if (a.status === 200){
+          
+          console.log('if working')
+          poperFunction(a.status, a.message, true)
+
+        } else {
+          console.log('else working')
+          poperFunction(a.status, a.message, false)
+        }
+      }
+    })
+
+  </script>
+
+
+
+
+{% comment %} <div class=" min-h-[calc(100vh / 2)] bg-base-200"> {% endcomment %}
+    {% comment %} <div id="crew-1" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Shubham Nigam</h2>
+          <p class="crew_designation my-1">Cinematic Videographer</p>
+          <p class="crew_short_description my-1">This is the short description of the crew member. Keep it short</p>
+
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-2" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body w-20">
+          <h2 class="card-title">Jayesh Nigam</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-3" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Person three</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-4" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Person Four</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div> {% endcomment %}
+{% comment %} </div> {% endcomment %}
+
+
+{% comment %} <div class="relative w-full h-96"> {% endcomment %}
+  {% comment %} <iframe class="absolute top-0 left-0 w-full h-full"
+      src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12080.73732861526!2d-74.0059418!3d40.7127847!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM40zMDA2JzEwLjAiTiA3NMKwMjUnMzcuNyJX!5e0!3m2!1sen!2sus!4v1648482801994!5m2!1sen!2sus"
+      frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0">
+  </iframe> {% endcomment %}
+
+  {% comment %} <iframe width="600" height="450" style="border:0" loading="lazy" allowfullscreen
+src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJOV1-ngP-YjkRTL2CB41sJso&key=..."></iframe>
+</div> {% endcomment %}
+
+
+
+
+
+{% endblock  %}

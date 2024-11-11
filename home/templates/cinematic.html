@@ -1,0 +1,618 @@
+{% extends "layout/layout.html" %}
+
+
+{% block main_body %}
+
+{% comment %} <script> {% endcomment %}
+    {% comment %} document.addEventListener('DOMContentLoaded', ()=>{ {% endcomment %}
+        {% comment %} let token = localStorage.getItem('token') {% endcomment %}
+        
+        {% comment %} window.addEventListener('touchmove',()=>{
+            var scrollYPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+
+            
+
+
+            fetch('http://192.168.0.112:8000/api/vp', {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify({height: window.innerHeight, width: window.innerWidth, scroll: window.screenTop })})
+        }) {% endcomment %}
+
+        {% comment %} window.addEventListener('scroll',()=>{
+            fetch('http://192.168.0.112:8000/api/vp', {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify({height: window.innerHeight * 10/100 , width: window.innerWidth, scroll: window})})
+        }) {% endcomment %}
+    {% comment %} }) {% endcomment %}
+        {% comment %} .then('res'=) {% endcomment %}
+{% comment %} </script> {% endcomment %}
+
+<div class="swiper box-border w-screen h-auto max-w-full sticky relative pt-2 z-50 " >
+    <div class="p-1 " style="height: calc(100% - 70px); width: calc(100% - 4px);">
+        <div class="prewedding_cards h-[95%] w-full opacity-0" style="animation: animate 1s ease-in-out 0.6s 1 forwards;">
+            <div class="flex justify-center items-center"><span class="text-2xl">Recommended</span></div>
+            <div id="swiper1" class=" swiper_container_2 swiper-instance1 p-3">
+                <div class="swiper-wrapper">
+
+                    {% for r in data %}
+                        <div class="swiper-slide s1_slide flex justify-center items-center h-[430px] ">
+                            <div class="card_on_hover rounded-2xl h-[400px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-[0_15px_60px_10px_rgba(0,0,0,0.3)] shadow-sm duration-500">
+                                <div class="card_image_on_hover h-[330px] w-[280px] duration-300  relative overflow-hidden">
+                                    {% comment %} <img class="h-full w-full" src="static/assets/images/card_7.webp"> {% endcomment %}
+                                    <div class="h-full w-full rounded-2xl bg-[url('/static/{{r.cover_picture}}')] bg-cover bg-center"></div>
+                                    <div class="pre_wedding_bg_filler h-full w-full rounded-2xl opacity-20 duration-300 bg-slate-900 absolute top-0 left-0"><span class="text-slate-100"></span></div>
+                                    <div class="pre_wedding_card_description h-2/4 w-full rounded-2xl duration-300 opacity-0  absolute top-[50%] left-0 m-3">
+                                        <span class ="border-b-2 py-2 my-2 w-full flex flex-col ">
+                                            <span class="text-slate-100 ">{{r.title}}</span>
+                                        </span>
+                                        <span class="text-slate-100 text-sm">{{r.description|slice:":60"}} {% if r.description|length > 50 %}...{% endif %}</span>
+                                        <div class="text-slate-100 text-sm"><a href="/pre-wedding/watch/{{r.id}}"><button type="button" class="py-2 px-2 mt-2 absolute bottom-[10%] inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                                            Watch Now
+                                          </button></a></div>
+                                    </div>
+                                </div>
+                                <div class="h-[50px] w-[280px] pt-2 overflow-hidden">
+                                    <div class="h-full w-full p-1 flex flex-col ">
+                                        <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">Pre Wedding Title</span></div>
+                                    </div>      
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+    <div class="swiper-button-prev swiper-instance1"></div>
+    <div class="swiper-button-next swiper-instance1"></div>
+
+
+    <script>
+        const swiper1 = new Swiper('#swiper1', {
+            //direction: 'vertical',
+            loop: true,
+            slidesPerView:4.25,
+            spaceBetween:10,
+            centeredSlides: true,
+            autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        breakpoints: {
+            // when window width is >= 320px
+ 
+            300: {
+                slidesPerView: 1.2,
+                spaceBetween: 10
+            },
+            // when window width is >= 480px
+            480: {
+                slidesPerView: 1.3,
+                spaceBetween: 20
+            },
+            500:{
+                slidesPerView: 1.5,
+                spaceBetween: 20
+            },
+
+            650:{
+                slidesPerView: 1.75,
+                spaceBetween: 20
+            },
+
+            750:{
+                slidesPerView: 2,
+                spaceBetween: 20
+            },
+
+            // when window width is >= 768px
+            768: {
+                slidesPerView: 2.2,
+                spaceBetween: 30
+            },
+
+            850: {
+                slidesPerView: 2.5,
+                spaceBetween: 30
+            },
+
+            992: {
+                slidesPerView: 3,
+                spaceBetween: 50
+            },
+
+            1100: {
+                slidesPerView: 3.25,
+                spaceBetween: 50
+            },
+            1200:{
+                slidesPerView: 4,
+                spaceBetween: 50
+            },
+            1300:{
+                slidesPerView: 4,
+                spaceBetween: 50
+            },
+
+            1400:{
+                slidesPerView: 4.5,
+                spaceBetween: 50
+            },
+
+            1500: {
+                slidesPerView: 4.75,
+                spaceBetween: 50
+            },
+
+            // when window width is >= 1200px
+        },
+        // centeredSlides: true,
+    
+        pagination: {
+          el: '.swiper-pagination.swiper-instance1',
+          clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next.swiper-instance1',
+            prevEl: '.swiper-button-prev.swiper-instance1',
+        },
+    });
+
+
+    const s1_slide = document.querySelectorAll('.s1_slide');
+    s1_slide.forEach(e=>{
+
+        const card_hover = e.querySelector('.card_on_hover');
+        const card_image_hover = e.querySelector('.card_image_on_hover');
+        const pre_wedding_card_description = e.querySelector('.pre_wedding_card_description');
+        const pre_wedding_bg_filler = e.querySelector('.pre_wedding_bg_filler');
+
+        e.addEventListener('mouseenter', ()=>{
+            swiper1.autoplay.stop()
+            console.log('enter')
+            card_hover.classList.remove('h-[400px]')
+            card_hover.classList.remove('w-[300px]')
+            card_hover.classList.add('h-[420px]')
+            card_hover.classList.add('w-[320px]')
+
+            pre_wedding_card_description.classList.remove('opacity-0')
+            pre_wedding_card_description.classList.add('opacity-100')
+
+            pre_wedding_bg_filler.classList.remove('opacity-0')
+            pre_wedding_bg_filler.classList.add('opacity-50')
+            
+
+            card_image_hover.classList.remove('h-[330px]')
+            card_image_hover.classList.remove('w-[280px]')
+            card_image_hover.classList.add('h-[350px]')
+            card_image_hover.classList.add('w-[300px]')
+
+        })
+        e.addEventListener('mouseleave', ()=>{
+            console.log('leave')
+            swiper1.autoplay.start()
+            card_hover.classList.add('h-[400px]')
+            card_hover.classList.add('w-[300px]')
+            card_hover.classList.remove('h-[420px]')
+            card_hover.classList.remove('w-[320px]')
+
+            card_image_hover.classList.add('h-[330px]')
+            card_image_hover.classList.add('w-[280px]')
+            card_image_hover.classList.remove('h-[350px]')
+            card_image_hover.classList.remove('w-[300px]')
+
+            pre_wedding_card_description.classList.remove('opacity-100')
+            pre_wedding_card_description.classList.add('opacity-0')
+
+            pre_wedding_bg_filler.classList.remove('opacity-50')
+            pre_wedding_bg_filler.classList.add('opacity-0')
+        })
+    })
+    </script>
+</div>
+
+
+
+<div class="swiper box-border w-screen h-auto max-w-full sticky relative pt-2 z-50" >
+    <div class="p-1 " style="height: calc(100% - 70px); width: calc(100% - 4px);">
+        <div id="prewedding_cards_2" class="prewedding_cards h-[95%] w-full opacity-0">
+            <div class="flex justify-center items-center"><span class="text-2xl">Most Viewed</span></div>
+            <div id="swiper2" class=" swiper_container_3 swiper-instance2 p-3">
+                <div class="swiper-wrapper">
+
+                    {% for r in data %}
+                        <div class="swiper-slide s2_slide flex justify-center items-center h-[430px] ">
+                            <div class="card_on_hover rounded-2xl h-[400px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-[0_15px_60px_10px_rgba(0,0,0,0.3)] shadow-sm duration-500">
+                                <div class="card_image_on_hover h-[330px] w-[280px] duration-300  relative overflow-hidden">
+                                    {% comment %} <img class="h-full w-full" src="static/assets/images/card_7.webp"> {% endcomment %}
+                                    <div class="h-full w-full rounded-2xl bg-[url('/static/{{r.cover_picture}}')] bg-cover bg-center"></div>
+                                    <div class="pre_wedding_bg_filler h-full w-full rounded-2xl opacity-20 duration-300 bg-slate-900 absolute top-0 left-0"><span class="text-slate-100"></span></div>
+                                    <div class="pre_wedding_card_description h-2/4 w-full rounded-2xl duration-300 opacity-0  absolute top-[50%] left-0 m-3">
+                                        <span class ="border-b-2 py-2 my-2 w-full flex flex-col ">
+                                            <span class="text-slate-100 ">{{r.title}}</span>
+                                        </span>
+                                        <span class="text-slate-100 text-sm">{{r.description|slice:":60"}} {% if r.description|length > 50 %}...{% endif %}</span>
+                                        <div class="text-slate-100 text-sm"><button type="button" class="py-2 px-2 mt-2 absolute bottom-[10%] inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                                            Watch Now
+                                          </button></div>
+                                    </div>
+                                </div>
+                                <div class="h-[50px] w-[280px] pt-2 overflow-hidden">
+                                    <div class="h-full w-full p-1 flex flex-col ">
+                                        <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">Pre Wedding Title</span></div>
+                                    </div>      
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+    <div class="swiper-button-prev swiper-instance2"></div>
+    <div class="swiper-button-next swiper-instance2"></div>
+
+
+    <script>
+        const swiper2 = new Swiper('#swiper2', {
+            //direction: 'vertical',
+            loop: true,
+            slidesPerView:4.25,
+            spaceBetween:10,
+            centeredSlides: true,
+            autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        breakpoints: {
+            // when window width is >= 320px
+ 
+            300: {
+                slidesPerView: 1.2,
+                spaceBetween: 10
+            },
+            // when window width is >= 480px
+            480: {
+                slidesPerView: 1.3,
+                spaceBetween: 20
+            },
+            500:{
+                slidesPerView: 1.5,
+                spaceBetween: 20
+            },
+
+            650:{
+                slidesPerView: 1.75,
+                spaceBetween: 20
+            },
+
+            750:{
+                slidesPerView: 2,
+                spaceBetween: 20
+            },
+
+            // when window width is >= 768px
+            768: {
+                slidesPerView: 2.2,
+                spaceBetween: 30
+            },
+
+            850: {
+                slidesPerView: 2.5,
+                spaceBetween: 30
+            },
+
+            992: {
+                slidesPerView: 3,
+                spaceBetween: 50
+            },
+
+            1100: {
+                slidesPerView: 3.25,
+                spaceBetween: 50
+            },
+            1200:{
+                slidesPerView: 4,
+                spaceBetween: 50
+            },
+            1300:{
+                slidesPerView: 4,
+                spaceBetween: 50
+            },
+
+            1400:{
+                slidesPerView: 4.5,
+                spaceBetween: 50
+            },
+
+            1500: {
+                slidesPerView: 4.75,
+                spaceBetween: 50
+            },
+
+            // when window width is >= 1200px
+        },
+        // centeredSlides: true,
+    
+        pagination: {
+          el: '.swiper-pagination.swiper-instance2',
+          clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next.swiper-instance2',
+            prevEl: '.swiper-button-prev.swiper-instance2',
+        },
+    });
+
+
+    const s2_slide = document.querySelectorAll('.s2_slide');
+    s2_slide.forEach(e=>{
+
+        const card_hover = e.querySelector('.card_on_hover');
+        const card_image_hover = e.querySelector('.card_image_on_hover');
+        const pre_wedding_card_description = e.querySelector('.pre_wedding_card_description');
+        const pre_wedding_bg_filler = e.querySelector('.pre_wedding_bg_filler');
+
+        e.addEventListener('mouseenter', ()=>{
+            swiper2.autoplay.stop()
+            console.log('enter')
+            card_hover.classList.remove('h-[400px]')
+            card_hover.classList.remove('w-[300px]')
+            card_hover.classList.add('h-[420px]')
+            card_hover.classList.add('w-[320px]')
+
+            pre_wedding_card_description.classList.remove('opacity-0')
+            pre_wedding_card_description.classList.add('opacity-100')
+
+            pre_wedding_bg_filler.classList.remove('opacity-0')
+            pre_wedding_bg_filler.classList.add('opacity-50')
+            
+
+            card_image_hover.classList.remove('h-[330px]')
+            card_image_hover.classList.remove('w-[280px]')
+            card_image_hover.classList.add('h-[350px]')
+            card_image_hover.classList.add('w-[300px]')
+
+        })
+        e.addEventListener('mouseleave', ()=>{
+            console.log('leave')
+            swiper2.autoplay.start()
+            card_hover.classList.add('h-[400px]')
+            card_hover.classList.add('w-[300px]')
+            card_hover.classList.remove('h-[420px]')
+            card_hover.classList.remove('w-[320px]')
+
+            card_image_hover.classList.add('h-[330px]')
+            card_image_hover.classList.add('w-[280px]')
+            card_image_hover.classList.remove('h-[350px]')
+            card_image_hover.classList.remove('w-[300px]')
+
+            pre_wedding_card_description.classList.remove('opacity-100')
+            pre_wedding_card_description.classList.add('opacity-0')
+
+            pre_wedding_bg_filler.classList.remove('opacity-50')
+            pre_wedding_bg_filler.classList.add('opacity-0')
+        })
+    })
+
+
+        gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.create({
+            trigger: '#prewedding_cards_2',
+            start: 'top bottom',
+            // end: 'top 100px',
+            onEnter: (e)=>{
+                e.trigger.style.animation="animate 1s ease-in-out 1.3s 1 forwards"
+                //animation: animate 1s ease-in-out 0.6s 1 forwards;  
+            },
+        })
+
+
+
+
+    </script>
+</div>
+
+
+<div class="swiper box-border w-screen h-auto max-w-full sticky relative pt-2 z-50" >
+    <div class="p-1 " style="height: calc(100% - 70px); width: calc(100% - 4px);">
+        <div id="prewedding_cards_3" class="prewedding_cards h-[95%] w-full opacity-0">
+            <div class="flex justify-center items-center"><span class="text-2xl">Recent Work</span></div>
+            <div id="swiper3" class=" swiper_container_4 swiper-instance3 p-3">
+                <div class="swiper-wrapper">
+
+                    {% for r in data %}
+                        <div class="swiper-slide s3_slide flex justify-center items-center h-[430px] ">
+                            <div class="card_on_hover rounded-2xl h-[400px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-[0_15px_60px_10px_rgba(0,0,0,0.3)] shadow-sm duration-500">
+                                <div class="card_image_on_hover h-[330px] w-[280px] duration-300  relative overflow-hidden">
+                                    {% comment %} <img class="h-full w-full" src="static/assets/images/card_7.webp"> {% endcomment %}
+                                    <div class="h-full w-full rounded-2xl bg-[url('/static/{{r.cover_picture}}')] bg-cover bg-center"></div>
+                                    <div class="pre_wedding_bg_filler h-full w-full rounded-2xl opacity-20 duration-300 bg-slate-900 absolute top-0 left-0"><span class="text-slate-100"></span></div>
+                                    <div class="pre_wedding_card_description h-2/4 w-full rounded-2xl duration-300 opacity-0  absolute top-[50%] left-0 m-3">
+                                        <span class ="border-b-2 py-2 my-2 w-full flex flex-col ">
+                                            <span class="text-slate-100 ">{{r.title}}</span>
+                                        </span>
+                                        <span class="text-slate-100 text-sm">{{r.description|slice:":60"}} {% if r.description|length > 50 %}...{% endif %}</span>
+                                        <div class="text-slate-100 text-sm"><button type="button" class="py-2 px-2 mt-2 absolute bottom-[10%] inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                                            Watch Now
+                                          </button></div>
+                                    </div>
+                                </div>
+                                <div class="h-[50px] w-[280px] pt-2 overflow-hidden">
+                                    <div class="h-full w-full p-1 flex flex-col ">
+                                        <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">Pre Wedding Title</span></div>
+                                    </div>      
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+    <div class="swiper-button-prev swiper-instance3"></div>
+    <div class="swiper-button-next swiper-instance3"></div>
+
+
+    <script>
+        const swiper3 = new Swiper('#swiper3', {
+            //direction: 'vertical',
+            loop: true,
+            slidesPerView:4.25,
+            spaceBetween:10,
+            centeredSlides: true,
+            autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        breakpoints: {
+            // when window width is >= 320px
+ 
+            300: {
+                slidesPerView: 1.2,
+                spaceBetween: 10
+            },
+            // when window width is >= 480px
+            480: {
+                slidesPerView: 1.3,
+                spaceBetween: 20
+            },
+            500:{
+                slidesPerView: 1.5,
+                spaceBetween: 20
+            },
+
+            650:{
+                slidesPerView: 1.75,
+                spaceBetween: 20
+            },
+
+            750:{
+                slidesPerView: 2,
+                spaceBetween: 20
+            },
+
+            // when window width is >= 768px
+            768: {
+                slidesPerView: 2.2,
+                spaceBetween: 30
+            },
+
+            850: {
+                slidesPerView: 2.5,
+                spaceBetween: 30
+            },
+
+            992: {
+                slidesPerView: 3,
+                spaceBetween: 50
+            },
+
+            1100: {
+                slidesPerView: 3.25,
+                spaceBetween: 50
+            },
+            1200:{
+                slidesPerView: 4,
+                spaceBetween: 50
+            },
+            1300:{
+                slidesPerView: 4,
+                spaceBetween: 50
+            },
+
+            1400:{
+                slidesPerView: 4.5,
+                spaceBetween: 50
+            },
+
+            1500: {
+                slidesPerView: 4.75,
+                spaceBetween: 50
+            },
+
+            // when window width is >= 1200px
+        },
+        // centeredSlides: true,
+    
+        pagination: {
+          el: '.swiper-pagination.swiper-instance3',
+          clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next.swiper-instance3',
+            prevEl: '.swiper-button-prev.swiper-instance3',
+        },
+    });
+
+
+    const s3_slide = document.querySelectorAll('.s3_slide');
+    s3_slide.forEach(e=>{
+
+        const card_hover = e.querySelector('.card_on_hover');
+        const card_image_hover = e.querySelector('.card_image_on_hover');
+        const pre_wedding_card_description = e.querySelector('.pre_wedding_card_description');
+        const pre_wedding_bg_filler = e.querySelector('.pre_wedding_bg_filler');
+
+        e.addEventListener('mouseenter', ()=>{
+            swiper2.autoplay.stop()
+            console.log('enter')
+            card_hover.classList.remove('h-[400px]')
+            card_hover.classList.remove('w-[300px]')
+            card_hover.classList.add('h-[420px]')
+            card_hover.classList.add('w-[320px]')
+
+            pre_wedding_card_description.classList.remove('opacity-0')
+            pre_wedding_card_description.classList.add('opacity-100')
+
+            pre_wedding_bg_filler.classList.remove('opacity-0')
+            pre_wedding_bg_filler.classList.add('opacity-50')
+            
+
+            card_image_hover.classList.remove('h-[330px]')
+            card_image_hover.classList.remove('w-[280px]')
+            card_image_hover.classList.add('h-[350px]')
+            card_image_hover.classList.add('w-[300px]')
+
+        })
+        e.addEventListener('mouseleave', ()=>{
+            console.log('leave')
+            swiper2.autoplay.start()
+            card_hover.classList.add('h-[400px]')
+            card_hover.classList.add('w-[300px]')
+            card_hover.classList.remove('h-[420px]')
+            card_hover.classList.remove('w-[320px]')
+
+            card_image_hover.classList.add('h-[330px]')
+            card_image_hover.classList.add('w-[280px]')
+            card_image_hover.classList.remove('h-[350px]')
+            card_image_hover.classList.remove('w-[300px]')
+
+            pre_wedding_card_description.classList.remove('opacity-100')
+            pre_wedding_card_description.classList.add('opacity-0')
+
+            pre_wedding_bg_filler.classList.remove('opacity-50')
+            pre_wedding_bg_filler.classList.add('opacity-0')
+        })
+    })
+
+
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+        trigger: '#prewedding_cards_3',
+        start: 'top bottom',
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            e.trigger.style.animation="animate 1s ease-in-out 0.6s 1 forwards"
+            //animation: animate 1s ease-in-out 0.6s 1 forwards;  
+        },
+    })
+
+
+
+
+    </script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+{% endblock  %}

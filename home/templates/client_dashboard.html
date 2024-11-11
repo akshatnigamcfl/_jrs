@@ -1,0 +1,308 @@
+{% extends "layout/layout.html" %}
+
+
+{% block main_body %}
+
+{% load poll_extras %}
+{% load static %}
+
+<script src="{% static "assets/js/number_with_commas.js" %}"></script>
+{% comment %} <div class="w-full h-auto overflow-hidden p-2"> {% endcomment %}
+
+  {% comment %} <div class='w-full h-auto flex justify-between flex-col my-4'> {% endcomment %}
+    {% comment %} {% for key, value in data.items %}
+      {% if key != 'id' and key != 'profile' %}
+      <span class="w-full h-12 min-w-[350px] p-1 flex justify-start items-center flex-wrap"><span class="w-1/4 h-full flex items-center capitalize">{{ key }}</span><input class="inp_data rounded-xl w-3/4 h-full px-2" data-key="{{key}}" type="{% if 'date' in key %}date{% else %}text{% endif %}" value="{% if value is None %}{% else %}{{value}}{% endif %}"></span>
+      {% endif %}
+    {% endfor %} {% endcomment %}
+  {% comment %} </div> {% endcomment %}
+
+
+  
+<div class="hero my-10">
+    <div class="hero-content flex-col ">
+      {% comment %} <div class="text-center lg:text-left"> {% endcomment %}
+        {% comment %} <h1 class="text-5xl font-bold">Get a Call back!</h1> {% endcomment %}
+        {% comment %} <p class="py-6">Fill up the details to get a call back, or contact us <a class="text-blue-500 underline hover:text-blue-900" href="#">here</a>.</p> {% endcomment %}
+      {% comment %} </div> {% endcomment %}
+
+
+      {% if data != 'no data' %}
+      {% comment %} <div class="card shrink-0 w-[600px] shadow-2xl bg-base-100"> {% endcomment %}
+
+
+      <div class="flex justify-start w-full"><div class="stat-title">Overview</div></div>
+      <div class="">
+        <div class="stats stats-vertical lg:stats-horizontal shadow">
+          <div class="stat">
+            <div class="stat-title">Total Payment</div>
+            <div class="stat-value total_payment text-3xl"></div>
+            {% comment %} <div class="stat-desc">Jan 1st - Feb 1st</div> {% endcomment %}
+          </div>
+        
+          <div class="stat">
+            <div class="stat-title">Paid</div>
+            <div class="stat-value paid text-3xl"></div>
+            {% comment %} <div class="stat-desc">↗︎ 400 (22%)</div> {% endcomment %}
+          </div>
+        
+          <div class="stat">
+            <div class="stat-title">Remaining</div>
+            <div class="stat-value remaining text-3xl"></div>
+            {% comment %} <div class="stat-desc">↘︎ 90 (14%)</div> {% endcomment %}
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="flex justify-start w-full"><div class="stat-title">Booking</div></div>
+      <div class="bg-white p-3 rounded-2xl">
+        <div class="overflow-x-auto">
+          <table class="table table-zebra">
+            <!-- head -->
+            <thead>
+              <tr>
+                <th></th>
+                <th>Wedding Date</th>
+                <th>Title</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for b in client.booking.all %}
+                <tr>
+                  <th>{{ forloop.counter }}</th>
+                  <td>{{b.booking_date}}</td>
+                  <td><span class="capitalize">{{b.groom_name}}</span> weds <span class="capitalize">{{b.bride_name}}</span></td>
+                  <td>{{b.booking_status.title}}</td>
+                </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <script>
+
+        const total_payment = document.querySelector('.total_payment')
+        const paid = document.querySelector('.paid')
+        const remaining = document.querySelector('.remaining')
+        
+        total_payment.innerText = numberWithCommas({{total_payment}})
+        paid.innerText = numberWithCommas({{paid}})
+        remaining.innerText = numberWithCommas({{remaining}})
+
+      </script>
+
+      {% comment %} {% with client=request.user|clientObject %}
+        {% for b in client.bookings.all %}
+          <div class="card bg-base-100 w-96 shadow-xl">
+            <div class="card-body">
+              <h2 class="card-title">Total Payment</h2>
+              <p><span class="capitalize">{{b.groom_name}}</span> weds <span class="capitalize">{{b.bride_name}}</span></p>
+              <div class="card-actions justify-end">
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endwith %} {% endcomment %}
+
+        {% comment %} <form class="card-body"> {% endcomment %}
+
+          {% comment %} <div class="h-auto w-full flex justify-center items-center p-2 flex-col">
+            <div class="relative w-24 h-24 rounded-full bg-[url('/static/{{client.first.user.profile_picture}}')] bg-cover bg-center overflow-hidden border">
+              <div class="profile absolute bottom-0 left-0 w-full h-full bg-slate-900 text-slate-100 text-xs flex justify-center items-center opacity-0 hover:opacity-80 duration-300 cursor-pointer">update picture</div>
+            </div>
+            <input class="update_profile_picture hidden" data-key="{{key}}" type="file">
+            <span class="capitalize">{{data.name}}</span>
+          </div> {% endcomment %}
+
+
+          {% comment %} <div class="flex justify-center">
+            <button type="button" class="save py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Update</button>
+            <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-white/10 dark:hover:bg-white/20 dark:text-white dark:hover:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Cancle</button>
+          </div> {% endcomment %}
+          
+          {% comment %} <div class="form-control flex flex-row">
+            <label class="label w-1/4">
+              <span class="label-text">Contact Number</span>
+            </label>
+            <input type="text" placeholder="text" class="input input-bordered w-3/4" required />
+          </div>
+          <div class="form-control flex flex-row">
+            <label class="label w-1/4">
+              <span class="label-text">Email id</span>
+            </label>
+            <input type="email" placeholder="Email Id" class="input input-bordered w-3/4" required />
+          </div>
+          <div class="form-control flex flex-row">
+            <label class="label w-1/4">
+              <span class="label-text">Wedding Date</span>
+            </label>
+            <input type="date" placeholder="Wedding Date" class="input input-bordered w-3/4" required />
+          </div>
+          <div class="form-control mt-6">
+            <button class="btn btn-primary">Submit</button>
+          </div> {% endcomment %}
+        {% comment %} </form> {% endcomment %}
+      {% comment %} </div> {% endcomment %}
+      {% else %}
+        <span class="capitalize font-bold text-lg">no user found</span>
+      {% endif %}
+
+    </div>
+  </div>
+
+
+  {% comment %} <script>
+    const save = document.querySelector('.save');
+    save.addEventListener('click', ()=>{
+      const inp_data = document.querySelectorAll('.inp_data')
+      let formData = new FormData()
+      inp_data.forEach(e=>{
+        //  result = formValidation()
+        formData.append(e.getAttribute('data-key').replaceAll(' ', '_'), e.value.toLocaleLowerCase());
+      })
+        const profile = document.querySelector('.update_profile_picture');
+        formData.append('profile', profile.files[0])
+        
+        // let token = localStorage.getItem('token')
+      // console.log('token', token)
+        //if (token){
+            (async function rlUpl(){
+                let a = await fetch('{% url "edit_client_user_edit" id=data.id %}', {method: 'PUT', body: formData})
+                a = await a.json()
+                if (a && a.status === 200){
+                    // const popup = document.querySelector('.popup');
+                    // popup.remove()
+                    const dv = document.createElement('div');
+                    dv.classList = 'submit_alert w-80 absolute left-[50%] translate-x-[-50%] top-4 overflow-hidden'
+                    dv.innerHTML= `<div class="bg-teal-50 border-t-2 border-teal-500 rounded-lg p-4 dark:bg-teal-800/30" role="alert">
+                        <div class="flex">
+                          <div class="flex-shrink-0">
+                            <span class="inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-teal-100 bg-teal-200 text-teal-800 dark:border-teal-900 dark:bg-teal-800 dark:text-teal-400">
+                              <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                            </span>
+                          </div>
+                          <div class="ms-3">
+                            <h3 class="text-gray-800 font-semibold dark:text-white">
+                                ${a.message}
+                            </h3>
+                          </div>
+                        </div>
+                        <div class="submit_alert_duration bg-green-800 w-[100%] h-[6px] absolute bottom-0 left-0 rounded-b-md"></div>
+                      </div>
+                      `
+                      document.body.prepend(dv)
+                      
+                      const submit_alert = document.querySelector('.submit_alert');
+                      // const submit_alert_duration = submit_alert.querySelector('.submit_alert_duration')
+                      setTimeout(()=>{
+                        // submit_alert_duration.style.width = Number((submit_alert_duration.style.width).replaceAll('%', '')) - 25+'%'
+                        // submit_alert.remove()
+                        window.location.reload()
+  
+                      },1000)     
+                }  else {
+                  const dv = document.createElement('div');
+                  dv.classList = 'submit_alert w-80 absolute left-[50%] translate-x-[-50%] top-4 overflow-hidden'
+                  dv.innerHTML= `<div class="bg-red-50 border-s-4 border-red-500 p-4 dark:bg-red-800/30" role="alert">
+                    <div class="flex">
+                      <div class="flex-shrink-0">
+                        <!-- Icon -->
+                        <span class="inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-red-100 bg-red-200 text-red-800 dark:border-red-900 dark:bg-red-800 dark:text-red-400">
+                          <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                        </span>
+                        <!-- End Icon -->
+                      </div>
+                      <div class="ms-3">
+                        <h3 class="text-gray-800 font-semibold dark:text-white">
+                          Error!
+                        </h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-400">
+                          ${e.message}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                    </div>
+                    `
+                    document.body.prepend(dv)
+                }
+            }())
+          // }
+    })
+    const profile = document.querySelector('.profile');
+    profile.addEventListener('click', ()=>{
+      const update_profile_picture = document.querySelector('.update_profile_picture');
+      update_profile_picture.click()
+    })
+  </script> {% endcomment %}
+
+{% comment %} </div> {% endcomment %}
+
+
+
+
+
+{% comment %} <div class=" min-h-[calc(100vh / 2)] bg-base-200"> {% endcomment %}
+    {% comment %} <div id="crew-1" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Shubham Nigam</h2>
+          <p class="crew_designation my-1">Cinematic Videographer</p>
+          <p class="crew_short_description my-1">This is the short description of the crew member. Keep it short</p>
+
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-2" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body w-20">
+          <h2 class="card-title">Jayesh Nigam</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-3" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Person three</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-4" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Person Four</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div> {% endcomment %}
+{% comment %} </div> {% endcomment %}
+
+
+{% comment %} <div class="relative w-full h-96"> {% endcomment %}
+  {% comment %} <iframe class="absolute top-0 left-0 w-full h-full"
+      src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12080.73732861526!2d-74.0059418!3d40.7127847!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM40zMDA2JzEwLjAiTiA3NMKwMjUnMzcuNyJX!5e0!3m2!1sen!2sus!4v1648482801994!5m2!1sen!2sus"
+      frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0">
+  </iframe> {% endcomment %}
+
+  {% comment %} <iframe width="600" height="450" style="border:0" loading="lazy" allowfullscreen
+src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJOV1-ngP-YjkRTL2CB41sJso&key=..."></iframe>
+</div> {% endcomment %}
+
+
+
+
+
+{% endblock  %}

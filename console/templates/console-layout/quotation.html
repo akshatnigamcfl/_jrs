@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body {
+            background-color: yellow;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+    
+        @page {
+            size: A4;
+            margin: 0;
+            {% comment %} background-color: yellow; {% endcomment %}
+
+        }
+
+        br {
+            display: block;
+            margin:  0; /* Adjust as needed */
+            content: "";
+        }
+
+
+
+
+
+    </style>
+
+
+
+    <title>{{ dynamic_data.title }}</title>
+</head>
+<body style="">
+
+</body>
+</html>
+
+<img style="float: left; width: 50%;" src="http://localhost:8000/static/assets/images/bg_fix_1.jpg">
+
+<span style="position: absolute;
+top: 50px;
+left: 200px; /* Adjust left position as needed */
+font-size: 20px;" >asdffffffsfd lorem ipsum</span>
+
+
+
+
+        {% comment %} <div><span5class="UPDbrand" style="font-weight: bold; font-size: 64px;">Shoot Date</span><span style="margin-left: 10px;">27-january, 27-january, 27-january, 27-january, 27-january, 27-january {{brand_name}}</span></div> {% endcomment %}
+        {% comment %} </br>
+            <div style=" padding: 5px;">
+                <div style=" display:flex;">
+    5            <div style="font-weight: bold; font-size: 64px; padding: 5px;">To</div>
+                    <span style="margin-left: 10px;">Akshat Nigam{{payment_date}}</span>
+                </div>
+                <div style=" display:flex;">
+                    <div style="font-weight: bold; font-size: 14px; padding: 5px;">Email ID</div>
+                    <span style="margin-left: 10px;">akshatnigamcfl@gmail.com{{payment_date}}</span>
+                </div>
+                <div style=" display:flex;">
+                    <div style="font-weight: bold; font-size: 14px; padding: 5px;">Contact Number</div>
+                    <span style="margin-left: 10px;">9399922844{{payment_date}}</span>
+                </div>
+            </div>
+        </br>
+
+            <table class="tb" style="margin-top: 10px; border-collapse: collapse; ">
+                <thead style="">
+                    <tr class="headRow">
+                        <th class="tbHead" style="border: 1px solid black; padding: 2px; margin: 0;">Particular</th>
+                        <th class="tbHead" style="border: 1px solid black; padding: 2px; margin: 0;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody style="">
+                    <tr class="bodyRow" style="">
+                        <td class="bodyHead" style=" border: 1px solid black; font-size: 12px; padding: 3px 0; height:200px;">
+                            <div style="height:100%;  display:flex; justify-content:start; padding: 10px; font-size: 15px;">Complete Wedding Shoot</div>
+                        </td>
+                        <td class="bodyHead" style=" border: 1px solid black; font-size: 12px;">
+                            <div style="height:100%;  display:flex; justify-content:start; padding: 10px;"></div>
+                        </td>
+                    </tr>
+
+               
+            
+                </tbody>
+            </table>
+
+            </br>
+            <table class="tb" style="">
+                <thead>
+                    <tr class="headRow" style="">
+                        <th class="tbHead" style="padding: 0 5px; ">
+                                        <div style="font-size: 12px;">For Evitamin Business Consulting Private Limited</div>
+                                        <div style="font-size: 12px;">Mr. Vaibhav Daga</div>
+                                        <div style="font-size: 12px;">Director</div>
+                        </th>
+                        <th class="tbHead" style="padding: 0 5px; ">
+                                        <div style="font-size: 12px;">For {{business_name}}</div>
+                                        <div style="font-size: 12px;">Mr. {{name_for_mou}}</div>
+                                        <div style="font-size: 12px;">{{designation}}</div>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            </br>
+ {% endcomment %}

@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/assets/css/tw.css" rel="stylesheet" type="text/css" />
+    <script src="/static/assets/js/tw.js"></script>
+    
+    <link rel="stylesheet" href="/static/assets/css/swiper.css"/>
+    <script src="/static/assets/js/swiper.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+
+    <style>@import url('https://fonts.googleapis.com/css2?family=Grape+Nuts&family=Tangerine:wght@400;700&display=swap')</style>
+    
+    
+    <title>Home</title>
+
+</head>
+<body class=" m-0 p-0 min-h-screen h-full w-screen max-w-full border-box">
+    <div class="w-full h-full md:flex md:justify-center md:items-center md:flex-col">
+        <div class="max-w-[2000px] h-auto w-full relative">
+
+            {% comment %} <div class="md:flex md:justify-center w-full max-w-[2000px] h-screen  bg-slate-400"> {% endcomment %}
+            <video autoplay muted loop id="banner_video" class="fixed left-0 top-0 object-cover min-h-[100vh] w-full bg-stone-800">
+                <source src="/media/{{data.file}}">
+            </video>
+            {% comment %} </div> {% endcomment %}
+
+            <nav id="navbar" class="duration-500 p-1 md:flex md:items-center md:justify-around w-full fixed top-0 left-0 z-50">
+                <div class="flex justify-between items-center">
+                    <span id="logo" class="text-[40px] cursor-pointer text-nowrap text-slate-100 tracking-widest drop-shadow-[0_3px_3px_rgba(255,255,255,1)]" style="font-family: 'Tangerine', cursive;
+                    font-weight: 400; font-style: normal;">Jrs Studios</span>
+                    <span class="md:hidden block"><img class="h-[25px] w-[25px] menu_btn" name='menu' src ="/media/assets/images/icons/menu.png"></span>
+                </div>
+                <ul class="md:flex md:items-center z-[-1] md:z-auto md:static absolute md:bg-transparent bg-transparent w-full left-0 md:w-auto md:opacity-100 opacity-0 top-[-400px] transition-all ease-in md:duration-0 duration-500 pl-4">
+                    <li class="mx-4 my-6 md:my-0 text-slate-100 md:text-slate-900"><a class="flex items-center" href="{% url 'wedding' %}">
+                        <span class="ml-2 md:m-1 text-nowrap text-slate-100 tracking-widest text-xl " style="font-family: 'Tangerine', cursive;
+                    font-weight: 700; font-style: normal;" >Wedding</span>
+                        <div class="w-3 h-3 bg-cover bg-[url('/media/assets/images/icons/wedding.png')]"></div>
+                        </a>
+                    </li>
+                    <li class="mx-4 my-6 md:my-0 text-slate-100 md:text-slate-900"><a class="flex items-center" href="{% url 'pre-wedding' %}">
+                        {% comment %} <img class='w-3 h-3' src="media/assets/images/icons/pre-wedding.png"> {% endcomment %}
+                        <span class="ml-2 md:m-1 text-nowrap text-slate-100 tracking-widest text-xl " style="font-family: 'Tangerine', cursive;
+                    font-weight: 700; font-style: normal;" >Pre Wedding</span>
+                        <div class="w-3 h-3 bg-cover bg-[url('/media/assets/images/icons/pre-wedding.png')]"></div>
+                        </a>
+                    </li>
+                    {% comment %} <li class="mx-4 my-6 md:my-0 text-slate-100 md:text-slate-900"><a class="flex items-center" href="{% url 'events' %}">
+                        <div class="w-3 h-3 bg-cover bg-[url('/media/assets/images/icons/events.png')]"></div>
+                        <span class="ml-2 md:m-1 text-nowrap text-slate-100 tracking-widest text-xl " style="font-family: 'Tangerine', cursive;
+                    font-weight: 700; font-style: normal;" >Events</span>
+                        </a>
+                    </li> {% endcomment %}
+                    <li class="mx-4 my-6 md:my-0 text-slate-100 md:text-slate-900"><a class="flex items-center" href="{% url 'reels' %}">
+                        {% comment %} <img class='w-3 h-3' src="media/assets/images/icons/reels.png"> {% endcomment %}
+                        <span class="ml-2 md:m-1 text-nowrap text-slate-100 tracking-widest text-xl " style="font-family: 'Tangerine', cursive;
+                    font-weight: 700; font-style: normal;" >Reels</span>
+                        <div class="w-3 h-3 bg-cover bg-[url('/media/assets/images/icons/reels.png')]"></div>
+                        </a>
+                    </li>
+                    <li class="mx-4 my-6 md:my-0 text-slate-100 md:text-slate-900"><a class="flex items-center" href="{% url 'team' %}">
+                        {% comment %} <img class='w-3 h-3' src="media/assets/images/icons/customers.png"> {% endcomment %}
+                        <span class="ml-2 md:m-1 text-nowrap text-slate-100 tracking-widest text-xl " style="font-family: 'Tangerine', cursive;
+                    font-weight: 700; font-style: normal;" >Team</span>
+                        <div class="w-3 h-3 bg-cover bg-[url('/media/assets/images/icons/customers.png')]"></div>
+                        </a>
+                    </li>
+                    <li class="mx-4 my-6 md:my-0 text-slate-100 md:text-slate-900"><a class="flex items-center" href="{% url 'contact' %}">
+                        {% comment %} <img class='w-3 h-3' src="media/assets/images/icons/contact_white.png"> {% endcomment %}
+                        <span class="ml-2 md:m-1 text-nowrap text-slate-100 tracking-widest text-xl " style="font-family: 'Tangerine', cursive;
+                    font-weight: 700; font-style: normal;" >Contact Us</span>
+                        <div class="w-3 h-3 bg-cover bg-[url('/media/assets/images/icons/contact_white.png')]"></div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            {% comment %} <div class="md:flex md:justify-center max-w-screen min-h-screen  z-50"> {% endcomment %}
+                <div id="cont_1" class="w-full h-full min-h-screen max-w-[2000px] relative bg-transparent z-40">
+
+                    {% comment %} <span class="absolute bottom-0 left-[35%]">
+                        the perfectionist
+                    </span> {% endcomment %}
+
+                </div>
+                    <script>
+                        gsap.registerPlugin(ScrollTrigger);
+                    
+                            ScrollTrigger.create({
+                                trigger: '#cont_1',
+                                start: 'top top',
+                                end: 'bottom 70',
+                                onLeave: (e)=>{
+                                    let navbar = document.querySelector('#navbar');
+                                    navbar.classList.add('bg-slate-700')
+                                    let cont_3 = document.querySelector('#cont_3')
+                                    cont_3.classList.add('fixed')
+                                    // let header = e.trigger.querySelector('#header')
+                                    // let banner_video = e.trigger.querySelector('#banner_video')
+                                    // header.classList.remove('fixed')
+                                    // header.classList.add('relative')
+                                    // banner_video.classList.remove('fixed')
+                                    // banner_video.classList.add('relative')
+                                },
+                                onEnterBack: (e)=>{
+                                    let navbar = document.querySelector('#navbar');
+                                    navbar.classList.remove('bg-slate-700')
+                                    let cont_3 = document.querySelector('#cont_3')
+                                    cont_3.classList.remove('fixed')
+                                    // let header = e.trigger.querySelector('#header')
+                                    // let banner_video = e.trigger.querySelector('#banner_video')
+                                    // header.classList.remove('relative')
+                                    // header.classList.add('fixed')
+                                    // banner_video.classList.remove('relative')
+                                    // banner_video.classList.add('fixed')
+                                }
+                            })
+                    </script>
+                <div id="cont_2" class="w-full h-full min-h-screen max-w-[2000px] relative z-40">
+
+                    {% comment %} bg-slate-100 {% endcomment %}
+                    <div class='demo-wrapper relative z-50 overflow-hidden '>
+                        <section class='demo-gallery pb-1'>
+                          <ul class='wrapper flex pl-1 list-none'>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/card_1.jpg' width='1240'>
+                            </li>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/card_3.jpg' width='1240'>
+                            </li>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/card_4.jpg' width='1240'>
+                            </li>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/card_5.jpg' width='1240'>
+                            </li>
+                          </ul>
+                        </section>
+                        <section class='demo-gallery pb-1'>
+                          <ul class='wrapper flex pl-1 list-none'>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/card_6.jpg' width='1240'>
+                            </li>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/events_poster/events_card_1.jpg' width='1240'>
+                            </li>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/events_poster/events_card_2.jpg' width='1240'>
+                            </li>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/events_poster/events_card_3.jpg' width='1240'>
+                            </li>
+                          </ul>
+                        </section>
+                        <section class='demo-gallery pb-1'>
+                          <ul class='wrapper flex pl-1 list-none'>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/events_poster/events_card_4.jpg' width='1240'>
+                            </li>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/events_poster/events_card_5.jpg' width='1240'>
+                            </li>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/events_poster/events_card_6.jpg' width='1240'>
+                            </li>
+                            <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                              <img class="md:w-[1240px] md:h-[474px] w-[620px] h-[230px] bg-slate-200" height='874' src='static/assets/images/events_poster/events_card_7.jpeg' width='1240'>
+                            </li>
+                          </ul>
+                        </section>
+            
+                        <section class='demo-text'>
+                          <div class='wrapper flex text leading-none font-black text-nowrap drop-shadow-[0_5px_5px_rgba(0,0,0,.7)]' style="font-size: clamp(7rem, 13vw, 14rem); font-family: 'Tangerine', cursive; font-weight: 400; font-style: normal;  ">
+                            memories... it's our creativity!!!
+                          </div>
+                        </section>
+                    
+                      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/5.0.0/imagesloaded.pkgd.min.js"></script>
+                      <script>
+                            gsap.registerPlugin(ScrollTrigger);
+                    
+                            const images = gsap.utils.toArray('img');
+                    
+                            const showDemo = () => {
+                            document.body.style.overflow = 'auto';
+                            document.scrollingElement.scrollTo(0, 0);
+                            gsap.to(document.querySelector('.loader'), { autoAlpha: 0 });
+                            
+                            gsap.utils.toArray('section').forEach((section, index) => {
+                                const w = section.querySelector('.wrapper');
+                                const [x, xEnd] = (index % 2) ? ['100%', (w.scrollWidth - section.offsetWidth) * -1] : [w.scrollWidth * -1, 0];
+                                gsap.fromTo(w, {  x  }, {
+                                x: xEnd,
+                                scrollTrigger: {
+                                    trigger: section,
+                                    start: 'top bottom',
+                                    scrub: 1
+                                }
+                                });
+                            });
+                            }
+                            imagesLoaded(images).on('always', showDemo);
+                      </script>
+                    </div>
+
+                </div>
+
+                <div id="cont_3" class="cont_bg_fix bg-cover w-full h-full md:bg-cover bg-right bg:center top-0 left-0" style="background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0)), url('static/assets/images/bg_fix_2.jpg');">
+
+                </div>
+                <div id="cont_blank" class="w-full h-[30vh] min-h-auto max-w-[2000px] relative z-40 overflow-hidden flex justify-center">
+                
+                </div>
+
+                <div id="cont_memory" class="w-full h-auto min-h-auto max-w-[2000px] relative z-40 overflow-hidden flex justify-center">
+                    <div class="h-[70px] w-full  flex justify-center items-center">
+                        <span id="cont_memory_heading" class="text-pretty h-full w-[300px] text-2xl md:text-[30px] relative left-[-100px] text-slate-100 flex justify-center items-center p-1 opacity-0 duration-300 text-slate-900 tracking-widest text-nowrap drop-shadow-[0_3px_3px_rgba(0,0,0,1)] text-center" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">
+                            The best thing about memories
+                        </span>
+                    </div>
+                </div>
+                    <script>
+
+                        gsap.registerPlugin(ScrollTrigger);
+                        gsap.to('#cont_memory_heading',{
+                            scrollTrigger: {
+                                trigger: '#cont_memory_heading',
+                                start: 'top center',
+                                end: 'bottom top',
+                                scrub: true,
+                                pin: '#cont_memory',
+                                // markers: true,
+                                onEnter: ()=>{
+                                    const cont_memory_heading = document.querySelector('#cont_memory_heading');
+                                    console.log(cont_memory_heading)
+                                    cont_memory_heading.classList.remove('opacity-0')
+                                    cont_memory_heading.classList.add('opacity-100')
+                                },
+                                onLeaveBack: ()=>{
+                                    const cont_memory_heading = document.querySelector('#cont_memory_heading');
+                                    cont_memory_heading.classList.remove('opacity-100')
+                                    cont_memory_heading.classList.add('opacity-0')
+                                },
+                                onLeave: ()=>{
+                                    const cont_memory_heading = document.querySelector('#cont_memory_heading');
+                                    // cont_memory_heading.style.animation = 'animate .5s ease-in-out 0.3s 1 forwards'
+                                    cont_memory_heading.classList.remove('opacity-100')
+                                    cont_memory_heading.classList.add('opacity-0')
+                                },
+                                onEnterBack: ()=>{
+                                    const cont_memory_heading = document.querySelector('#cont_memory_heading');
+                                    cont_memory_heading.classList.remove('opacity-0')
+                                    cont_memory_heading.classList.add('opacity-100')
+                                },
+                            },
+                            x: 100,
+                            //rotation: 360,
+                            ease: 'none',
+                            duration: 1,
+                        })
+
+                    </script>
+
+
+
+
+                    <div id="cont_memory_tag" class="w-full h-auto min-h-auto max-w-[2000px] relative z-40 overflow-hidden flex justify-center">
+                        <div class="h-[70px] w-full  flex justify-center items-center">
+                            <span id="cont_memory_tag_heading" class="text-pretty h-full w-[300px] text-2xl md:text-[30px] relative left-[-100px] text-slate-100 flex justify-center items-center p-1 opacity-0 duration-300 text-slate-900 tracking-widest text-nowrap drop-shadow-[0_3px_3px_rgba(0,0,0,1)] text-center" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">
+                                It stays forever...
+                            </span>
+                        </div>
+                    </div>
+                        <script>
+    
+                            gsap.registerPlugin(ScrollTrigger);
+                            gsap.to('#cont_memory_tag_heading',{
+                                scrollTrigger: {
+                                    trigger: '#cont_memory_tag_heading',
+                                    start: 'top center',
+                                    end: 'bottom top',
+                                    scrub: true,
+                                    pin: '#cont_memory_tag',
+                                    // markers: true,
+    
+                                    onEnter: ()=>{
+                                        const cont_memory_tag_heading = document.querySelector('#cont_memory_tag_heading');
+                                        console.log(cont_memory_tag_heading)
+                                        cont_memory_tag_heading.classList.remove('opacity-0')
+                                        cont_memory_tag_heading.classList.add('opacity-100')
+    
+                                    },
+                                    onLeaveBack: ()=>{
+                                        const cont_memory_tag_heading = document.querySelector('#cont_memory_tag_heading');
+                                        cont_memory_tag_heading.classList.remove('opacity-100')
+                                        cont_memory_tag_heading.classList.add('opacity-0')
+                                    },
+    
+                                    onLeave: ()=>{
+                                        const cont_memory_tag_heading = document.querySelector('#cont_memory_tag_heading');
+                                        // cont_memory_tag_heading.style.animation = 'animate .5s ease-in-out 0.3s 1 forwards'
+                                        cont_memory_tag_heading.classList.remove('opacity-100')
+                                        cont_memory_tag_heading.classList.add('opacity-0')
+    
+                                    },
+                                    onEnterBack: ()=>{
+                                        const cont_memory_tag_heading = document.querySelector('#cont_memory_tag_heading');
+                                        cont_memory_tag_heading.classList.remove('opacity-0')
+                                        cont_memory_tag_heading.classList.add('opacity-100')
+    
+                                    },
+                                },
+                                x: 100,
+                                //rotation: 360,
+                                ease: 'none',
+                                duration: 1,
+                            })
+    
+                        </script>
+
+
+
+
+                
+
+                        <div id="cont_divein" class="bg-slate-400 w-full min-h-screen max-w-[2000px] left-0 top-0 relative z-40 overflow-hidden flex justify-center items-center bg-cover bg-center" style=" background-image: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)), url('static/assets/images/bg_fix_3.jpg')">
+                            <div class="h-[70px] w-full  flex justify-center items-center">
+                                <span id="cont_divein_heading" class=" text-pretty h-full w-[300px] text-2xl md:text-[30px] relative left-[-100px] text-slate-100 flex justify-center items-center p-1 opacity-0 duration-300 text-slate-100 tracking-widest text-nowrap drop-shadow-[0_3px_3px_rgba(255,255,255,1)] text-center" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">
+                                    Let's dive in to our wedding creations
+                                </span>
+                            </div>
+                        </div>
+                            <script>
+        
+                                gsap.registerPlugin(ScrollTrigger);
+                                gsap.to('#cont_divein_heading',{
+                                    scrollTrigger: {
+                                        trigger: '#cont_divein_heading',
+                                        start: 'top center',
+                                        end: 'bottom top',
+                                        scrub: true,
+                                        // pin: '#cont_divein',
+                                        markers: true,
+        
+                                        onEnter: ()=>{
+                                            const cont_divein_heading = document.querySelector('#cont_divein_heading');
+                                            console.log(cont_divein_heading)
+                                            cont_divein_heading.classList.remove('opacity-0')
+                                            cont_divein_heading.classList.add('opacity-100')
+        
+                                        },
+                                        onLeaveBack: ()=>{
+                                            const cont_divein_heading = document.querySelector('#cont_divein_heading');
+                                            cont_divein_heading.classList.remove('opacity-100')
+                                            cont_divein_heading.classList.add('opacity-0')
+                                        },
+        
+                                        onLeave: ()=>{
+                                            const cont_divein_heading = document.querySelector('#cont_divein_heading');
+                                            // cont_divein_heading.style.animation = 'animate .5s ease-in-out 0.3s 1 forwards'
+                                            cont_divein_heading.classList.remove('opacity-100')
+                                            cont_divein_heading.classList.add('opacity-0')
+
+                                            // const cont_bg_fix = document.querySelector('.cont_bg_fix');
+                                            // console.log(cont_bg_fix)
+                                            // cont_bg_fix.style.backgroundImage="linear-gradient(rgba(0,0,0,.7), rgba(0,0,0,.7)), url('static/assets/images/bg_fix_3.jpg')";
+
+                                            const cont_divein = document.querySelector('#cont_divein')
+                                            cont_divein.classList.remove('relative')
+                                            cont_divein.classList.add('fixed')
+        
+                                        },
+                                        onEnterBack: ()=>{
+                                            const cont_divein_heading = document.querySelector('#cont_divein_heading');
+                                            cont_divein_heading.classList.remove('opacity-0')
+                                            cont_divein_heading.classList.add('opacity-100')
+        
+                                        },
+                                    },
+                                    x: 100,
+                                    //rotation: 360,
+                                    ease: 'none',
+                                    duration: 1,
+                                })
+        
+                            </script>
+                
+
+
+
+
+
+
+
+
+                {% comment %} </div> {% endcomment %}
+
+
+                <div id="cont_6" class="w-full h-auto min-h-auto max-w-[2000px] relative z-40 overflow-hidden flex justify-center">
+                
+                {% comment %} <div id="cont_6" class="w-full h-full min-h-[100vh] max-w-[2000px] relative bg-transparent z-40 bg-cover duration-500 opacity-100 md:flex md:justify-center md:items-center md:flex-col overflow-hidden"> {% endcomment %}
+                    {% comment %} <div class="camera_pin_dv flex justify-center items-center relative left-[-400px]"> {% endcomment %}
+                        {% comment %} <img id="camera_pin" src="static/assets/images/icons/camera.png" class="w-24 h-24 md:w-48 md:h-48"> {% endcomment %}
+                        <div class="h-[70px] w-full h-auto    flex justify-center items-center">
+                            <span id="cont_6_heading" class="text-pretty h-full w-[300px] text-2xl md:text-[30px] relative left-[-100px] text-slate-100 flex justify-center items-center p-1 opacity-0 duration-300 text-slate-900 tracking-widest drop-shadow-[0_3px_3px_rgba(0,0,0,1)] text-center" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">
+                                Pre Weddings
+                            </span>
+                        </div>
+                        
+                        {% comment %} <div id='cont_6_container' class="opacity-0 duration-300 w-full min-w-screen bg-slate-300">
+
+                            <div class="container overscroll-none w-full min-w-screen h-full flex">
+                              
+                                <section class="panel red w-full flex-none">
+                                    ONE
+                                    <video autoplay muted loop class="w-full rounded-2xl"><source src="static/assets/videos/banner_video/banner_video.mp4"></video>
+                                </section>
+                                <section class="panel orange w-full flex-none">
+                                    TWO
+                                    <video autoplay muted loop class="w-full rounded-2xl"><source src="static/assets/videos/banner_video/banner_video.mp4"></video>
+                                </section>
+                                <section class="panel purple w-full flex-none">
+                                    THREE
+                                    <video autoplay muted loop class="w-full rounded-2xl"><source src="static/assets/videos/banner_video/banner_video.mp4"></video>
+                                </section> 
+                              </div>
+                        </div> {% endcomment %}
+                        {% comment %} <div id="cont_6_heading" class="camera_pin_pre_wedding h-auto w-auto text-2xl text-slate-100 text-nowrap duration-500 opacity-0 relative left-[-400px]" style="font-size: clamp(1rem, 2vw, 2rem);">Pre Weddings</div> {% endcomment %}
+                    {% comment %} </div> {% endcomment %}
+                </div>
+                        
+                        <script>
+
+                            {% comment %} const cont_5 = document.querySelector('#cont_5'); {% endcomment %}
+                            gsap.registerPlugin(ScrollTrigger);
+                            gsap.to('#cont_6_heading',{
+                                scrollTrigger: {
+                                    trigger: '#cont_6_heading',
+                                    start: 'top center',
+                                    end: 'bottom top',
+                                    scrub: true,
+                                    pin: '#cont_6',
+                                    // markers: true,
+
+                                    onEnter: ()=>{
+                                        const cont_6_heading = document.querySelector('#cont_6_heading');
+                                        console.log(cont_6_heading)
+                                        cont_6_heading.classList.remove('opacity-0')
+                                        cont_6_heading.classList.add('opacity-100')
+
+                                    },
+                                    onLeaveBack: ()=>{
+                                        const cont_6_heading = document.querySelector('#cont_6_heading');
+                                        cont_6_heading.classList.remove('opacity-100')
+                                        cont_6_heading.classList.add('opacity-0')
+                                    },
+
+                                    onLeave: ()=>{
+                                        const cont_6_heading = document.querySelector('#cont_6_heading');
+                                        // cont_6_heading.style.animation = 'animate .5s ease-in-out 0.3s 1 forwards'
+                                        cont_6_heading.classList.remove('opacity-100')
+                                        cont_6_heading.classList.add('opacity-0')
+
+                                    },
+                                    onEnterBack: ()=>{
+                                        const cont_6_heading = document.querySelector('#cont_6_heading');
+                                        cont_6_heading.classList.remove('opacity-0')
+                                        cont_6_heading.classList.add('opacity-100')
+
+                                    },
+                                },
+                                x: 100,
+                                //rotation: 360,
+                                ease: 'none',
+                                duration: 1,
+                            })
+
+
+                            {% comment %} gsap.to('#cont_6_container', {
+                                scrollTrigger: {
+                                    trigger: "#cont_6_container",
+                                    start: 'top bottom',
+                                    end: 'bottom top',
+                                    scrub: true,
+                                    pin: 'true',
+                                    markers: true,
+                                },
+                                //x: 400,
+                                //rotation: 360,
+                                ease: 'none',
+                                duration: 1,
+                            }) {% endcomment %}
+
+
+
+
+
+
+
+                                    // onEnter: (e)=>{
+                                    //     e.trigger.classList.remove('opacity-0')
+                                    //     e.trigger.classList.add('opacity-100')
+                                    // },
+                                    // onLeave: ()=>{
+                                    //     const camera_pin_pre_wedding = document.querySelector('.camera_pin_pre_wedding');
+                                    //     camera_pin_pre_wedding.classList.remove('opacity-0')
+                                    //     camera_pin_pre_wedding.classList.add('opacity-100')
+                                    // },
+                                    // onEnterBack: (e)=>{
+                                    //     const camera_pin_pre_wedding = document.querySelector('.camera_pin_pre_wedding');
+                                    //     camera_pin_pre_wedding.classList.remove('opacity-100')
+                                    //     camera_pin_pre_wedding.classList.add('opacity-0')
+                                    // },
+                                    // onLeaveBack: (e)=>{
+                                    //     e.trigger.classList.add('opacity-0')
+                                    //     e.trigger.classList.remove('opacity-100')
+                                    // }
+
+{% comment %}                             
+                            gsap.to('#camera_pin',{
+                                scrollTrigger: {
+                                    trigger: '#camera_pin',
+                                    start: 'top center',
+                                    end: 'bottom 70',
+                                    scrub: true,
+                                    // pin: '#cont_5',
+                                    markers: true,
+                                    onEnter: (e)=>{
+                                        const camera_pin_filler = document.querySelector('.camera_pin_filler');
+                                        camera_pin_filler.classList.remove('opacity-0')
+                                        camera_pin_filler.classList.add('opacity-100')
+                                    },
+                                    onEnterBack: ()=>{
+                                    },
+                                },
+                                // x: 500,
+                                //rotation: 360,
+                                ease: 'none',
+                                duration: 3,
+                            }) {% endcomment %}
+
+
+                        </script>
+
+                        
+                {% comment %} <div class="w-full h-full min-h-screen max-w-[2000px] relative z-40 flex justify-start overflow-x-hidden">
+                    <video autoplay muted loop class="w-[400px] rounded-2xl"><source src="static/assets/videos/banner_video/banner_video.mp4"></video>
+                    <video autoplay muted loop class="w-[400px] rounded-2xl"><source src="static/assets/videos/banner_video/banner_video.mp4"></video>
+                    <video autoplay muted loop class="w-[400px] rounded-2xl"><source src="static/assets/videos/banner_video/banner_video.mp4"></video>
+                </div> {% endcomment %}
+
+                <div id="cont_7" class="w-full h-full min-h-screen max-w-[2000px] relative z-40 overflow-hidden opacity-0 duration-500 bg-slate-500
+                
+                ">
+                    <div class="fixed left-0 top-0 h-screen w-screen z-40"></div>
+                    <div id='cont_7_container' class="opacity-1000 duration-300 w-full min-w-screen ">
+
+                        <div class="container overscroll-none w-full min-w-screen h-full flex overflow-hidden z-50">
+
+                            <section class="panel red w-full h-screen flex-none flex justify-center items-center flex-col">
+                                {% comment %} <video autoplay muted loop class=" hover:shadow-[0_15px_60px_75px_rgba(0,0,0,0.3)] shadow-[0_15px_60px_50px_rgba(0,0,0,0.3)] cursor-pointer duration-500 hover:w-96 w-80 hover:md:w-[53%] md:w-[50%] rounded-[30px]">
+                                    <source src="static/assets/videos/banner_video/banner_video.mp4">
+                                </video>{% endcomment %}
+                                <span class="text-[28px] mt-6 tracking-widest" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">Pre Wedding</span> 
+                            </section>
+                          
+                            <section class="panel red w-full h-screen flex-none flex justify-center items-center flex-col">
+                                <video autoplay muted loop class=" hover:shadow-[0_15px_60px_75px_rgba(0,0,0,0.3)] shadow-[0_15px_60px_50px_rgba(0,0,0,0.3)] cursor-pointer duration-500 hover:w-96 w-80 hover:md:w-[53%] md:w-[50%] rounded-[30px]">
+                                    <source src="static/assets/videos/banner_video/banner_video.mp4">
+                                </video>
+                                <span class="text-[28px] mt-6 tracking-widest" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">Priyank Weds Nick</span>
+                            </section>
+                            <section class="panel orange w-full flex-none flex justify-center items-center flex-col">
+                                <video autoplay muted loop class=" hover:shadow-[0_15px_60px_75px_rgba(0,0,0,0.3)] shadow-[0_15px_60px_50px_rgba(0,0,0,0.3)] cursor-pointer duration-500 hover:w-96 w-80 hover:md:w-[53%] md:w-[50%] rounded-2xl">
+                                    <source src="static/assets/videos/banner_video/banner_video.mp4">
+                                </video>
+                                <span class="text-[28px] mt-6 tracking-widest" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">Priyank Weds Nick</span>
+                            </section>
+                            <section class="panel purple w-full flex-none flex justify-center items-center flex-col">
+                                <video autoplay muted loop class=" hover:shadow-[0_15px_60px_75px_rgba(0,0,0,0.3)] shadow-[0_15px_60px_50px_rgba(0,0,0,0.3)] cursor-pointer duration-500 hover:w-96 w-80 hover:md:w-[53%] md:w-[50%] rounded-2xl">
+                                    <source src="static/assets/videos/banner_video/banner_video.mp4">
+                                </video>
+                                <span class="text-[28px] mt-6 tracking-widest" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">Priyank Weds Nick</span>
+                            </section> 
+                            <section class="panel purple w-full flex-none flex justify-center items-center flex-col">
+                                <video autoplay muted loop class=" hover:shadow-[0_15px_60px_75px_rgba(0,0,0,0.3)] shadow-[0_15px_60px_50px_rgba(0,0,0,0.3)] cursor-pointer duration-500 hover:w-96 w-80 hover:md:w-[53%] md:w-[50%] rounded-2xl">
+                                    <source src="static/assets/videos/banner_video/banner_video.mp4">
+                                </video>
+                                <span class="text-[28px] mt-6 tracking-widest" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">Priyank Weds Nick</span>
+                            </section> 
+                            <section class="panel purple w-full flex-none flex justify-center items-center flex-col">
+                                <video autoplay muted loop class=" hover:shadow-[0_15px_60px_75px_rgba(0,0,0,0.3)] shadow-[0_15px_60px_50px_rgba(0,0,0,0.3)] cursor-pointer duration-500 hover:w-96 w-80 hover:md:w-[53%] md:w-[50%] rounded-2xl">
+                                    <source src="static/assets/videos/banner_video/banner_video.mp4">
+                                </video>
+                                <span class="text-[28px] mt-6 tracking-widest" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">Priyank Weds Nick</span>
+                            </section> 
+                            <section class="panel purple w-full flex-none flex justify-center items-center flex-col">
+                                <video autoplay muted loop class=" hover:shadow-[0_15px_60px_75px_rgba(0,0,0,0.3)] shadow-[0_15px_60px_50px_rgba(0,0,0,0.3)] cursor-pointer duration-500 hover:w-96 w-80 hover:md:w-[53%] md:w-[50%] rounded-2xl">
+                                    <source src="static/assets/videos/banner_video/banner_video.mp4">
+                                </video>
+                                <span class="text-[28px] mt-6 tracking-widest" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">Priyank Weds Nick</span>
+                            </section> 
+                            <section class="panel purple w-full flex-none flex justify-center items-center">
+                                <div class=" hover:shadow-[0_15px_60px_40px_rgba(0,0,0,0.3)] shadow-[0_15px_60px_10px_rgba(0,0,0,0.3)] cursor-pointer duration-500 w-auto md:w-auto rounded-2xl flex justify-center items-center">
+                                    <span class="text-2xl md:text-2xl p-2 px-4" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">explore our pre wedding creations</span>
+                                    {% comment %} <source src="static/assets/divs/banner_div/banner_div.mp4"> {% endcomment %}
+                                </div>
+                            </section> 
+                          </div>
+                    </div>
+                    
+                    <script>
+                        gsap.registerPlugin(ScrollTrigger);
+                        let sections = gsap.utils.toArray(".panel");
+                        gsap.to(sections,{
+                            xPercent: -100 * (sections.length - 1),
+                            ease: 'none',
+                            scrollTrigger:{
+                                trigger: ".container",
+                                pin: true,
+                                scrub: 1,
+                                snap: 1 / (sections.length - 1),
+                                start: 'center center',
+                                end: "+=3500",
+                                onEnter: ()=>{
+                                    const cont_7 = document.querySelector('#cont_7');
+                                    cont_7.classList.remove('opacity-0')
+                                    cont_7.classList.add('opacity-100')
+                                },
+                                onEnterBack: ()=>{
+                                    const cont_7 = document.querySelector('#cont_7');
+                                    cont_7.classList.remove('opacity-0')
+                                    cont_7.classList.add('opacity-100')
+                                },
+                                onLeaveBack: ()=>{
+                                    const cont_7 = document.querySelector('#cont_7');
+                                    cont_7.classList.remove('opacity-100')
+                                    cont_7.classList.add('opacity-0')
+                                },
+                                onLeave: ()=>{
+                                    const cont_7 = document.querySelector('#cont_7');
+                                    cont_7.classList.remove('opacity-100')
+                                    cont_7.classList.add('opacity-0')
+                                }
+                            }
+                        })
+                    </script>
+                    
+                </div>
+
+
+                <div id="cont_8" class="w-full h-full min-h-screen max-w-[2000px] relative z-40">
+                    {% comment %} <div class="bg-slate-900 w-full h-full min-h-screen absolute left-0 top-0 opacity-50 "></div> {% endcomment %}
+                    <div  class="cont_8_heading h-full w-full min-h-screen  flex justify-center items-center text-slate-100 absolute">
+                        <h1 id="cont_8_heading" class="relative left-[-100px] text-[30px] opacity-0 text-slate-900 duration-100 tracking-widest" style="font-family: 'Grape Nuts', cursive; font-weight: 400; font-style: normal;">
+                            Cinematic Weddings
+                        </h1>
+                    </div>
+                </div>
+
+                    <script>
+                        gsap.registerPlugin(ScrollTrigger);
+                        gsap.to('#cont_8_heading', {
+                            scrollTrigger: {
+                                trigger: '#cont_8_heading',
+                                start: 'top center',
+                                end: 'bottom top',
+                                pin: '#cont_8',
+                                scrub: true,
+                                markers: true,
+                                onEnter: (e)=>{
+                                    e.trigger.classList.remove('opacity-0')
+                                    e.trigger.classList.add('opacity-100')
+                                },
+                                onEnterBack: (e)=>{
+                                    e.trigger.classList.remove('opacity-0')
+                                    e.trigger.classList.add('opacity-100')
+                                },
+                                onLeave: (e)=>{
+                                    e.trigger.classList.remove('opacity-100')
+                                    e.trigger.classList.add('opacity-0')
+                                },
+                                onLeaveBack: (e)=>{
+                                    e.trigger.classList.remove('opacity-100')
+                                    e.trigger.classList.add('opacity-0')
+                                },
+                            },
+                                x: 100,
+                                //rotation: 360,
+                                ease: 'none',
+                                duration: 1,
+
+                        })
+                    </script>
+
+                    {% comment %} <div id="cont_3" class="bg-cover w-full h-full bg-cover top-0 left-0 bg-[url('static/assets/images/bg_fix_1.jpg')]">
+
+                    </div> {% endcomment %}
+
+
+                <div id="cont_9" class="w-full h-full min-h-screen max-w-[2000px] relative bg-slate-800 z-40"></div>
+                    <script>
+                        gsap.registerPlugin(ScrollTrigger);
+                        gsap.to('#cont_9_heading', {
+                            scrollTrigger: {
+                                trigger: '#cont_9_heading',
+                                start: 'top top',
+                                end: 'bottom top',
+                                pin: '#cont_9',
+                                scrub: true,
+                                markers: true,
+                                onEnter: (e)=>{
+                                    e.trigger.classList.remove('opacity-0')
+                                    e.trigger.classList.add('opacity-100')
+                                },
+                                onEnterBack: (e)=>{
+                                    e.trigger.classList.remove('opacity-100')
+                                    e.trigger.classList.add('opacity-0')
+                                },
+                                onLeave: (e)=>{
+                                    e.trigger.classList.remove('opacity-100')
+                                    e.trigger.classList.add('opacity-0')
+                                },
+                                onLeaveBack: (e)=>{
+                                    e.trigger.classList.remove('opacity-0')
+                                    e.trigger.classList.add('opacity-100')
+                                },
+                            },
+                                x: 200,
+                                //rotation: 360,
+                                ease: 'none',
+                                duration: 1,
+
+                        })
+                    </script>
+
+
+
+                <div class="w-full h-full min-h-screen max-w-[2000px] relative bg-slate-900 z-40"></div>
+                <div class="w-full h-full min-h-screen max-w-[2000px] relative bg-slate-900 z-40"></div>
+                <div class="w-full h-full min-h-screen max-w-[2000px] relative bg-slate-900 z-40"></div>
+                <div class="w-full h-full min-h-screen max-w-[2000px] relative bg-slate-900 z-40"></div>
+                <div class="w-full h-full min-h-screen max-w-[2000px] relative bg-slate-900 z-40"></div>
+
+
+
+                <div id="cont_5" class="swiper w-full h-full min-h-screen max-w-[2000px] relative z-40 overflow-hidden flex justify-center flex-col">
+
+                    {% comment %} <div class="swiper box-border w-screen h-screen max-w-full sticky bg-slate-100 relative z-50"> {% endcomment %}
+                        <div class="h-[70px] w-full  flex justify-center items-center">
+                            <span id="cont_5_heading" class=" h-full w-[300px] text-[30px] relative left-[-400px] text-slate-100 flex justify-center items-center p-1 opacity-0 duration-300">
+                                Highlights
+                            </span>
+                        </div>  
+                        <div id="cont_5_container" class="swiper_cotainer pt-4 opacity-0 duration-[2s]">
+                            <div class="swiper-wrapper">
+                                
+                                <div data="0" class="swiper-slide bg-slate-100 recent_card_main md:h-[500px] md:w-[500px] md:!min-w-[calc(500px + 5px)] flex flex-col items-center hover:shadow-2xl shadow-sm duration-500 ">
+                                    <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_7.webp')] bg-cover">
+                                        <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                                            <img class="h-[50px] w-[50px] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                                        </div>
+                                    </div>
+                                    <div class="md:h-[280px] md:w-[380px] pt-1 overflow-hidden">
+                                        <div class="h-full w-full p-1 flex flex-col ">
+                                            <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                                            <div class="md:h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div data="0" class="swiper-slide bg-slate-100 recent_card_main md:h-[500px] md:w-[500px] md:!min-w-[calc(500px + 5px)] flex flex-col items-center hover:shadow-2xl shadow-sm duration-500 ">
+                                    <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_7.webp')] bg-cover">
+                                        <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                                            <img class="h-[50px] w-[50px] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                                        </div>
+                                    </div>
+                                    <div class="md:h-[280px] md:w-[380px] pt-1 overflow-hidden">
+                                        <div class="h-full w-full p-1 flex flex-col ">
+                                            <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                                            <div class="md:h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div data="0" class="swiper-slide bg-slate-100 recent_card_main md:h-[500px] md:w-[500px] md:!min-w-[calc(500px + 5px)] flex flex-col items-center hover:shadow-2xl shadow-sm duration-500 ">
+                                    <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_7.webp')] bg-cover">
+                                        <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                                            <img class="h-[50px] w-[50px] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                                        </div>
+                                    </div>
+                                    <div class="md:h-[280px] md:w-[380px] pt-1 overflow-hidden">
+                                        <div class="h-full w-full p-1 flex flex-col ">
+                                            <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                                            <div class="md:h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div data="0" class="swiper-slide bg-slate-100 recent_card_main md:h-[500px] md:w-[500px] md:!min-w-[calc(500px + 5px)] flex flex-col items-center hover:shadow-2xl shadow-sm duration-500 ">
+                                    <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_7.webp')] bg-cover">
+                                        <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                                            <img class="h-[50px] w-[50px] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                                        </div>
+                                    </div>
+                                    <div class="md:h-[280px] md:w-[380px] pt-1 overflow-hidden">
+                                        <div class="h-full w-full p-1 flex flex-col ">
+                                            <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                                            <div class="md:h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div data="0" class="swiper-slide bg-slate-100 recent_card_main md:h-[500px] md:w-[500px] md:!min-w-[calc(500px + 5px)] flex flex-col items-center hover:shadow-2xl shadow-sm duration-500 ">
+                                    <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_7.webp')] bg-cover">
+                                        <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                                            <img class="h-[50px] w-[50px] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                                        </div>
+                                    </div>
+                                    <div class="md:h-[280px] md:w-[380px] pt-1 overflow-hidden">
+                                        <div class="h-full w-full p-1 flex flex-col ">
+                                            <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                                            <div class="md:h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                                        </div>
+                                    </div> 
+                                </div>
+
+         
+                            </div>
+                            <div class="swiper-button-prev text-slate-900 hover:text-slate-100 hover:bg-slate-900 h-[10%] w-[3%] duration-500 opacity-75 rounded-lg"></div>
+                            <div class="swiper-button-next text-slate-900 hover:text-slate-100 hover:bg-slate-900 h-[10%] w-[3%] duration-500 opacity-75 rounded-lg " ></div>
+                        </div>  
+                        <script>
+                        const swiper = new Swiper('.swiper_cotainer', {
+                          //direction: 'vertical',
+                          loop: true,
+                          slidesPerView:2,
+                          spaceBetween:20,
+                          centeredSlides: true,
+                          autoplay: {
+                            delay: 3500,
+                            disableOnInteraction: true,
+                          },
+                          breakpoints: {
+                            // when window width is >= 320px
+                 
+                            300: {
+                                slidesPerView: 1,
+                                spaceBetween: 10
+                            },
+                            // when window width is >= 480px
+                            480: {
+                                slidesPerView: 1, 
+                                spaceBetween: 20
+                            },
+                            500:{
+                                slidesPerView: 1,
+                                spaceBetween: 20
+                            },
+                
+                            650:{
+                                slidesPerView: 1.1,
+                                spaceBetween: 20
+                            },
+
+                            700: {
+                                slidesPerView: 1.3,
+                                spaceBetween: 20
+                            },
+                
+                            // when window width is >= 768px
+                            768: {
+                                slidesPerView: 2.2,
+                                spaceBetween: 30
+                            },
+                
+                            850: {
+                                slidesPerView: 2.5,
+                                spaceBetween: 30
+                            },
+                
+                            992: {
+                                slidesPerView: 2,
+                                spaceBetween: 10
+                            },
+                
+                            1100: {
+                                slidesPerView: 2,
+                                spaceBetween: 50
+                            },
+                            1200:{
+                                slidesPerView: 2.5,
+                                spaceBetween: 50
+                            },
+                            1300:{
+                                slidesPerView: 2.5,
+                                spaceBetween: 50
+                            },
+                
+                            1400:{
+                                slidesPerView: 2.5,
+                                spaceBetween: 50
+                            },
+                
+                            1500: {
+                                slidesPerView: 2.5,
+                                spaceBetween: 50
+                            },
+                        },
+                          // centeredSlides: true,
+                        
+                          pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                          },
+                          navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                          },
+                        });
+                            function popupFun(){
+                                const popup = document.createElement('div');
+                                popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-6';
+                                popup.innerHTML = `
+                                    <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                                    </div>
+                                    <div class="h-[80%] w-[90%] video_playback opacity-100 absolute top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] overflow-hidden">
+                                        <video autoplay preload muted loop id="myVideo" class="h-full w-full right-0 top-0 min-w-full min-h-full">
+                                            <source src="/static/assets/videos/banner_video.mp4">
+                                        </video>
+                                    </div>
+                                    <div class="close_btn_dv h-[5%] w-[3%] absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                                        <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="static/assets/images/icons/close_button.png">
+                                    </div>
+                                    
+                                    <div id="video_playback_previous_button" class="absolute bg-slate-700 opacity-25 hover:text-slate-100 hover:opacity-100 duration-700 top-2/4 h-[10%] w-[3%] flex justify-center items-center left-[1%] rounded-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="70" viewBox="0 0 60 70" fill="none">
+                                            <path d="M34.691 20L21.6001 35L34.691 50L39.6001 44.375L31.4183 35L39.6001 25.625L34.691 20Z" fill="white"/>
+                                            </svg>
+                                    </div>
+                                    <div id="video_playback_next_button" class="absolute bg-slate-700 opacity-25 hover:text-slate-100 hover:opacity-100 duration-700 top-2/4 h-[10%] w-[3%] flex justify-center items-center right-[1%] rounded-lg" >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="70" viewBox="0 0 60 70" fill="none">
+                                            <path d="M27.0909 20L23 25.625L29.8182 35L23 44.375L27.0909 50L38 35L27.0909 20Z" fill="white"/
+                                        </svg>
+                                    </div>
+                                    `
+                                document.body.prepend(popup)
+                                const close_btn = document.querySelector('.close_btn_dv')
+                                close_btn.addEventListener('click', ()=>{
+                                    const popup = document.querySelector('.popup')
+                                    popup.remove()
+                                })
+                            }
+                            const card_play_button = document.querySelectorAll('.card_play_button');
+                            const play_button = document.querySelectorAll('.play_button');
+                            card_play_button.forEach((e, i)=>{
+                                e.addEventListener('click', (e)=>{
+                                    const recent_card_main = document.querySelectorAll('.recent_card_main');
+                                    const popupcheck = document.querySelector('.popup');
+                                    if (!popupcheck){
+                                        popupFun()
+                                        
+                                    } else {
+                                        popupcheck.remove()
+                                    }
+                                })
+                                e.addEventListener('mouseenter', ()=>{
+                                    play_button[i].classList.remove('hidden')
+                                })
+                                e.addEventListener('mouseleave', ()=>{
+                                    play_button[i].classList.add('hidden')
+                                })
+                            })
+                            {% comment %} const recent_cards_previous_button = document.getElementById('recent_cards_previous_button')
+                            recent_cards_previous_button.addEventListener('click', ()=>{
+                                console.log(recent_cards_previous_button)
+                            })
+                            const recent_cards_next_button = document.getElementById('recent_cards_next_button')
+                            recent_cards_next_button.addEventListener('click', ()=>{
+                                console.log(recent_cards_next_button)
+                            }) {% endcomment %}
+            
+                        </script>
+                </div>
+
+                        <script>
+
+                            gsap.registerPlugin(ScrollTrigger);
+
+                            {% comment %} ScrollTrigger.create({
+                                trigger: '#cont_5',
+                                start: 'top center',
+                                end: 'bottom 70',
+                                rotation: 360,
+                                ease: 'none',
+                                duration: 1,
+                                markers: true
+                            }) {% endcomment %}
+
+                            gsap.to('#cont_5_heading',{
+                                scrollTrigger: {
+                                    trigger: '#cont_5_heading',
+                                    start: 'top center',
+                                    end: 'bottom 70',
+                                    scrub: true,
+                                    pin: '#cont_5',
+
+                                    onEnter: ()=>{
+                                        const cont_5_heading = document.querySelector('#cont_5_heading');
+                                        cont_5_heading.classList.remove('opacity-0')
+                                        cont_5_heading.classList.add('opacity-100')
+
+                                    },
+                                    onLeaveBack: ()=>{
+                                        const cont_5_heading = document.querySelector('#cont_5_heading');
+                                        cont_5_heading.classList.remove('opacity-100')
+                                        cont_5_heading.classList.add('opacity-0')
+                                    },
+
+                                    onLeave: ()=>{
+                                        const cont_5_container = document.querySelector('#cont_5_container');
+                                        cont_5_container.style.animation = 'animate .5s ease-in-out 0.3s 1 forwards'
+                                        cont_5_container.classList.remove('opacity-0')
+                                        cont_5_container.classList.add('opacity-100')
+
+                                    },
+                                    onEnterBack: ()=>{
+                                        const cont_5_container = document.querySelector('#cont_5_container');
+                                        cont_5_container.classList.remove('opacity-100')
+                                        cont_5_container.classList.add('opacity-0')
+
+                                    },
+                                },
+                                
+                                x: 400,
+                                // rotation: 360,
+                                ease: 'none',
+                                duration: 5,
+
+                            })
+
+                        </script>
+
+
+
+
+
+                
+            {% comment %} </div> {% endcomment %}
+        </div>
+    </div>
+            
+
+    <script>
+
+
+            const e = document.querySelector('.menu_btn');
+            const list = document.querySelector('ul')
+
+            e.addEventListener('click', ()=>{
+                e.name === 'menu' ? (e.name = 'close', e.src='static/assets/images/icons/menu_close.png',  list.classList.add('top-[70px]'), list.classList.add('opacity-100')) : (e.name = 'menu', e.src = "static/assets/images/icons/menu.png" , list.classList.remove('top-[70px]'), list.classList.remove('opacity-100'))
+            })
+                
+    </script>
+
+</body>
+</html>

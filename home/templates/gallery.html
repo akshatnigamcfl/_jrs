@@ -1,0 +1,471 @@
+{% extends "layout/layout.html" %}
+
+
+{% block main_body %}
+
+
+<div class="swiper box-border w-full h-auto max-w-full sticky bg-slate-100 relative pb-8 z-50">
+    <div class="h-[70px] w-full bg-slate-100 flex justify-center items-center">
+        <span class="h-full w-[200px] text-2xl flex justify-center items-center p-1">Events</span>
+    </div>
+
+
+    <section class="image--grid--boxes w-full h-auto mx-0 py-[60px] px-0">
+        <h2 id="grid_heading" class="grid_heading text-center text-[34px] mb-6 mx-0 opacity-0 duration-1000 relative right-[500px] blur-md">Step into Our Captivating Image Gallery!</h2>
+        <div class="image_grid w-full h-full flex flex-col items-center">
+    
+    
+            {% for ig in image_gallery %}
+            {{ig}}
+                <div id="grid--grabber-par{{forloop.counter}}" class="w-full h-auto m-20 w-[95%] my-[5px] mx-auto py-0 mx-[15px] h-auto opacity-0 duration-1000 relative top-[100px] blur-md flex flex-wrap justify-center">
+                    {% comment %} <div  class="grid--grabber-par  grid gap-[10px] " style="grid-template-columns: auto auto auto auto; grid-template-rows: 250px 235px 250px;"> {% endcomment %}
+                    <div class="flex flex-wrap justify-center">
+                        {% for i in ig %}
+                            <div class="h-[400px] w-[300px] m-2 bg-[rgb(230,230,250)] bg-[url('/media/{{i.data.file}}')] bg-cover bg-center rounded-xl "></div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+                {% comment %} <div  class="grid--grabber-par w-[95%] my-[5px] mx-auto py-0 mx-[15px] h-auto grid gap-[10px] opacity-0 duration-1000 relative top-[100px] blur-md" style="grid-template-columns: auto auto auto auto; grid-template-rows: 250px 235px 250px;"> {% endcomment %}
+    
+                        {% comment %} <div class="grid_elem h-[400px] w-[300px] bg-[rgb(230,230,250)] bg-[url('/media/{{i.data.file}}')] bg-cover"></div> {% endcomment %}
+                        {% comment %} <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/pVert.jpeg')] bg-cover row-GR row-[span_2] bg-[rgb(230,230,250)]"></div> {% endcomment %}
+                        {% comment %} <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/PHori.jpeg')] bg-cover row-GR2 col-[3_/_5]"></div> {% endcomment %}
+                
+                {% comment %} </div> {% endcomment %}
+                
+            
+            {% comment %} <div id="grid--grabber-par2" class="grid--grabber-par_2 w-[95%] my-[5px] mx-auto py-0 mx-[15px] h-auto grid gap-[10px] opacity-0 duration-1000 relative top-[100px] blur-md"  style="grid-template-columns: auto auto auto auto; grid-template-rows: 250px 235px 250px;">
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p10.webp')] bg-cover"></div>
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p11.webp')] bg-cover"></div>
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p11.webp')] bg-cover"></div>
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p12.webp')] bg-cover"></div>
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p13.webp')] bg-cover"></div>
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p14.webp')] bg-cover"></div>
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p15.webp')] bg-cover"></div>
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p15.webp')] bg-cover"></div>
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p16.webp')] bg-cover"></div>
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p4.webp')] bg-cover"></div>
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p9.webp')] bg-cover"></div>
+                <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/p9.webp')] bg-cover"></div>
+            </div> {% endcomment %}
+            {% comment %} <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/PHori2.jpeg')] bg-center bg-cover row-GR2 col-[1_/_3]"></div> {% endcomment %}
+            {% comment %} <div class="grid_elem bg-[rgb(230,230,250)] bg-[url('/media/pVert2.jpeg')] bg-cover row-GR row-[span_2] bg-[rgb(230,230,250)]"></div> {% endcomment %}
+        </div>
+    </section>
+    
+    <script>
+    
+    gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.create({
+        trigger: '#grid_heading',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const grid_heading = document.querySelector('#grid_heading');
+            grid_heading.classList.remove('opacity-0')
+            grid_heading.classList.remove('right-[500px]')
+            grid_heading.classList.remove('blur-md')
+            grid_heading.classList.add('right-0')
+            grid_heading.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const grid_heading = document.querySelector('#grid_heading');
+            grid_heading.classList.add('opacity-0')
+            grid_heading.classList.add('right-[500px]')
+            grid_heading.classList.add('blur-md')
+            grid_heading.classList.remove('right-0')
+            grid_heading.classList.remove('opacity-100')
+        },
+    })
+    
+    gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.create({
+        trigger: '#grid--grabber-par1',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const grid_grabber_par1 = document.querySelector('#grid--grabber-par1');
+            grid_grabber_par1.classList.remove('opacity-0')
+            grid_grabber_par1.classList.remove('top-[100px]')
+            grid_grabber_par1.classList.remove('blur-md')
+            grid_grabber_par1.classList.add('top-0')
+            grid_grabber_par1.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const grid_grabber_par1 = document.querySelector('#grid--grabber-par1');
+            grid_grabber_par1.classList.add('opacity-0')
+            grid_grabber_par1.classList.add('top-[100px]')
+            grid_grabber_par1.classList.add('blur-md')
+            grid_grabber_par1.classList.remove('top-0')
+            grid_grabber_par1.classList.remove('opacity-100')
+        },
+    })
+    
+    gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.create({
+        trigger: '#grid--grabber-par2',
+        start: 'top center',
+        // markers: true,
+        // end: 'top 100px',
+        onEnter: (e)=>{
+            const grid_grabber_par2 = document.querySelector('#grid--grabber-par2');
+            grid_grabber_par2.classList.remove('opacity-0')
+            grid_grabber_par2.classList.remove('top-[100px]')
+            grid_grabber_par2.classList.remove('blur-md')
+            grid_grabber_par2.classList.add('top-0')
+            grid_grabber_par2.classList.add('opacity-100')
+        },
+        onLeaveBack: (e)=>{
+            const grid_grabber_par2 = document.querySelector('#grid--grabber-par2');
+            grid_grabber_par2.classList.add('opacity-0')
+            grid_grabber_par2.classList.add('top-[100px]')
+            grid_grabber_par2.classList.add('blur-md')
+            grid_grabber_par2.classList.remove('top-0')
+            grid_grabber_par2.classList.remove('opacity-100')
+        },
+    })
+    
+    </script>
+
+    {% comment %} <div class="p-1 " style="height: calc(100% - 70px); width: calc(100% - 4px);">
+        <div class="prewedding_cards h-[90%] w-full ">
+            <div id="swiper_1" class=" swiper_container_1 swiper_instance_1 pt-2">
+                <div class="swiper-wrapper">
+
+                    {% for r in data %}
+                    <div class="swiper-slide s1_events">
+                        <div class="rounded-2xl h-[360px] w-[300px] min-w-[300px] mx-2 py-2 flex flex-col items-center pt-[10px] shadow-sm hover:shadow-[0_15px_60px_10px_rgba(0,0,0,0.3)] shadow-sm duration-500">
+                            <div class="events_image_display duration-700 rounded-2xl h-[350px] w-[280px] bg-slate-300">
+                                <img class="h-full w-full rounded-2xl" src="static/{{r.cover_picture }}">
+                            </div>
+                            <div class="events_description_display h-[0px] duration-700 w-[280px] pt-2 overflow-hidden">
+                                <div class="h-full w-full p-1 flex flex-col ">
+                                    <div class=""><span class="card_date tracking-normal font-bold text-lg">{{r.date}}</span></div>
+                                    <div class=""><span class="card_location tracking-normal font-bold text-md">indore</span></div>
+                                    <div class=""><span class="card_couple tracking-[5px] text-xl flex justify-center">{{r.title}}</span></div>
+                                    <div class="overflow-scroll h-[60px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">{{r.description}}</span>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+     
+
+                </div>
+            </div>
+    <div class="swiper-button-prev swiper_instance_1 opacity-50 hover:opacity-100 duration-500 bg-slate-900 rounded-2xl py-8 px-5"></div>
+    <div class="swiper-button-next swiper_instance_1 opacity-50 hover:opacity-100 duration-500 bg-slate-900 rounded-2xl py-8 px-5"></div> {% endcomment %}
+
+
+        <script>
+        
+            const swiper_1 = new Swiper('#swiper_1', {
+                loop: true,
+                slidesPerView:4.7,
+            spaceBetween:10,
+            centeredSlides: true,
+            autoplay: {
+              delay: 3000,
+              disableOnInteraction: false,
+            },
+        
+            pagination: {
+              el: '.swiper-pagination.swiper_instance_1',
+              clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next.swiper_instance_1',
+                prevEl: '.swiper-button-prev.swiper_instance_1',
+            },
+        });
+
+
+        const s1_events = document.querySelectorAll('.s1_events');
+        s1_events.forEach(e=>{
+        
+            const events_image_display = e.querySelector('.events_image_display');
+            const events_description_display = e.querySelector('.events_description_display');
+        
+            e.addEventListener('mouseenter', ()=>{
+                swiper_1.autoplay.stop()
+                events_image_display.classList.remove('h-[350px]')
+                events_image_display.classList.add('h-[200px]')
+            
+                events_description_display.classList.remove('h-[0px]')
+                events_description_display.classList.add('h-[160px]')
+            })
+        
+            e.addEventListener('mouseleave', ()=>{
+                swiper_1.autoplay.start()
+                events_image_display.classList.remove('h-[200px]')
+                events_image_display.classList.add('h-[350px]')
+            
+                events_description_display.classList.remove('h-[160px]')
+                events_description_display.classList.add('h-[0px]')
+            })
+        })
+
+        </script>
+</div>
+
+
+
+
+<div class="swiper box-border w-full h-auto max-w-full sticky relative pb-8 z-50">
+    <div class="h-[70px] w-full flex justify-center items-center">
+        <span class="h-full w-[200px] text-2xl flex justify-center items-center p-1">Events</span>
+    </div>
+
+    <div class="p-1 " style="height: calc(100% - 70px); width: calc(100% - 4px);">
+        <div class="prewedding_cards h-[90%] w-full ">
+            <div id="swiper_2" class=" swiper_container_2 swiper_instance_2 pt-2">
+                <div class="swiper-wrapper">
+
+                    {% for r in data %}
+                    <div class="swiper-slide s2_events">
+                        <div class="rounded-2xl h-[360px] w-[300px] min-w-[300px] mx-2 py-2 flex flex-col items-center pt-[10px] shadow-sm hover:shadow-[0_15px_60px_10px_rgba(0,0,0,0.3)] shadow-sm duration-500">
+                            <div class="events_image_display duration-700 rounded-2xl h-[350px] w-[280px] bg-slate-300">
+                                <img class="h-full w-full rounded-2xl" src="static/{{r.cover_picture }}">
+                            </div>
+                            <div class="events_description_display h-[0px] duration-700 w-[280px] pt-2 overflow-hidden">
+                                <div class="h-full w-full p-1 flex flex-col ">
+                                    <div class=""><span class="card_date tracking-normal font-bold text-lg">{{r.date}}</span></div>
+                                    <div class=""><span class="card_location tracking-normal font-bold text-md">indore</span></div>
+                                    <div class=""><span class="card_couple tracking-[5px] text-xl flex justify-center">{{r.title}}</span></div>
+                                    <div class="overflow-scroll h-[60px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">{{r.description}}</span>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+     
+
+                </div>
+            </div>
+    <div class="swiper-button-prev swiper_instance_2 opacity-50 hover:opacity-100 duration-500 bg-slate-900 rounded-2xl py-8 px-5"></div>
+    <div class="swiper-button-next swiper_instance_2 opacity-50 hover:opacity-100 duration-500 bg-slate-900 rounded-2xl py-8 px-5"></div>
+
+
+        <script>
+        
+            const swiper_2 = new Swiper('#swiper_2', {
+                loop: true,
+                slidesPerView:4.7,
+            spaceBetween:10,
+            centeredSlides: true,
+            autoplay: {
+              delay: 3000,
+              disableOnInteraction: false,
+            },
+        
+            pagination: {
+              el: '.swiper-pagination.swiper_instance_2',
+              clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next.swiper_instance_2',
+                prevEl: '.swiper-button-prev.swiper_instance_2',
+            },
+        });
+        
+        
+        const s2_events = document.querySelectorAll('.s2_events');
+        s2_events.forEach(e=>{
+        
+            const events_image_display = e.querySelector('.events_image_display');
+            const events_description_display = e.querySelector('.events_description_display');
+        
+            e.addEventListener('mouseenter', ()=>{
+                swiper_2.autoplay.stop()
+                events_image_display.classList.remove('h-[350px]')
+                events_image_display.classList.add('h-[200px]')
+            
+                events_description_display.classList.remove('h-[0px]')
+                events_description_display.classList.add('h-[160px]')
+            })
+        
+            e.addEventListener('mouseleave', ()=>{
+                swiper_2.autoplay.start()
+                events_image_display.classList.remove('h-[200px]')
+                events_image_display.classList.add('h-[350px]')
+            
+                events_description_display.classList.remove('h-[160px]')
+                events_description_display.classList.add('h-[0px]')
+            })
+        })
+        
+        </script>
+</div>
+
+
+
+{% comment %} <div class="swiper box-border w-screen h-full max-w-full sticky bg-slate-100 relative z-50">
+    <div class="h-[70px] w-full bg-slate-100 flex justify-center items-center">
+        <span class="h-full w-[300px] text-[30px] flex justify-center items-center p-1">Most Recent</span>
+    </div>  
+    <div class=" swiper_cotainer pt-[1%]">
+        <div class="swiper-wrapper">
+            <div data="0" class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500 ">
+                <div class="card_play_button cursor-pointer  h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_7.webp')] bg-cover">
+                    <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                        <img class="h-[40%] w-[20%] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                    </div>
+                </div>
+                <div class="h-[280px] w-[480px] pt-1 overflow-hidden">
+                    <div class="h-full w-full p-1 flex flex-col ">
+                        <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                        <div class="h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                    </div>
+                </div>
+            </div>
+            <div data="1" class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">
+                <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_3.jpg')] bg-cover">
+                    <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                        <img class="h-[40%] w-[20%] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                    </div>
+                </div>
+                <div class="h-[280px] w-[480px] pt-1 overflow-hidden">
+                    <div class="h-full w-full p-1 flex flex-col ">
+                        <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                        <div class="h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                    </div>
+                </div>
+            </div>
+            <div data="2" class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500 ">
+                <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_5.jpg')] bg-cover">
+                    <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                        <img class="h-[40%] w-[20%] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                    </div>
+                </div>
+                <div class="h-[280px] w-[480px] pt-1 overflow-hidden">
+                    <div class="h-full w-full p-1 flex flex-col ">
+                        <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                        <div class="h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                    </div>
+                </div>
+            </div>
+            <div data="3" class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500 ">
+                <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_1.jpg')] bg-cover">
+                    <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                        <img class="h-[40%] w-[20%] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                    </div>
+                </div>
+                <div class="h-[280px] w-[480px] pt-1 overflow-hidden">
+                    <div class="h-full w-full p-1 flex flex-col ">
+                        <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                        <div class="h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                    </div>
+                </div>
+            </div>
+            <div data="4" class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500 ">
+                <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_1.jpg')] bg-cover">
+                    <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                        <img class="h-[40%] w-[20%] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                    </div>
+                </div>
+                <div class="h-[280px] w-[480px] pt-1 overflow-hidden">
+                    <div class="h-full w-full p-1 flex flex-col ">
+                        <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                        <div class="h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-button-prev text-slate-900 hover:text-slate-100 hover:bg-slate-900 h-[10%] w-[3%] duration-500 opacity-75 rounded-lg"></div>
+        <div class="swiper-button-next text-slate-900 hover:text-slate-100 hover:bg-slate-900 h-[10%] w-[3%] duration-500 opacity-75 rounded-lg " ></div>
+
+    </div>  
+    <script>
+        const swiper = new Swiper('.swiper_cotainer', {
+          loop: true,
+          slidesPerView:2,
+          spaceBetween:20,
+          centeredSlides: true,
+          autoplay: {
+            delay: 3500,
+            disableOnInteraction: false,
+          },
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+
+
+            function popupFun(){
+                const popup = document.createElement('div');
+                popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-6';
+                popup.innerHTML = `
+                    <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                    </div>
+                    <div class="h-[80%] w-[90%] video_playback opacity-100 absolute top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] overflow-hidden">
+                        <video autoplay preload muted loop id="myVideo" class="h-full w-full right-0 top-0 min-w-full min-h-full">
+                            <source src="/static/assets/videos/banner_video.mp4">
+                        </video>
+                    </div>
+
+                    <div class="close_btn_dv h-[5%] w-[3%] absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                        <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="static/assets/images/icons/close_button.png">
+                    </div>
+
+                    <div id="video_playback_previous_button" class="absolute bg-slate-700 opacity-25 hover:text-slate-100 hover:opacity-100 duration-700 top-2/4 h-[10%] w-[3%] flex justify-center items-center left-[1%] rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="70" viewBox="0 0 60 70" fill="none">
+                            <path d="M34.691 20L21.6001 35L34.691 50L39.6001 44.375L31.4183 35L39.6001 25.625L34.691 20Z" fill="white"/>
+                            </svg>
+                    </div>
+                    <div id="video_playback_next_button" class="absolute bg-slate-700 opacity-25 hover:text-slate-100 hover:opacity-100 duration-700 top-2/4 h-[10%] w-[3%] flex justify-center items-center right-[1%] rounded-lg" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="70" viewBox="0 0 60 70" fill="none">
+                            <path d="M27.0909 20L23 25.625L29.8182 35L23 44.375L27.0909 50L38 35L27.0909 20Z" fill="white"/
+                        </svg>
+                    </div>
+
+                    `
+                document.body.prepend(popup)
+                const close_btn = document.querySelector('.close_btn_dv')
+                close_btn.addEventListener('click', ()=>{
+                    const popup = document.querySelector('.popup')
+                    popup.remove()
+                })
+            }
+
+            const card_play_button = document.querySelectorAll('.card_play_button');
+            const play_button = document.querySelectorAll('.play_button');
+            card_play_button.forEach((e, i)=>{
+
+                e.addEventListener('click', (e)=>{
+                    const recent_card_main = document.querySelectorAll('.recent_card_main');
+                    const popupcheck = document.querySelector('.popup');
+                    if (!popupcheck){
+                        popupFun()
+
+
+
+                    } else {
+                        popupcheck.remove()
+                    }
+                })
+                e.addEventListener('mouseenter', ()=>{
+                    play_button[i].classList.remove('hidden')
+                })
+                e.addEventListener('mouseleave', ()=>{
+                    play_button[i].classList.add('hidden')
+                })
+            })
+        </script>
+</div>  {% endcomment %}
+
+
+
+
+
+
+{% endblock  %}

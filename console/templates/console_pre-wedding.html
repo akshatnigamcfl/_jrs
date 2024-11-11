@@ -1,0 +1,334 @@
+{% extends "console-layout/layout.html" %}
+ 
+{% block page_title %}
+    Pre Wedding
+{% endblock  %}
+
+{% block main_body %}
+
+    <span class="text-2xl text-slate-100">Pre Wedding</span>
+    <div class="w-full  h-[50px] flex items-center justify-end">
+        <div>
+            <button type="button" class="upload_reels_btn py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                Upload Pre Wedding
+              </button>
+
+              <script src="/static/assets/js/poper.js"></script>
+              <script src="/static/assets/js/upload_popup_form.js"></script>
+
+              <script>
+                function validateUploadForm(){
+                  let cover_picture = document.querySelector('.cover_picture');
+                  let description = document.querySelector('.description');
+                  let title = document.querySelector('.title');
+                  let yt_video = document.getElementById('yt_video');
+                  let video_link = document.querySelector('.video_link');
+                  let youtube_link = document.querySelector('.youtube_link');
+                  const error_message = document.querySelector('.error_message');
+
+                  function success(el, message){
+                      error_message.innerText = message
+                      if (el != 0) {
+                          el.classList.remove('outline')
+                          el.classList.remove('outline-4')
+                          el.classList.remove('outline-red-600')
+                          el.classList.remove('outline-offset-0')
+                      }
+                  }
+                  function failed(el, message){
+                      error_message.innerText = message
+                      if (el != 0) {
+                          el.classList.add('outline')
+                          el.classList.add('outline-4')
+                          el.classList.add('outline-red-600')
+                          el.classList.add('outline-offset-0')
+                      }
+                  }
+
+
+                  cover_picture.addEventListener('change', ()=>{
+                    console.log(cover_picture.files[0].type.includes('image'))
+                      if(cover_picture.files[0].type.includes("image")){
+                          const error_message = document.querySelector('.error_message');
+                          success(cover_picture, '')
+                      } else {
+                          failed(cover_picture, 'Only image files can be uploaded')
+                      }
+                  })
+
+                  video_link.addEventListener('change', ()=>{
+                    console.log(video_link.files[0].type.includes('video'))
+                      if(video_link.files[0].type.includes("video")){
+                          const error_message = document.querySelector('.error_message');
+                          success(video_link, '')
+                      } else {
+                          failed(video_link, 'Only video files can be uploaded')
+                      }
+                  })
+
+                  title.addEventListener('blur', ()=>{
+                      console.log(title.value.length)
+                      if (title.value.length < 1) {
+                          failed(title, 'title should not be blank')
+                      } else {
+                          success(title, '')
+                      }
+                  })
+
+                  description.addEventListener('blur', ()=>{
+                      console.log(description.value.length)
+                      if (description.value.length < 1) {
+                          failed(description, 'description should not be blank')
+                      } else {
+                          success(description, '')
+                      }
+                  })
+
+                  youtube_link.addEventListener('blur', ()=>{
+                    console.log(youtube_link.value.length)
+                    if (youtube_link.value.length < 1) {
+                        failed(youtube_link, 'youtube_link should not be blank')
+                    } else {
+                        success(youtube_link, '')
+                    }
+                })
+                }
+
+              </script>
+
+              <script>
+
+                    const upload_reels_btn= document.querySelector('.upload_reels_btn');
+                    upload_reels_btn.addEventListener('click', ()=>{
+                        popupFun('Pre Wedding')
+                        validateUploadForm()
+
+                        const upload_submit = document.querySelector('.upload_submit');
+                        upload_submit.addEventListener('click', ()=>{
+                              if(cover_picture.files[0].type.includes("image")  && title.value.length > 0 && description.value.length > 0 && (youtube_link.value.length > 0 || video_link.files[0].type.includes("video"))){
+                                    let formData = new FormData();
+                                    formData.append('cover_picture', cover_picture.files[0])
+                                    formData.append('title', title.value)
+                                    formData.append('description', description.value)
+                                    formData.append('is_youtube_video', yt_video.checked)
+                                    if (yt_video.checked){
+                                      formData.append('video_youtube_link', youtube_link.value)
+                                    } else {
+                                      formData.append('video_link', video_link.files[0])
+                                    }
+
+
+                                    // let token = localStorage.getItem('token')
+                                    let token = getCookies()
+                                    if (token){
+                                        (async function rlUpl(){
+                                            let a = await fetch('{% url "upload_pre_wedding" %}', {method: 'POST', headers:{ 'Authorization': 'Bearer '+ token.access}, body: formData})
+                                            a = await a.json()
+                                            if (a && a.status === 200){
+                                                // const popup = document.querySelector('.popup');
+                                                // popup.remove()
+                                                poperFunction(a.status, a.message, false);
+                                                  
+                                            } else {
+                                              poperFunction(a.status, a.message, false)
+                                            }
+                                        }())
+                                    }
+                                } else {
+                                    failed(0, 'something went wrong, no issue at the server\'s end')
+                                }
+                        })
+                    })
+
+
+              </script>
+        </div>
+    </div>
+
+    
+    <div>
+        <div class="flex flex-col  bg-slate-100 rounded-xl p-4 mt-4">
+            <div class="-m-1.5 overflow-x-auto">
+              <div class="p-1.5 min-w-full inline-block align-middle">
+                <div class="overflow-hidden">
+                  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Title</th> 
+                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Description</th>
+                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Thumbnail</th>
+                        <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+
+
+
+
+                    {% if pages != 'no data' %} {% for r in pages %}
+ 
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{{ r.title }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ r.description|slice:":50" }} {% if r.description|length > 50 %}...{% endif %}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200"> <a target="blank" href="/static/{{ r.cover_picture }}"><img class="w-12 h-16"  src="/static/{{r.cover_picture}}"></a></td>
+                        {% comment %} <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 flex"> </td> {% endcomment %}
+                        <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                          {% comment %} <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"> {% endcomment %}
+                            <button type="button" data-id={{r.id}} class="edit py-2 px-2 w-16 flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Edit</button>
+                            <button type="button" data-id={{r.id}} data-cover-picture="/static/{{r.cover_picture}}" class="delete_pre_wedding py-2 px-2 w-16 flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Delete</button>
+                        {% comment %} </button> {% endcomment %}
+                        </td>
+                      </tr>
+                      {% endfor %}
+
+                      {% else %}
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                        {% comment %} <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 flex"> </td> {% endcomment %}
+                        <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                          <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">{{pages}}</button>
+                        </td>
+                      </tr>
+
+                      {% endif %}
+                      
+                    </tbody>
+                  </table>
+
+                  <script src="/static/assets/js/popup_confirm.js"></script>
+                  <script src="/static/assets/js/fetch.js"></script>
+
+                  <script>
+                    const delete_pre_wedding = document.querySelectorAll('.delete_pre_wedding');
+                    if (delete_pre_wedding.length > 0){
+                      delete_pre_wedding.forEach(e=>{
+                        e.addEventListener('click', (e)=>{
+                          popupConfirmFun(e.target.getAttribute('data-id'), 'Delete Pre Wedding!', 'Are you sure you want to delete this pre wedding?' ,e.target.getAttribute('data-cover-picture'))
+
+                          const confirm = document.querySelector('.confirm');
+                          confirm.addEventListener('click', async (e)=>{
+                            let id = e.target.getAttribute('data-id')
+                            // csrf = JSON.parse(localStorage.getItem('token'))
+                            let csrf = getCookies()
+                            
+                            let a = await ftN(`http://localhost:8000/api/delete_pre_wedding/${id}`, 'DELETE', {'Content-Type': 'application/json', 'Authorization': 'Bearer '+csrf.access}, JSON.stringify({'data': 'no data'}))
+                            if (a.status == 200){
+
+                              const popup = document.querySelector('.popup');
+                              popup.remove()
+                              poperFunction(a.status, a.message, true);
+
+                            } else {
+                              poperFunction(a.status, a.message, false);
+                            }
+
+                          })
+
+                        })
+                      })
+                    }
+
+
+                    const edit = document.querySelectorAll('.edit');
+                    edit.forEach(e=>{
+                      e.addEventListener('click', async (f)=>{
+                        // let token = JSON.parse(localStorage.getItem('token')).access
+                        let token = getCookies().access
+                        let url = '{% url "get_pre_wedding_indv" id=0 %}';
+                        url = url.replaceAll(0,f.target.getAttribute('data-id'))
+                        console.log(url)
+                          let a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': 'Bearer '+token})
+                          if (a.status === 200){
+
+                            const ftData = a.data
+                            popupFun('Pre Wedding');
+                            const title = document.querySelector('.title')
+                            const description = document.querySelector('.description')
+                            const yt_video = document.getElementById('yt_video')
+                            const youtube_link = document.querySelector('.youtube_link')
+
+                            title.value = a.data.title;
+                            description.value = a.data.description;
+                            if (a.data.is_youtube_video){
+                              yt_video.click();
+                            } else{
+                              const video_link_view = document.querySelector('.video_link_view');
+                              video_link_view.innerHTML =`<video class="w-8 h-12"><source src="/static/${a.data.video_link}"></video> <span>or choose a new file</span>`
+                            }
+
+                            youtube_link.value = a.data.video_youtube_link
+                            
+                            const cover_picture_view = document.querySelector('.cover_picture_view');
+                            cover_picture_view.innerHTML = `<img class="w-8 h-12" src="/static/${a.data.cover_picture}"> <span>or choose a new file</span>`
+
+                            const upload_submit = document.querySelector('.upload_submit');
+                            upload_submit.classList.remove('upload_submit')
+                            upload_submit.classList.add('upload_edit')
+                            
+                            const upload_edit = document.querySelector('.upload_edit');
+                            upload_edit.addEventListener('click', async ()=>{
+                              let url = '{% url "edit_pre_wedding_indv" id=0 %}'
+                              url = url.replaceAll(0, f.target.getAttribute('data-id'))
+
+                              validateUploadForm()
+                              let formData = new FormData()
+                                formData.append('title', title.value)
+                                formData.append('description',  description.value)
+                                formData.append('is_youtube_video', yt_video.checked);
+                              const cover_picture = document.querySelector('.cover_picture');
+                              const video_link = document.querySelector('.video_link');
+                              const video_youtube_link = document.querySelector('.youtube_link');
+
+                              if (cover_picture.files[0] && cover_picture.files[0].type.includes('image')){
+                                formData.append('cover_picture', cover_picture.files[0])
+                              }
+
+                                if (yt_video.checked){
+                                    formData.append('video_youtube_link', youtube_link.value)
+                                } else {
+                                  if (video_link.files[0] && video_link.files[0].type.includes('video')){
+                                    formData.append('video_link', video_link.files[0])
+                                  }
+                                }
+
+                              let a = await ftN(url, 'PUT', {'Authorization': 'Bearer '+token}, formData)
+                              if (a.status == 200 ){
+                                const popup = document.querySelector('.popup');
+                                popup.remove()
+                                poperFunction(a.status, a.message, true)
+                              } else {
+                                poperFunction(a.status, a.message, false)
+                              }
+
+                            })
+
+                          } else {
+                            poperFunction(a.status, a.message, false)
+                          }
+                      })
+                    })
+
+
+                  </script>
+
+
+                  {% comment %} {% for p in pages  %} {% endcomment %}
+
+                  {{pages.num_pages}}
+                    
+                  {% comment %} {% endfor %} {% endcomment %}
+
+                {% if pages != 'no data' %}
+                  {% include 'console-layout/pagination.html' with pages=pages %}
+                {% endif %} 
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+    </div>
+    
+{% endblock  %}

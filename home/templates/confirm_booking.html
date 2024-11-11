@@ -1,0 +1,291 @@
+{% extends "layout/layout.html" %}
+
+
+{% block main_body %}
+
+{% comment %} <div class="w-full h-auto overflow-hidden p-2"> {% endcomment %}
+
+  {% comment %} <div class='w-full h-auto flex justify-between flex-col my-4'> {% endcomment %}
+    {% comment %} {% for key, value in data.items %}
+      {% if key != 'id' and key != 'profile' %}
+      <span class="w-full h-12 min-w-[350px] p-1 flex justify-start items-center flex-wrap"><span class="w-1/4 h-full flex items-center capitalize">{{ key }}</span><input class="inp_data rounded-xl w-3/4 h-full px-2" data-key="{{key}}" type="{% if 'date' in key %}date{% else %}text{% endif %}" value="{% if value is None %}{% else %}{{value}}{% endif %}"></span>
+      {% endif %}
+    {% endfor %} {% endcomment %}
+  {% comment %} </div> {% endcomment %}
+
+
+
+<div class="hero bg-base-200 py-20">
+    <div class="hero-content flex-col lg:flex-row-reverse">
+      <div class="text-center lg:text-left">
+        {% comment %} <h1 class="text-5xl font-bold">Get a Call back!</h1> {% endcomment %}
+        {% comment %} <p class="py-6">Fill up the details to get a call back, or contact us <a class="text-blue-500 underline hover:text-blue-900" href="#">here</a>.</p> {% endcomment %}
+      </div>
+
+      {% if data != 'no data' %}
+      <div class="card shrink-0 w-[600px] shadow-2xl bg-base-100">
+        <form class="card-body mx-10 mb-6">
+
+
+          {% if data.booking_status.title == 'in progress' %}
+
+          <script src="/static/assets/js/fetch.js"></script>
+          <script src="/static/assets/js/poper.js"></script>
+          <script src="/static/assets/js/loader.js"></script>
+
+
+            <div class="h-auto w-full flex justify-center items-start p-2 flex-col">
+              <h1 class="capitalize text-lg font-bold mb-8 self-center">confirm booking</h1>
+              <span class="capitalize mb-1">Hello {{data.name}},</span>
+              <p class="capitalize text-xs mb-6">Please confirm below to finalize your booking.</p>
+              <span><input class="text-xs terms_checkbox" type="checkbox"><span class="ml-3 text-xs">I 've read the <a class="text-sky-600" href="#">terms & conditions</a> and <a class="text-sky-600" href="#">quotation</a>, would like to continue. </span></span>
+            </div>
+
+            <div class="flex">
+              <button type="button" class="grayed_button py-2 m-1 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-slate-500 text-white disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Confirm</button>
+              <button type="button" class="cancel py-2 m-1 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-white/10 dark:hover:bg-white/20 dark:text-white dark:hover:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Cancel</button>
+            </div>
+
+            <script>
+
+              const grayed_button = document.querySelector('.grayed_button')
+              const terms_checkbox = document.querySelector('.terms_checkbox')
+              
+              terms_checkbox.addEventListener('change', ()=>{
+
+                if (terms_checkbox.checked){
+                  grayed_button.classList.remove('bg-slate-500')
+                  grayed_button.classList.remove('grayed_button')
+                  grayed_button.classList.add('bg-teal-500')
+                  grayed_button.classList.add('hover:bg-teal-600')
+                  grayed_button.classList.add('hover:bg-teal-600')
+                  grayed_button.classList.add('confirm')
+
+                  const confirm = document.querySelector('.confirm')
+                  const cancel = document.querySelector('.cancel')
+                  confirm.addEventListener('click', confirmBooking)
+                  cancel.addEventListener('click', cancelBooking)
+
+                } else {
+                  grayed_button.classList.add('bg-slate-500')
+                  grayed_button.classList.add('grayed_button')
+                  grayed_button.classList.remove('bg-teal-500')
+                  grayed_button.classList.remove('hover:bg-teal-600')
+                  grayed_button.classList.remove('confirm')
+
+                  const confirm = document.querySelector('.confirm')
+                  const cancel = document.querySelector('.cancel')
+                  confirm.removeEventListener('click', confirmBooking)
+                  cancel.removeEventListener('click', cancelBooking)
+
+                }
+              
+              })
+              
+              async function confirmBooking(){
+                const terms_checkbox = document.querySelector('.terms_checkbox')
+                if (terms_checkbox.checked){
+                  addLoader()
+
+                    let a = await ftN('{% url "confirm_bookings" id=data.user.id %}', "PUT", {'Content-Type': 'application/json' }, '')
+                    if(a.status == 200){
+                      poperFunction(a.status, a.message, true)
+                    } else {
+
+                      removeLoader()
+                      poperFunction(a.status, a.message, false)
+                    
+                    }
+
+                }
+              }
+
+              function cancelBooking(){
+                console.log('cancel booking')
+              }
+
+            </script>
+
+
+          {% elif data.booking.booking_status.title != 'in progress' %}
+
+            <div class="h-auto w-full flex justify-center items-center p-2 flex-col">
+              <div class="relative w-32 h-32 rounded-full bg-[url('/static/assets/gif/confirmed.gif')] bg-cover bg-center overflow-hidden">
+              </div>
+              {% comment %} <h1 class="capitalize text-lg font-bold mb-8 self-center">confirm booking</h1> {% endcomment %}
+              <span class="capitalize mb-2">Hello <b>{{data.name}}</b>,</span>
+              <span class="capitalize text-center mb-3">your booking is confirmed!</span>
+              <span class="text-center mb-1 text-xs">Click here to go to the <a class="text-sky-600" href="/">home page</a>.</span>
+              {% comment %} <p class="capitalize text-xs mb-6">Please confirm below to finalize your booking.</p> {% endcomment %}
+              {% comment %} <span><input class="text-xs" type="checkbox"><span class="ml-3 text-xs">I 've read the <a class="text-sky-600" href="#">terms & conditions</a> and <a class="text-sky-600" href="#">quotation</a>, would like to continue. </span></span> {% endcomment %}
+            </div>
+          
+          {% endif %}
+
+          {% comment %} <div class="form-control flex flex-row">
+            <label class="label w-1/4">
+              <span class="label-text">Contact Number</span>
+            </label>
+            <input type="text" placeholder="text" class="input input-bordered w-3/4" required />
+          </div>
+          <div class="form-control flex flex-row">
+            <label class="label w-1/4">
+              <span class="label-text">Email id</span>
+            </label>
+            <input type="email" placeholder="Email Id" class="input input-bordered w-3/4" required />
+          </div>
+          <div class="form-control flex flex-row">
+            <label class="label w-1/4">
+              <span class="label-text">Wedding Date</span>
+            </label>
+            <input type="date" placeholder="Wedding Date" class="input input-bordered w-3/4" required />
+          </div>
+          <div class="form-control mt-6">
+            <button class="btn btn-primary">Submit</button>
+          </div> {% endcomment %}
+        </form>
+      </div>
+      {% else %}
+        <span class="capitalize font-bold text-lg">no user found</span>
+      {% endif %}
+
+    </div>
+  </div>
+
+  {% comment %} <script>
+    const save = document.querySelector('.save');
+    save.addEventListener('click', ()=>{
+      const inp_data = document.querySelectorAll('.inp_data')
+      let formData = new FormData()
+      inp_data.forEach(e=>{
+        formData.append(e.getAttribute('data-key').replaceAll(' ', '_'), e.value.toLocaleLowerCase());
+      })
+        const profile = document.querySelector('.update_profile_picture');
+        formData.append('profile', profile.files[0])
+            (async function rlUpl(){
+                let a = await fetch('{% url "edit_client_user_edit" id=data.id %}', {method: 'PUT', body: formData})
+                a = await a.json()
+                if (a && a.status === 200){
+                    const dv = document.createElement('div');
+                    dv.classList = 'submit_alert w-80 absolute left-[50%] translate-x-[-50%] top-4 overflow-hidden'
+                    dv.innerHTML= `<div class="bg-teal-50 border-t-2 border-teal-500 rounded-lg p-4 dark:bg-teal-800/30" role="alert">
+                        <div class="flex">
+                          <div class="flex-shrink-0">
+                            <span class="inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-teal-100 bg-teal-200 text-teal-800 dark:border-teal-900 dark:bg-teal-800 dark:text-teal-400">
+                              <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                            </span>
+                          </div>
+                          <div class="ms-3">
+                            <h3 class="text-gray-800 font-semibold dark:text-white">
+                                ${a.message}
+                            </h3>
+                          </div>
+                        </div>
+                        <div class="submit_alert_duration bg-green-800 w-[100%] h-[6px] absolute bottom-0 left-0 rounded-b-md"></div>
+                      </div>
+                      `
+                      document.body.prepend(dv)
+                      
+                      const submit_alert = document.querySelector('.submit_alert');
+                      setTimeout(()=>{
+                        window.location.reload()
+                      },1000)     
+                }  else {
+                  const dv = document.createElement('div');
+                  dv.classList = 'submit_alert w-80 absolute left-[50%] translate-x-[-50%] top-4 overflow-hidden'
+                  dv.innerHTML= `<div class="bg-red-50 border-s-4 border-red-500 p-4 dark:bg-red-800/30" role="alert">
+                    <div class="flex">
+                      <div class="flex-shrink-0">
+                        <!-- Icon -->
+                        <span class="inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-red-100 bg-red-200 text-red-800 dark:border-red-900 dark:bg-red-800 dark:text-red-400">
+                          <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                        </span>
+                        <!-- End Icon -->
+                      </div>
+                      <div class="ms-3">
+                        <h3 class="text-gray-800 font-semibold dark:text-white">
+                          Error!
+                        </h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-400">
+                          ${e.message}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                    </div>
+                    `
+                    document.body.prepend(dv)
+                }
+            }())
+          // }
+    })
+    const profile = document.querySelector('.profile');
+    profile.addEventListener('click', ()=>{
+      const update_profile_picture = document.querySelector('.update_profile_picture');
+      update_profile_picture.click()
+    })
+  </script> {% endcomment %}
+
+{% comment %} </div> {% endcomment %}
+
+
+
+
+
+{% comment %} <div class=" min-h-[calc(100vh / 2)] bg-base-200"> {% endcomment %}
+    {% comment %} <div id="crew-1" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Shubham Nigam</h2>
+          <p class="crew_designation my-1">Cinematic Videographer</p>
+          <p class="crew_short_description my-1">This is the short description of the crew member. Keep it short</p>
+
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-2" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body w-20">
+          <h2 class="card-title">Jayesh Nigam</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-3" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Person three</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div>
+    <div id="crew-4" class="card card-side bg-base-100 shadow-xl self-center my-10 hover:shadow-2xl duration-3000">
+        <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="crew"/></figure>
+        <div class="card-body">
+          <h2 class="card-title">Person Four</h2>
+          <p>Click the button to watch on Jetflix app.</p>
+          <div class="card-actions justify-end">
+          </div>
+        </div>
+    </div> {% endcomment %}
+{% comment %} </div> {% endcomment %}
+
+
+{% comment %} <div class="relative w-full h-96"> {% endcomment %}
+  {% comment %} <iframe class="absolute top-0 left-0 w-full h-full"
+      src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12080.73732861526!2d-74.0059418!3d40.7127847!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM40zMDA2JzEwLjAiTiA3NMKwMjUnMzcuNyJX!5e0!3m2!1sen!2sus!4v1648482801994!5m2!1sen!2sus"
+      frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0">
+  </iframe> {% endcomment %}
+
+  {% comment %} <iframe width="600" height="450" style="border:0" loading="lazy" allowfullscreen
+src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJOV1-ngP-YjkRTL2CB41sJso&key=..."></iframe>
+</div> {% endcomment %}
+
+
+
+
+
+{% endblock  %}

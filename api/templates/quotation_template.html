@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quotation</title>
+    {% load static %}
+
+    <style>
+
+        {% comment %} @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap'); {% endcomment %}
+
+        @font-face{
+            font-family: "Julius Sans One", sans-serif;
+            src: url("/media/font/Julius_Sans_One/JuliusSansOne-Regular.ttf") format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            {% comment %} color: #333; {% endcomment %}
+            text-align: center;
+            text-decoration: underline;
+            font-size: 30px;
+            font-family: "Julius Sans One", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        .quotation-header {
+            margin-bottom: 20px;
+        }
+
+        .date_heading{
+            padding-left: 50px;
+        }
+
+        .date_heading_inr_bullets{
+            padding-left: 100px;
+        }
+
+        .normal_text{
+            font-size: 14px;
+        }
+
+        .heading_text{
+            font-size: 16px;
+        }
+
+        .capitalized{
+            text-transform: capitalize;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="quotation-header">
+        <h1>JRS STUDIOS</h1>
+        {% comment %} <p>Date: {{ date }}</p> {% endcomment %}
+        {% comment %} <p>Customer: {{ customer_name }}</p> {% endcomment %}
+        {% comment %} <p>Email: {{ customer_email }}</p> {% endcomment %}
+    </div>
+    <div>
+        <p class="normal_text">Dear <b>{{name}}</b>,</p>
+        <p class="normal_text">As per your requirement for <b>Wedding Event Shoot</b>, I ‘ve shared below the detailed quotation for the same</p>
+        <p class="heading_text">Package Name: <b class="capitalized">{{package_name}}</b></p>
+        <p class="heading_text">Package Cost: <b class="capitalized">{{package_cost}}</b></p>
+        <p class="normal_text">The package is inclusive of</p>
+        {% for b in booking %}
+            <ul class="date_heading">
+                <li class=" normal_text">{{b.date}}</li>
+            </ul>
+                <ul class="date_heading_inr_bullets">
+                    {% for ads in b.services %}
+                        <li class="normal_text capitalized">{{ads.count}} - {{ads.service_name}}</li>
+                    {% endfor %}
+                </ul>
+        {% endfor %}
+        <p class="heading_text"><b>Cameras & Equipments details:</b></p>
+        <ul class="date_heading">
+            {% for ce in camera_equipments %}
+            <li class="normal_text">{{ce}}</li>
+            {% endfor %}
+        </ul>
+
+        <p class="heading_text"><b>Production Process:</b></p>
+        <ul class="date_heading">
+            {% for ce in production_process %}
+            <li class="normal_text">{{ce}}</li>
+            {% endfor %}
+        </ul>
+
+        <p class="heading_text"><b>What you get:</b></p>
+        <ul class="date_heading">
+            {% for ce in deliverables %}
+            <li class="normal_text">{{ce}}</li>
+            {% endfor %}
+        </ul>
+
+        
+        <p class="heading_text"><b>Terms and conditions:</b></p>
+        <ul class="date_heading">
+            {% for ce in terms_conditions %}
+            <li class="normal_text">{{ce}}</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+    {% comment %} <table> {% endcomment %}
+        {% comment %} <thead> {% endcomment %}
+            {% comment %} <tr> {% endcomment %}
+                {% comment %} <th>Item</th> {% endcomment %}
+                {% comment %} <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th> {% endcomment %}
+            {% comment %} </tr> {% endcomment %}
+        {% comment %} </thead> {% endcomment %}
+        {% comment %} <tbody> {% endcomment %}
+            {% comment %} {% for ce in camera_equipments %} {% endcomment %}
+            {% comment %} <tr> {% endcomment %}
+
+                {% comment %} <td>{{ ce }}</td> {% endcomment %}
+                {% comment %} <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.total }}</td> {% endcomment %}
+            {% comment %} </tr>
+            {% endfor %}
+        </tbody>
+    </table> {% endcomment %}
+
+
+
+
+
+    {% comment %} <h2>Total Amount: {{ total_amount }}</h2> {% endcomment %}
+</body>
+</html>

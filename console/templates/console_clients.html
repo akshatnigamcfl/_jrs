@@ -1,0 +1,477 @@
+{% extends "console-layout/layout.html" %}
+ 
+{% block page_title %}Clients{% endblock  %}
+
+{% block main_body %}
+{% load static %}
+
+
+<script src="{% static "assets/js/cookies.js" %}"></script>
+
+<div class="text-lg text-slate-900 border-b select-none w-full text-start p-2">Manage Clients</div>
+
+{% comment %} <div class="w-full h-[50px] flex items-center justify-end"> {% endcomment %}
+    {% comment %} <div> {% endcomment %}
+        {% comment %} <button type="button" class="upload_reels_btn py-1 px-2 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-white text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Add Client</button> {% endcomment %}
+
+    {% comment %} </div> {% endcomment %}
+{% comment %} </div> {% endcomment %}
+
+
+<div class="w-full">
+  
+  <div class="flex flex-col  bg-white rounded-xl p-4 mt-4">
+    <div class="-m-1.5 overflow-x-auto">
+      <div class="flex justify-end">
+        {% comment %} <button type="button" class="upload_reels_btn py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border shadow-lg bg-white text-gray-800 hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Add Client</button> {% endcomment %}
+        <button class="btn btn-outline upload_reels_btn btn-sm text-xs">Add Client</button>
+      </div>
+          <div class="p-1.5 min-w-full inline-block align-middle">
+            <div class="overflow-hidden border p-2 py-3">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-zebra">
+                <thead>
+                  <tr>
+                    <th scope="col" class="px-4 py-2 text-start text-xs font-medium text-gray-500 uppercase">Profile</th>
+                    <th scope="col" class="px-4 py-2 text-start text-xs font-medium text-gray-500 uppercase">Name</th>
+                    <th scope="col" class="px-4 py-2 text-start text-xs font-medium text-gray-500 uppercase">Contact Number</th>
+                    <th scope="col" class="px-4 py-2 text-start text-xs font-medium text-gray-500 uppercase">Email</th>
+                    <th scope="col" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+
+
+                {% if pages != 'no data' %} {% for r in pages %}
+
+                  <tr id="{{r.id}}" class="client_row">
+                    {% load static %}
+                    <td class="px-4 py-1 whitespace-nowrap text-xs font-medium text-gray-800 dark:text-gray-200 capitalize"><img class="h-6 w-6 mr-3 rounded-full" src="/media/{{r.user.profile_picture}}"></td>
+                    <td data-name="name" class="px-4 py-1 inps whitespace-nowrap text-xs font-medium text-gray-800 dark:text-gray-200 capitalize">{{ r.user.name }}</td>
+                    <td data-name="contact_number" class="px-4 py-1 inps whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">{{ r.user.contact_number}}</td>
+                    <td data-name="email" class="px-4 py-1 inps whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">{{ r.user.email}}</td>
+                    {% comment %} <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 capitalize"> {% if r.booking %}{{r.booking.booking_status}}{% else %}-{% endif %} {% endcomment %}
+                      {% comment %} {% if r.wedding_date == None %} - {% else %} {{ r.wedding_date }} {% endif %} {% endcomment %}
+                    
+                    </td>
+                    {% comment %} <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 flex"> </td> {% endcomment %}
+                    <td class="px-4 py-1 whitespace-nowrap text-end font-medium flex justify-center ">
+                      {% comment %} <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"> {% endcomment %}
+                        {% comment %} <a href="/console/client-edit?id={{r.id}}"> {% endcomment %}
+                          {% comment %} <button type="button" data-id={{r.id}} class="edit_client py-1 btn-xs text-xs px-2 w-16 flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Edit</button> {% endcomment %}
+                          <button type="button" data-id={{r.id}} class="view_bookings mx-1 py-1 btn-xs text-xs px-2 w-auto flex justify-center items-center inline-flex items-center gap-x-2 font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">View Bookings</button>
+                          <img class="edit_client h-5 w-5 mx-1 cursor-pointer" data-id={{r.id}} src="{% static "assets/images/icons/edit_profile.png" %}">
+
+                        {% comment %} </a> {% endcomment %}
+                        {% comment %} <button type="button" data-id={{r.id}} data-file="/static/{{r.file}}" class="cancle_booking py-2 px-2 w-16 flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Cancle</button> {% endcomment %}
+                    {% comment %} </button> {% endcomment %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+
+                  {% else %}
+                  <tr>
+                    <td class="px-4 py-4 whitespace-nowrap text-xs font-medium text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                    <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                    <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                    {% comment %} <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 flex"> </td> {% endcomment %}
+                    <td class="px-4 py-4 whitespace-nowrap text-end text-xs font-medium">
+                      <button type="button" class="inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">{{pages}}</button>
+                    </td>
+                  </tr>
+
+                  {% endif %}
+                  
+                </tbody>
+              </table>
+
+              <script src="/static/assets/js/popup_confirm.js"></script>
+              <script src="/static/assets/js/fetch.js"></script>
+
+              <script src="{% static "assets/js/poper.js" %}"></script>
+              <script>
+    
+                function popupFun(data){
+                    const popup = document.createElement('div');
+                    popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-6';
+                    popup.innerHTML = `
+                    <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0"></div>
+                    <div class="h-auto w-96 bg-white video_playback opacity-100 absolute top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-2xl">
+                      <div class='h-[40px] relative w-full bg-slate-800 text-white flex justify-center items-center text-base'>
+                        <span class="select-none">Add Client</span>
+                        <div class="close_btn_dv h-7 w-7 absolute top-[50%] translate-y-[-50%] right-[3%] rounded-full flex justify-center items-center bg-red-700"><img class="w-5 h-5 hover:h-6 hover:w-6 duration-300" src="/static/assets/images/icons/close_button.png"></div>
+                      </div>
+                      <div class='error_message capitalize mt-3 mb-1 h-4 w-full text-slate-100 flex justify-center text-xs text-red-500 font-bold'></div>
+
+                      <div class="px-3">
+                        <div class="w-full h-auto">
+                          <div class="w-full flex">
+                            <div class="w-[30%] flex items-center select-none text-xs">Name</div>
+                            <div class="w-[70%]">
+                              <input type="text" class="name py-3 px-4 block my-2 w-full border-gray-200 rounded-lg text-xs focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600 border" placeholder="Name" value="${data?data.name:''}" required>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="w-full h-auto">
+                          <div class="w-full flex">
+                            <div class="w-[30%] flex items-center select-none text-xs">Contact Number</div>
+                            <div class="w-[70%]">
+                              <input type="number" class="contact_number py-3 px-4 block my-2 w-full border-gray-200 rounded-lg text-xs focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600 border" placeholder="Contact Number" value="${data?data.contact_number:''}" required>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="w-full h-auto">
+                          <div class="w-full flex">
+                            <div class="w-[30%] flex items-center select-none text-xs">Email Id</div>
+                            <div class="w-[70%]">
+                              <input type="email" class="email_id py-3 px-4 block my-2 w-full border-gray-200 rounded-lg text-xs focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600 border" placeholder="Email ID" value="${data?data.email:''}" required>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="flex justify-center">
+                        <button type="button" data-id="${data?data.id:''}" class="${data?'upload_update':'upload_submit'} py-3 px-4 m-2 inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">${data?'update':'create'}</button>
+                      </div>
+                    </div>
+                    `
+    
+                    // popup.innerHTML = `
+                    //     <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                    //     </div>
+                    //     <div class="h-96 w-[500px] bg-slate-600 video_playback opacity-100 absolute top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-2xl">
+                    //         <div class='mt-4 mb-2 w-full text-slate-100 flex justify-center text-xl'>Add Client</div>
+                    //         <div class='error_message capitalize mt-1 mb-3 h-4 w-full text-slate-100 flex justify-center text-md text-red-500 font-bold'></div>
+                    //         <div class=" w-full h-[300px] flex flex-col items-center">
+                    //             <input type="text" class="name py-3 px-4 block m-2 w-[70%] border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" placeholder="Name" required>
+                    // 
+                    //             <input type="number" class="contact_number py-3 px-4 block m-2 w-[70%] border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" placeholder="Contact Number" required>
+                    //             <input type="email" class="email_id py-3 px-4 block m-2 w-[70%] border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" placeholder="Email ID" required>
+                    //             
+                    //             <button type="button" class="upload_submit py-3 px-4 m-2 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                    //                 Upload
+                    //               </button>
+                    //         </div>
+                    //     </div>
+                    //     <div class="close_btn_dv h-8 w-8 absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                    //         <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="/static/assets/images/icons/close_button.png">
+                    //     </div>
+                    //     `
+                    document.body.prepend(popup)
+                    const close_btn = document.querySelector('.close_btn_dv')
+                    close_btn.addEventListener('click', ()=>{
+                        const popup = document.querySelector('.popup')
+                        popup.remove()
+                    })
+
+                    
+                    const upload_update = document.querySelector('.upload_update');
+                    upload_update.addEventListener('click', ()=>{
+                      let data = uploadValidation()
+                      let formData = data.formData
+                      let token = data.token
+                      if (token){
+                        rlUpl({token: token, formData: formData, url: '{% url "edit_client" id=0 %}'.replaceAll('0', upload_update.getAttribute('data-id')), method: 'PUT' })
+                      }
+                    })
+                }
+
+
+                function validateForm(){
+                  let name = document.querySelector('.name');
+                  let contact_number = document.querySelector('.contact_number');
+                  let email_id = document.querySelector('.email_id');
+                  const error_message = document.querySelector('.error_message');
+                  function success(el, message){
+                      error_message.innerText = message
+                      if (el != 0) {
+                          el.classList.remove('outline')
+                          el.classList.remove('outline-4')
+                          el.classList.remove('outline-red-600')
+                          el.classList.remove('outline-offset-0')
+                      }
+                  }
+                  function failed(el, message){
+                      error_message.innerText = message
+                      if (el != 0) {
+                          el.classList.add('outline')
+                          el.classList.add('outline-4')
+                          el.classList.add('outline-red-600')
+                          el.classList.add('outline-offset-0')
+                      }
+                  }
+                  name.addEventListener('blur', ()=>{
+                      console.log(name.value.length)
+                      if (name.value.length < 1) {
+                          failed(name, 'name should not be blank')
+                      } else {
+                          success(name, '')
+                      }
+                  })
+                  contact_number.addEventListener('blur', ()=>{
+                      console.log(contact_number.value.length)
+                      if (contact_number.value.length < 10) {
+                          failed(contact_number, 'enter a valid contact number')
+                      } else {
+                          success(contact_number, '')
+                      }
+                  })
+                  email_id.addEventListener('blur', ()=>{
+                      console.log(email_id.value.length)
+                      if (email_id.value.length < 1) {
+                          failed(email_id, 'email_id should not be blank')
+                      } else {
+                          success(email_id, '')
+                      }
+                  })
+
+                  return {name: name, email_id: email_id, contact_number: contact_number }
+
+                }
+
+
+                function uploadValidation(){
+                  data = validateForm()
+                  let name = data.name
+                  let email_id = data.email_id
+                  let contact_number = data.contact_number
+
+                  if(name.value.length > 0 && contact_number.value.length === 10 && email_id.value.length > 0){
+                    let formData = new FormData();
+                    formData.append('name', name.value)
+                    formData.append('contact_number', contact_number.value)
+                    formData.append('email', email_id.value)
+                    // let token = localStorage.getItem('token')
+                    let token = getCookies().access
+
+                    return {formData: formData, token: token}
+
+                  } else {
+                    failed(0, 'something went wrong, no issue at the server\'s end')
+                  }
+                }
+
+                async function rlUpl(data){
+
+                  let url = data.url
+                  let method = data.method
+
+                  let a = await fetch(url, {method: method, headers:{ 'Authorization': 'Bearer '+ getCookies().access}, body: data.formData})
+                  a = await a.json()
+                  if (a && a.status === 200){
+                      poperFunction(a.status, a.message, true)
+                    } else {
+                    poperFunction(a.status, a.message, false)
+                  }
+              }
+
+
+                    const upload_reels_btn= document.querySelector('.upload_reels_btn');
+                    upload_reels_btn.addEventListener('click', ()=>{
+                        popupFun()
+    
+                        const upload_submit = document.querySelector('.upload_submit');
+                        upload_submit.addEventListener('click', ()=>{
+                          let data = uploadValidation()
+                          let formData = data.formData
+                          let token = data.token
+                          if (token){
+                            rlUpl({token: token, formData: formData, url: '{% url "add_client" %}', method:'POST' })
+                          }
+                          })
+                      })
+
+    
+  
+
+
+                const edit_client = document.querySelectorAll('.edit_client');
+                edit_client.forEach((e,i)=>{
+                  e.addEventListener('click',()=>{
+                    data={}
+
+                    const client_row = document.querySelectorAll('.client_row');
+                    const inps = client_row[i].querySelectorAll('.inps');
+                    inps.forEach(e=>{
+                      data[e.getAttribute('data-name')] = e.innerText.trim()
+                    })
+                    data['id'] = e.getAttribute('data-id')
+                    popupFun(data)
+                    // const client_row = document.querySelectorAll('.client_row');
+                    // const inps = client_row[i].querySelectorAll('.inps');
+                    // inps.forEach((e=>{
+                    //   console.log(e.getAttribute('data-name'), e)
+                    //   e.innerHTML = `<input type="text" class="h-full w-auto py-1" name="${e.getAttribute('data-name')}" value="${e.innerText}" >`
+                    // }))
+                  })
+                })
+
+                const view_bookings = document.querySelectorAll('.view_bookings');
+                view_bookings.forEach(e=>{
+                  e.addEventListener('click',async ()=>{
+
+                    const popup = document.createElement('div');
+                    popup.classList.value = 'absolute h-96 w-96 bg-white top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] shadow-2xl rounded-xl p-5';
+                    popup.innerHTML = `
+                    <div class= "close_div p-1 bg-red-700 w-8 h-8 absolute right-[25px] top-[20px] rounded-full flex justify-center items-center">
+                      <img class="close_popup text-center h-5 w-5 duration-200" src="/static/assets/images/icons/close_button.png" >
+                    </div>
+                    <div class="text-center mb-4 text-md font-bold">Booking id</div>
+                    <div class="border w-full h-64 rounded-xl p-3">
+                      <ul class="booking_history overflow-y-scroll h-full text-xs">
+                        {% comment %} <li class="px-4 bg-slate-100"><div class="w-full h-8 flex"><div class="w-full">Boooking Date</div>  </div><li> {% endcomment %}
+                      </ul>
+                    </div>
+                    <div>
+                      <button data-client-id=${e.getAttribute('data-id')} class="create_new_service btn btn-success my-1 w-full text-white">Create New Booking</button>
+                    </div>
+                    `
+
+                    const close_div = popup.querySelector('.close_div')
+                    const close_popup = popup.querySelector('.close_popup')
+                    close_div.addEventListener('mouseenter', ()=>{
+                      close_popup.classList.remove('h-5')
+                      close_popup.classList.remove('w-5')
+                      close_popup.classList.add('h-6')
+                      close_popup.classList.add('w-6')
+                    })
+                    close_div.addEventListener('mouseleave', ()=>{
+                      close_popup.classList.remove('h-6')
+                      close_popup.classList.remove('w-6')
+                      close_popup.classList.add('h-5')
+                      close_popup.classList.add('w-5')
+                    })
+                    close_div.addEventListener('click', ()=>{
+                      popup.remove()
+                    })
+
+
+                    async function getBookingHistory(){
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      let url = '{% url "get_bookings_history" client_id=0 %}'.replaceAll(0, e.getAttribute('data-id'))
+
+                      let a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, '')
+                      if (a.status == 200){
+                        const booking_history = popup.querySelector('.booking_history');
+                        a.data.forEach((f,i)=>{
+
+                          console.log(f,i)
+
+                          const li = document.createElement('li');
+                          li.classList.value = 'booking_history_item h-12 hover:bg-sky-600 flex items-center hover:text-white border hover:shadow-xl rounded-lg mr-2 my-1'
+                          {% comment %} li.innerHTML=`<a class="cursor-pointer w-full" href="/console/client-edit?id=${e.getAttribute('data-id')}&booking_id=${f.id}" ><div class="w-full h-12 flex"> <div class="w-2/4 flex items-center" >${new Date(f.date)}</div> <div class="w-2/4 flex items-center" >${f.status}</div> </div></a>` {% endcomment %}
+
+                          li.innerHTML=`
+                          <a class="cursor-pointer w-full h-full flex text-blue-700 hover:text-white items-center px-4" href="/console/client-edit?id=${e.getAttribute('data-id')}&booking_id=${f.id}" > 
+                          
+                            <div class="flex items-center w-full justify-between">
+                              <div class="flex justify-start w-1/4">
+                                <div class="flex items-center flex-col w-full ">
+                                  <img class="h-4 w-4 " src=${f.status==="confirmed"?"{% static 'assets/gif/confirmed1.gif' %}":f.status==='completed'?"{% static 'assets/gif/completed1.gif' %}":f.status==='in progress'?"{% static 'assets/gif/in_progress.gif' %}":f.status==='cancelled'?"{% static 'assets/images/icons/excluding_red.png' %}":'' }>
+                                  <p class="text-xs">${f.status}</p>
+                                </div>
+                              </div>
+                              <div class="w-[75%] text-xs font-bold tracking-sm text-center">${new Date(f.date).toLocaleDateString()}</div>
+                            </div>
+                          </a>`
+                          
+                          booking_history.append(li)
+                        })
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                    } getBookingHistory()
+
+                    const create_new_service = popup.querySelector('.create_new_service');
+                    create_new_service.addEventListener('click', async ()=>{
+                      let url = '{% url "create_new_booking" client_id=0 %}'.replaceAll(0,create_new_service.getAttribute('data-client-id'))
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      let a = await ftN(url,'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`})
+                      if (a.status === 200){
+                        const booking_history_item = document.querySelectorAll('.booking_history_item')
+                        booking_history_item.forEach(e=>{
+                          e.remove()
+                        })
+                        getBookingHistory()
+                        poperFunction(a.status, a.message, false)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                    })
+
+
+                    document.body.appendChild(popup)
+
+                  })
+                })
+                  
+
+                // const cancle_booking = document.querySelectorAll('.cancle_booking');
+                // if (cancle_booking.length > 0){
+                //   cancle_booking.forEach(e=>{
+                //     e.addEventListener('click', (e)=>{
+                //       popupConfirmFun(e.target.getAttribute('data-id'), 'Cancle Booking!', 'Are you sure you want to cancle this booking?', null)
+// 
+                //       const confirm = document.querySelector('.confirm');
+                //       confirm.addEventListener('click', async (e)=>{
+                //         let id = e.target.getAttribute('data-id')
+                //         console.log('id', id)
+                //         csrf = JSON.parse(localStorage.getItem('token'))
+// 
+                //         console.log('confirm cancle')
+                {% comment %} //         let url = "{% url 'cancle_booking' %}"; {% endcomment %}
+                //         url = url.replaceAll(0,id) 
+                //         
+                //         let a = await ftN(url , 'DELETE', {'Content-Type': 'application/json', 'Authorization': 'Bearer '+csrf.access}, JSON.stringify({'data': 'no data'}))
+                //         if (a && a.status === 200){
+                //           const popup = document.querySelector('.popup');
+                //           popup.remove()
+                //           poperFunction(a.status, a.message, true);
+                //             
+                //         } else {
+                //           poperFunction(a.status, a.message, false)
+                //         }
+// 
+// 
+                //       })
+// 
+// 
+                //     })
+                //   })
+                // }
+
+                {% comment %} const view_bookings = document.querySelectorAll('.view_bookings');
+                view_bookings.forEach(e=>{
+                    e.addEventListener('click', async ()=>{
+                        
+                }) {% endcomment %}
+
+                    
+                {% comment %} }) {% endcomment %}
+
+              </script>
+
+
+              {% comment %} {% for p in pages  %} {% endcomment %}
+
+              {{pages.num_pages}}
+                
+              {% comment %} {% endfor %} {% endcomment %}
+
+              {% if pages != 'no data' %}
+                {% include 'console-layout/pagination.html' with pages=pages %}
+              {% endif %} 
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+</div>
+
+
+
+{% endblock  %}

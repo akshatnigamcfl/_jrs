@@ -1,0 +1,196 @@
+{% extends "console-layout/layout.html" %}
+ 
+
+{% block page_title %}
+    Reviews
+{% endblock  %}
+
+{% block main_body %}
+
+{% load poll_extras %}
+{% load static %}
+
+{% comment %} {%for k,v in request.GET.items %}
+  {{k}} - {{v}}</br>
+{% endfor %} {% endcomment %}
+
+
+
+
+{% comment %} {% for p in pages %}
+  {{p}}
+{%endfor%} {% endcomment %}
+
+<script src="{% static "assets/js/poper.js" %}"></script>
+<script src="{% static "assets/js/fetch.js" %}"></script>
+
+<div class="text-lg text-slate-900 border-b select-none w-full text-start p-2">Reviews</div>
+
+  <div class="w-full mt-6 h-[50px] flex items-center ">
+    <select class="date_selector w-40 h-8 rounded-xl px-3 mx-1 capitalize text-xs">
+      <option disabled selected value="{{dateSelector|default:"this_month"}}">{{dateSelector|default:"this month"}}</option>
+      <option value="today">today</option>
+      <option value="this_month">this month</option>
+      <option value="this_year">this year</option>
+      <option value="custom">custom</option>
+      {% comment %} <option value="this_month">Custom</option> {% endcomment %}
+    </select>
+    
+    <span class="custom_date_selector {% if not dateSelector == 'custom' %}hidden{% endif %}">
+    <input type="date" class="date_select_from w-40 h-8 rounded-xl px-3 mx-1" value="{{date.date_from}}"><span class="text-white">to</span><input type="date" class="date_select_to w-40 h-8 rounded-xl px-3 mx-1" value="{{date.date_to}}">
+      <button type="button" class="py-1 px-2 custom_date_submit inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none">Submit</button>
+    </span>
+  </div>
+
+
+  <div class="flex flex-col w-full bg-white rounded-xl p-4 my-4">
+      <div class="-m-1.5 overflow-x-auto">
+          <div class="p-1.5 min-w-full inline-block align-middle">
+              <div class="overflow-hidden">
+                  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xss">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th scope="col" class="px-6 py-2 text-start text-xs font-medium text-gray-500 uppercase">Date</th>
+                            <th scope="col" class="px-6 py-2 text-start text-xs font-medium text-gray-500 uppercase">Name</th>
+                          <th scope="col" class="px-6 py-2 text-start text-xs font-medium text-gray-500 uppercase">Booking</th>
+                            <th scope="col" class="px-6 py-2 text-xs font-medium text-gray-500 text-center uppercase">Rating</th>
+                            <th scope="col" class="px-6 py-2 text-start text-xs font-medium text-gray-500 uppercase">Title</th>
+                          <th scope="col" class="px-6 py-2 text-start text-xs font-medium text-gray-500 uppercase">Review</th>
+                          {% comment %} <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 text-end uppercase">Invoice Id</th> {% endcomment %}
+                          <th scope="col" class="px-6 py-2 text-end text-xs font-medium text-gray-500 uppercase">Action</th>  
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+
+                        {% if pages != 'no data' %} {%for p in pages%}
+                          {% with client=p|clientObjectWithReview %}
+                            {% with booking=p|bookingObjectWithReview %}
+                              <tr>
+                                <td class="px-4 py-1 whitespace-nowrap text-xs font-medium text-gray-800 dark:text-gray-200 capitalize"><img class="h-6 w-6 mr-3 rounded-full" src="/media/{{client.user.profile_picture}}"></td>
+                                <td class="px-6 py-2 whitespace-nowrap text-xs font-medium text-gray-800 dark:text-gray-200">{{p.date}}</td>
+                                <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">{{client.user.name}}</td>
+                                <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">{{booking.groom_name}} weds {{booking.bride_name}}</td>
+                                <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200"> 
+                                  <div class="flex border w-full flex justify-center items-center bg-slate-50 rounded-lg h-8">
+                                    <div class="rating rating-xs">
+                                      <input type="radio" name="rating-{{forloop.counter}}" class="mask mask-star-2 mx-0.5 bg-orange-400" {% if p.ratings == 1 %}checked="checked"{% endif %} />
+                                      <input type="radio" name="rating-{{forloop.counter}}" class="mask mask-star-2 mx-0.5 bg-orange-400" {% if p.ratings == 2 %}checked="checked"{% endif %} />
+                                      <input type="radio" name="rating-{{forloop.counter}}" class="mask mask-star-2 mx-0.5 bg-orange-400" {% if p.ratings == 3 %}checked="checked"{% endif %} />
+                                      <input type="radio" name="rating-{{forloop.counter}}" class="mask mask-star-2 mx-0.5 bg-orange-400" {% if p.ratings == 4 %}checked="checked"{% endif %} />
+                                      <input type="radio" name="rating-{{forloop.counter}}" class="mask mask-star-2 mx-0.5 bg-orange-400" {% if p.ratings == 5 %}checked="checked"{% endif %} />
+                                    </div>
+                                  </div>
+                                </td>
+                                <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">{{p.title}}</td>
+                                <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">{{p.content}}</td>
+                                {% comment %} <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 text-end">{{p.id}}</td> {% endcomment %}
+                              
+                                <td class="px-6 py-2 whitespace-nowrap text-end text-xs">
+
+                                  <div class="flex flex-col justify-center items-center">  
+                                    <input type="checkbox" data-id={{p.id}} class="update toggle toggle-sm toggle-success" {% if p.visibility == True %}checked="checked"{% endif %} />
+                                    <span class="text-xs">{% if p.visibility == True %}Visible{% else %}Hidden{% endif %} on website</span>
+                                  </div>
+
+                                  
+                                    {% comment %} <button  type="button"  data-type="{% if not p.visibility == True %}visible{% else %}hidden{% endif %}" class="update py-1 px-1 w-16 flex justify-center items-center inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-{% if not p.visibility == True %}blue{% else %}red{% endif %}-600 text-white hover:bg-{% if not p.visibility == True %}blue{% else %}red{% endif %}-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">{% if not p.visibility == True %}visible{% else %}hidden{% endif %}</button> {% endcomment %}
+                                  
+                                      {% comment %} <button  type="button" data-id={{p.id}} class="{% if not p.visibility == True %}edit{% endif %} py-1 px-1 w-16 flex justify-center items-center inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Hidden</button> {% endcomment %}
+                                  
+
+                                </td>
+                              </tr>
+                            {% endwith %}
+                          {% endwith %}
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                          <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                          <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                          <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">{{ pages }}</td>
+                          <td class="px-6 py-4 whitespace-nowrap text-end text-xs font-medium">
+                            <button type="button" class="inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">{{pages}}</button>
+                          </td>
+                        </tr>
+                        
+                    {% endif %}
+                        
+                      </tbody>
+                  </table>
+                  {% comment %} {% with pages=pages %} {% endcomment %}
+                  {% if pages != 'no data' %}
+                      {% include 'console-layout/pagination.html' with pages=pages %}
+                  {% endif %}
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+  
+    
+
+    {% comment %} <script src="/static/assets/js/poper.js"></script> {% endcomment %}
+    <script>
+
+      const date_selector = document.querySelector('.date_selector');
+      date_selector.addEventListener('change',()=>{
+        console.log('date_selector.value',date_selector.value)
+        if (date_selector.value !== 'custom'){
+          window.location.search = `?date=${date_selector.value}`
+        } else {
+          const custom_date_selector = document.querySelector('.custom_date_selector')
+          custom_date_selector.classList.remove('hidden')
+
+          const custom_date_submit = document.querySelector('.custom_date_submit');
+          custom_date_submit.addEventListener('click',()=>{
+            const date_select_from = document.querySelector('.date_select_from');
+            const date_select_to = document.querySelector('.date_select_to')
+
+            if (date_select_from.value === '' ){
+              poperFunction(400,'date not selected',false)
+              date_select_from.classList.add('border-2')
+              date_select_from.classList.add('border-red-700')
+            }
+
+            if (date_select_to.value === '' ){
+              poperFunction(400,'date not selected',false)
+              date_select_to.classList.add('border-2')
+              date_select_to.classList.add('border-red-700')
+            }
+
+            if (date_select_from.value !== '' || date_select_to.value !== ''){
+              window.location.search = `?date=${date_selector.value}&date_from=${date_select_from.value}&date_to=${date_select_to.value}`
+            }
+
+          })
+        }
+      })
+
+
+      const update = document.querySelectorAll('.update');
+      update.forEach(e=>{
+        e.addEventListener('change', async ()=>{
+          let data={}
+
+          data['visibility'] = e.getAttribute('checked')?false:true
+
+          let url = '{% url "review_visibility" review_id=0 %}'.replaceAll('0', e.getAttribute('data-id'))
+          let a = await ftN(url, 'PUT', {'Content-Type': 'application/json', 'Authorization': `Bearer ${getCookies().access}`}, JSON.stringify(data))
+          if (a){
+            poperFunction(a.status, a.message, a.status===200?true:false)
+          }
+        })
+      })
+
+
+      {% comment %} const edit = document.querySelectorAll('.edit');
+      edit.forEach(e=>{
+        e.addEventListener('click',()=>{
+          console.log(e .getAttribute('data-id'))
+        })
+      }) {% endcomment %}
+
+    </script>
+{% endblock  %}

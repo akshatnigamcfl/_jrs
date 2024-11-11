@@ -1,0 +1,2730 @@
+{% extends "console-layout/layout.html" %}
+
+{% block page_title %}Administration{{data.name}} {% endblock  %}
+
+{% block main_body %}
+
+{% comment %} {{token}} {% endcomment %}
+<script>
+  var popup_check=false;
+  var package_data;
+</script>
+
+
+
+<script src="/static/assets/js/fetch.js"></script>
+<script src="/static/assets/js/poper.js"></script>
+<script src="/static/assets/js/popup_confirm.js"></script>
+<script src="/static/assets/js/number_with_commas.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
+
+<div class="text-lg text-slate-900 border-b select-none w-full text-start p-2">Administration</div>
+
+{% comment %} <div class="w-full h-[50px] flex items-center justify-end"> {% endcomment %}
+
+<div class="flex flex-col w-full  bg-white rounded-xl p-4 pb-0 mt-4">
+  <div class="-m-1.5 overflow-x-auto">
+
+    <div class="border-b-2 border-gray-200 dark:border-gray-700">
+      <nav class="-mb-0.5 flex space-x-6">
+
+        {% comment %} {{request.GET.get(sec)}} {% endcomment %}
+
+        {% for r,v in request.GET.items %}
+          {% if r == 'sec' %}
+
+              {% with active='client_nav py-4 px-1 inline-flex items-center gap-2 border-b-2 border-blue-500 text-xs font-medium whitespace-nowrap text-blue-600 focus:outline-none focus:text-blue-800' inactive='client_nav py-4 px-1 inline-flex items-center gap-2 border-b-2 border-transparent text-xs whitespace-nowrap text-gray-500 hover:text-blue-600 focus:outline-none focus:text-blue-600' %}
+
+                <a class="{% if v == 'homepage' %}{{active}}{% else %}{{inactive}}{% endif %}" data-status='active' name='homepage' href="#">
+                  <img class="h-[20px] w-[20px]" src="/static/assets/images/icons/banner_gray.png">
+                  Homepage
+                </a>
+                <a class="{% if v == 'packages' %}{{active}}{% else %}{{inactive}}{% endif %}" data-status='inactive' name='packages' href="#" aria-current="page">
+                  <img class="h-[20px] w-[20px]" src="/static/assets/images/icons/services_gray.png">
+                  Packages
+                </a>
+ 
+                {% comment %} <a class="{% if v == 'events' %}{{active}}{% else %}{{inactive}}{% endif %}" data-status='inactive' name='events' href="#">
+                  <img class="h-[20px] w-[20px]" src="/media/assets/images/icons/events_gray.png">
+                  Events
+                </a>
+
+                <a class="{% if v == 'reels' %}{{active}}{% else %}{{inactive}}{% endif %}" data-status='inactive' name='reels' href="#">
+                  <img class="h-[20px] w-[20px]" src="/media/assets/images/icons/reels_gray.png">
+                  Reels
+                </a> {% endcomment %}
+              {% endwith %}
+
+        {% endif %}
+      {% endfor %}
+      </nav>
+    </div>
+
+    <script>
+      let url = window.location.search
+      url = new URLSearchParams(url)
+      if (!url.get('sec')){
+        url.set('sec','homepage')
+        window.location.href = window.location.pathname+'?'+url.toString()
+      }
+    </script>
+
+    <script>
+      function addPackagePopUp(id=null, message){
+        const popup = document.createElement('div');
+        popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-3';
+        popup.innerHTML = `
+            <div class="h-full w-full opacity-25 bg-slate-900 absolute top-0 left-0">
+            </div>
+            <div class="absolute left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] card w-[500px] bg-slate-100 text-neutral-content">
+              <div class="card-body items-center text-center relative">
+                <h2 class="card-title text-slate-900 mb-6">${message}</h2>
+                <div class="flex mb-1 w-full"><span class="text-slate-900 text-sm w-[30%] text-start">Title</span><span class="w-[60%]"><input class="video_title w-full p-2 shadow-2xl rounded-md h-8 text-slate-900" type="text"></span></div>
+                <div class="flex mb-1 w-full"><span class="text-slate-900 text-sm w-[30%] text-start">File</span><span class="w-[60%]"><input class="video_file shadow-2xl h-8 text-slate-900" type="file"></span></div>
+                  <ul class="service_list">
+                    {% for s in service %}
+                    <li class="flex justify-start"><input class="package_services" data-id="{{s.id}}" type="checkbox"><span class="ml-2 text-slate-900">{{s}}</span></li>
+                    {% endfor %}
+                  </ul>
+                </span>
+
+                <div class="card-actions justify-end mt-3">
+                  <button data-id="${id}" class="confirm btn btn-primary">Submit</button>
+                  <button class="cancle btn btn-ghost text-slate-900">Cancel</button>
+                </div>
+                
+                <div class="close_btn_dv h-8 w-8 absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                  <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="/media/assets/images/icons/close_button_black.png">
+                </div>
+
+              </div>
+            </div>
+            `
+        document.body.prepend(popup)
+        const close_btn = document.querySelector('.close_btn_dv')
+        const cancle = document.querySelector('.cancle')
+        // const popup = document.querySelector('.popup')
+        cancle.addEventListener('click', ()=>{
+            popup.remove()
+        })
+        close_btn.addEventListener('click', ()=>{
+            popup.remove()
+        })
+      }
+    </script>
+
+
+    <div class="main_container p-1.5 min-w-full inline-block align-middle">
+          {%for k,v in request.GET.items%}
+            {% if k == 'sec' %}
+              {% if v == 'homepage' %}
+
+              {% comment %} <div class="h-auto border-b-8	border-solid mt-2">
+                <div class="flex">
+                  <div class="w-1/4">Home Banner Video</div>
+                  <div class="w-3/4">
+                    <div class="flex justify-end my-4 "><button type="button" class="add_package py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Add Banner Video</button></div>
+                    <div class="flex">
+                      <ul class="w-full">
+                        <li class="w-full flex"><div class="w-1/4 font-bold">Video Title</div><div class="w-2/4 font-bold flex justify-start">Actions</div></li>
+                        
+                        {% for d in banner %}
+                          <li class="w-full flex">
+                            <div class="w-1/4 text-sm"><a href="/static/{{d.file}}" target="_blank" class="underline text-blue-700">{{d.title}}</a></div>
+                            <div class="w-2/4 font-bold flex justify-start">
+                                  <img class="banner_video_delete h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-100 duration-300" data-id="{{d.id}}" src="/static/assets/images/icons/delete_gray.png" ></span>
+                            </div>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>  {% endcomment %}
+              
+
+              {% load poll_extras %}
+
+              {% comment %} <div class="w-auto h-auto">
+                <div role="tablist" class="tabs tabs-boxed tabs-xs w-auto h-auto">
+                  <a role="tab" data-tab="banner_video" class="homepage_tab tab">Banner Video</a>
+                  <a role="tab" data-tab="masterpiece_selection" class="homepage_tab tab tab-active">Masterpieces Selection</a>
+                  <a role="tab" data-tab="handpicked_selection" class="homepage_tab tab">Handpicked Selection</a>
+                  <a role="tab" data-tab="latest_creations" class="homepage_tab tab">Latest Creations</a>
+                  <a role="tab" data-tab="image_creations" class="homepage_tab tab">Image Creations</a>
+                </div>
+              </div>
+
+              <div class="main_container">
+
+              </div> {% endcomment %}
+
+              <div class="h-auto border-b-8	border-solid py-2">
+                <div class="flex">
+                  {% comment %} <div class="w-1/4"> {% endcomment %}
+                  {% comment %} </div> {% endcomment %}
+                  
+                  <div class="w-full">
+                    {% comment %} <div class="flex justify-end my-4 "><button type="button" class="add_package py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">select</button></div> {% endcomment %}
+                    <div class="flex flex-col bg-white rounded-xl text-center">
+                      <span class="my-2 font-bold" >Banner Video</span>
+                      {% comment %} <div class="flex justify-end my-1 "><button type="button" class="add_package py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Add Banner Video</button></div> {% endcomment %}
+                      <div class="border auto w-[calc(100%-10px)] px-2 py-5 grid grid-cols-6 gap-3 flex items-center">
+
+                        {% for d in banner %}
+                          <div class="w-full banner_video_card h-40 border border-dashed hover:border-slate-700 duration-200 flex flex-col justify-center items-center text-slate-400 text-xs text-center p-1">
+
+                            <video muted loop class="banner_video">
+                              <source src="/media/{{d.file}}" type="video/mp4">
+                            </video>
+
+                            
+                            <div class="w-full font-bold flex justify-between items-center my-2">
+                              <div class=" text-xs my-2">{{d.title}}</div>
+                              <img class="banner_video_delete h-5 w-5 cursor-pointer hover:opacity-[100%] opacity-70 duration-300" data-id="{{d.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+                            </div>
+                            
+                          </div>
+                        {% endfor %}
+                          {% with array_length=banner|length %}
+                            {% with remaining=6|substract:array_length %}
+                              {% with remaining_loop_generator=remaining|loop_length_generator %}
+                              
+                              
+                                {% for r in remaining_loop_generator %}
+                                <div class="h-40 border add_package border-dashed hover:border-slate-700 duration-200 flex justify-center items-center text-slate-400 text-xs text-center p-1">no file selected</div>
+                                {% endfor %}
+                              
+                              
+                              {% endwith %}
+
+                            {% endwith %}
+                          {% endwith %}
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <script>
+                $( function() {
+                  $( "#sortable" ).sortable();
+                  $( "#sortable" ).disableSelection();
+                } );
+
+                $( function() {
+                  $( "#sortable1" ).sortable();
+                  $( "#sortable1" ).disableSelection();
+                } );
+
+                $( function() {
+                  $( "#sortable2" ).sortable();
+                  $( "#sortable2" ).disableSelection();
+                } );
+              </script>
+
+
+              <div class="h-auto border-b-8	border-solid py-2">
+                <div class="flex">
+                  {% comment %} <div class="w-1/4">
+                  </div> {% endcomment %}
+                  <div class="w-full">
+                    <div class="flex flex-col bg-white rounded-xl text-center">
+                      <span class="my-2 font-bold" >Masterpieces Selection</span>
+                      <div id="sortable" class="border auto w-[calc(100%-10px)] px-2 py-5 grid grid-cols-6 gap-3 flex items-center">
+                        {% for m in masterpiece %}
+                          <div class="ui-state-default masterpiece_selected hover:cursor-pointer w-full h-40 border border-dashed hover:border-slate-700 duration-200 flex flex-col justify-center items-center text-slate-400 text-xs text-center p-1" data-selection-id={{m.id}} data-selection-table="{{m.table}}" data-selection-type="masterpiece" >
+                              <img class="h-full w-full" src="/media/{{m.data.cover_picture}}">
+                          </div>
+                        {% endfor %}
+
+                        {% with array_length=masterpiece|length %}
+                          {% with remaining=6|substract:array_length %}
+                            {% with remaining_loop_generator=remaining|loop_length_generator %}
+
+                              {% for r in remaining_loop_generator %}
+                              <div class="h-40 hover:cursor-pointer select-none border select_media border-dashed hover:border-slate-700 duration-200 flex justify-center items-center text-slate-400 text-xs text-center p-1" data-selection-type="masterpiece" >no file selected</div>
+                              {% endfor %}
+                            
+                            {% endwith %}
+                          {% endwith %}
+                        {% endwith %}
+
+                      </div>
+                      <div class="flex justify-center"><button class="masterpieces_update btn btn-success btn-sm text-white w-40">Success</button></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="h-auto border-b-8	border-solid py-2">
+                <div class="flex">
+                  <div class="w-full">
+                    <div class="flex flex-col bg-white rounded-xl text-center">
+                      <span class="my-2 font-bold" >Handpicked Selection</span>
+                      <div id="sortable1" class="border auto w-[calc(100%-10px)] px-2 py-5 grid grid-cols-6 gap-3 flex items-center">
+                        {% if handpicked %}
+                          {% for m in handpicked %}
+                          <div class="ui-state-default masterpiece_selected hover:cursor-pointer w-full h-40 border border-dashed hover:border-slate-700 duration-200 flex flex-col justify-center items-center text-slate-400 text-xs text-center p-1" data-selection-id={{m.id}} data-selection-table="{{m.table}}" data-selection-type="handpicked" >
+                            <img class="h-full w-full" src="/media/{{m.data.cover_picture}}">
+                          </div>
+                          {% endfor %}
+                        {% endif %}
+
+                          {% with array_length=handpicked|length %}
+                          {% with remaining=6|substract:array_length %}
+                            {% with remaining_loop_generator=remaining|loop_length_generator %}
+                            
+                              {% for r in remaining_loop_generator %}
+                              <div class="h-40 hover:cursor-pointer select-none border select_media border-dashed hover:border-slate-700 duration-200 flex justify-center items-center text-slate-400 text-xs text-center p-1" data-selection-type="handpicked" >no file selected</div>
+                              {% endfor %}
+                            
+                            {% endwith %}
+                          {% endwith %}
+                        {% endwith %}
+
+                      </div>
+                      <div class="flex justify-center"><button class="handpicked_update btn btn-success btn-sm text-white w-40">Success</button></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <div class="h-auto border-b-8	border-solid py-2">
+                <div class="flex">
+                  <div class="w-full">
+                    <div class="flex flex-col bg-white rounded-xl text-center">
+                      <span class="my-2 font-bold" >Latest Creations</span>
+                      <div id="sortable2" class="border auto w-[calc(100%-10px)] px-2 py-5 grid grid-cols-6 gap-3 flex items-center">
+                        {% if latest_creations %}
+                          {% for m in latest_creations %}
+                          <div class="ui-state-default masterpiece_selected hover:cursor-pointer w-full h-40 border border-dashed hover:border-slate-700 duration-200 flex flex-col justify-center items-center text-slate-400 text-xs text-center p-1" data-selection-id={{m.id}} data-selection-table="{{m.table}}" data-selection-type="latest_creations" >
+                            <img class="h-full w-full" src="/media/{{m.data.cover_picture}}">
+                          </div>
+                          {% endfor %}
+                        {% endif %}
+                       
+
+                          {% with array_length=latest_creations|length %}
+                          {% with remaining=6|substract:array_length %}
+                            {% with remaining_loop_generator=remaining|loop_length_generator %}
+                            
+                              {% for r in remaining_loop_generator %}
+                              <div class="h-40 hover:cursor-pointer select-none border select_media select_banner border-dashed hover:border-slate-700 duration-200 flex justify-center items-center text-slate-400 text-xs text-center p-1" data-selection-type="latest_creations" >no file selected</div>
+                              {% endfor %}
+                            
+                            {% endwith %}
+                          {% endwith %}
+                        {% endwith %}
+
+                      </div>
+                      <div class="flex justify-center"><button class="latest_creations_update btn btn-success btn-sm w-40 text-white">Success</button></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="h-auto border-b-8	border-solid py-2">
+                <div class="flex">
+                  <div class="w-full">
+                    <div class="flex flex-col bg-white rounded-xl text-center">
+                      <span class="my-2 font-bold" >Image Gallery</span>
+                      {% comment %} <button class="" >Upload</button> {% endcomment %}
+                      {% comment %} <div class="flex"><input type="file" class="file-input file-input-bordered w-full max-w-xs" /><button class="btn btn-info ">upload</button></div> {% endcomment %}
+                      <div id="sortable2" class="border auto w-[calc(100%-10px)] px-2 py-5 grid grid-cols-6 gap-3 flex items-center">
+                        {% if image_gallery %}
+                          {% for m in image_gallery %}
+                            <div class="ui-state-default hover:cursor-pointer w-full h-40 border border-dashed hover:border-slate-700 duration-200 flex flex-col justify-center items-center text-slate-400 text-xs text-center p-1" data-selection-id={{m.id}} data-selection-table="{{m.table}}" data-selection-type="image_gallery" >
+                            <img class="h-full w-full" src="/media/{{m.data.file}}">
+                          </div>
+                          {% endfor %}
+                        {% endif %}
+                       
+
+                          {% with array_length=image_gallery|length %}
+                          {% with remaining=12|substract:array_length %}
+                            {% with remaining_loop_generator=remaining|loop_length_generator %}
+                            
+                              {% for r in remaining_loop_generator %}
+                              <label for="image_gallery{{forloop.counter}}" class="h-40 hover:cursor-pointer select-none border image_gallery_upload border-dashed hover:border-slate-700 duration-200 flex justify-center items-center text-slate-400 text-xs text-center p-1" data-selection-type="image_gallery" >
+                                <div class="image_gallery_upload_inr">
+                                  <div class="my-3">no file selected</div>
+                                  {% load static %}
+                                  <div class="flex justify-center"><img class="h-6 w-6" src="{% static "assets/images/icons/upload_file.png" %}"></div>
+                                  <div class="my-2">Drag & drop file here</div> 
+                                  <div class="my-2">or</div>
+                                  <div class="my-2"><input id="image_gallery{{forloop.counter}}" type="file" class="w-20"></div>
+                                </div>
+                              </label>
+                              {% endfor %}
+                              
+                            {% endwith %}
+                          {% endwith %}
+                        {% endwith %}
+
+                      </div>
+                      {% comment %} <button class="image_gallery_update btn btn-success text-white">Success</button> {% endcomment %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              {% comment %} <div class="h-auto border-b-8	border-solid py-6">
+                <div class="flex">
+                  <div class="w-full">
+                    <div class="flex flex-col bg-white rounded-xl text-center">
+                      <span class="my-2 font-bold">Reach Out Banner</span>
+                      <div id="sortable1" class="border auto w-[calc(100%-10px)] px-2 py-5 grid grid-cols-5 gap-3 flex items-center">
+                        {% if banners %}
+                          {% for m in banners %}
+                          <div class="ui-state-default masterpiece_selected hover:cursor-pointer w-full h-52 border border-dashed hover:border-slate-700 duration-200 flex flex-col justify-center items-center text-slate-400 text-xs text-center p-1" data-selection-id={{m.id}} data-selection-table="{{m.table}}" data-selection-type="banner" >
+                            <img class="h-full w-full" src="/static/{{m.data.cover_picture}}">
+                          </div>
+                          {% endfor %}
+                        {% endif %}
+
+                          {% with array_length=banners|length %}
+                          {% with remaining=1|substract:array_length %}
+                            {% with remaining_loop_generator=remaining|loop_length_generator %}
+                            
+                              {% for r in remaining_loop_generator %}
+                              <div class="h-52 hover:cursor-pointer select-none border select_banner border-dashed hover:border-slate-700 duration-200 flex justify-center items-center text-slate-400 text-xs text-center p-1" data-selection-type="banners" >no file selected</div>
+                              {% endfor %}
+                            
+                            {% endwith %}
+                          {% endwith %}
+                        {% endwith %}
+
+                      </div>
+                      <button class="banner_update btn btn-success text-white">Success</button>
+                    </div>
+                  </div>
+                </div>
+              </div> {% endcomment %}
+
+
+
+
+
+
+
+              {% comment %} <div class="h-auto border-b-8	border-solid mt-2">
+                <div class="flex">
+                  <div class="w-1/4">Home Showcase Images</div>
+                  <div class="w-3/4">
+                    <div class="flex justify-end my-4 "><button type="button" class="add_showcase_images py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Add Showcase Images</button></div>
+                    <div class="flex">
+                      <ul class="w-full">
+                        <li class="w-full flex"><div class="w-1/4 font-bold">Image Title</div><div class="w-2/4 font-bold flex justify-start">Actions</div></li>
+                        
+                        {% for d in showcase_image %}
+                          <li class="w-full flex">
+                            <div class="w-1/4 text-sm"><a href="/static/{{d.file}}" target="_blank" class="underline text-blue-700">{{d.title}}</a></div>
+                            <div class="w-2/4 font-bold flex justify-start">
+                                <img class="delete_showcase_images h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-100 duration-300" data-id="{{d.id}}" src="/static/assets/images/icons/delete_gray.png" ></span>
+                            </div>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div> {% endcomment %}
+
+
+
+              {% load static %}
+              <script src="{% static "assets/js/fetch.js" %}"></script>
+              <script src="{% static "assets/js/poper.js" %}"></script>
+              <script>
+
+                  const add_package = document.querySelectorAll('.add_package');
+                  add_package.forEach(e=>{
+                    e.addEventListener('click', ()=>{
+                      addPackagePopUp(id=null, 'Add Banner Video')
+                      const confirm = document.querySelector('.confirm');
+                      confirm.addEventListener('click', async ()=>{
+                      
+                        const video_title = document.querySelector('.video_title')
+                        const video_file = document.querySelector('.video_file')
+                        // console.log(video_file.files[0].type, video_title.value)
+                      
+                        if (video_title.value === ''){
+                          poperFunction(400,'video title is required', false)
+                        }
+                        if (video_file.files.length === 0){
+                          poperFunction(400,'an image file is required for upload', false)
+                        } else if (!video_file.files[0].type.includes('video')){
+                          poperFunction(400,'only image file can be uploaded', false)
+                        } 
+                      
+                        let formdata = new FormData()
+                        formdata.append('file', video_file.files[0])
+                        formdata.append('title', video_title.value)
+                      
+                          // let token = JSON.parse(localStorage.getItem('token')).access;
+                          let token = getCookies().access;
+                          console.log('token', token)
+                          let url = '{% url "add_banner_video_admin" %}';
+                          let a = await ftN(url, 'POST', {'Authorization': `Bearer ${token}`}, formdata)
+                          if(a.status === 200){
+                            poperFunction(a.status, a.message, true)
+                          } else {
+                            poperFunction(a.status, a.message, false)
+                          }
+
+                          if (a && a.message && a.message.message && a.message.message == 'Token is invalid or expired'){ 
+                            poperFunction(a.status, a.message.message, true)
+                          }
+                      })
+                    })
+                  })
+                  
+  
+  
+                  const banner_video_delete = document.querySelectorAll('.banner_video_delete');
+                  banner_video_delete.forEach(e=>{
+                    e.addEventListener('click', ()=>{
+                      popupConfirmFun(Number(e.getAttribute('data-id')), 'delete banner video', 'click confirm to delete this banner video' , null)
+                      const confirm = document.querySelector('.confirm');
+                      confirm.addEventListener('click',async (e)=>{
+                        // let token = JSON.parse(localStorage.getItem('token')).access
+                        let token = getCookies().access
+                        let url = '{% url "delete_banner_video_admin" id=0 %}'
+                        url = url.replaceAll(0,e.target.getAttribute('data-id'));
+                        let a = await ftN(url, 'DELETE', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, '')
+                        if (a.status === 200){
+                          poperFunction(a.status, a.message, true)
+                        } else {
+                          poperFunction(a.status, a.message, false)
+                        }
+                      })
+                    })
+                  })
+                  
+                  // const service_edit = document.querySelectorAll('.service_edit');
+                  // service_edit.forEach(e=>{
+                  //   e.addEventListener('click',(f)=>{
+                  //     addPackagePopUp(f.target.getAttribute('data-id'), 'Update Banner')
+                  //     
+                  //   })
+                  // })
+
+
+
+                const banner_video_card = document.querySelectorAll('.banner_video_card');
+                banner_video_card.forEach(e=>{
+                  e.addEventListener('mouseenter', ()=>{
+                    e.querySelector('.banner_video').play()
+                  })
+
+                  e.addEventListener('mouseleave', ()=>{
+                    e.querySelector('.banner_video').pause()
+                  })
+
+                })
+
+
+                function bannerSelectPopup(e){
+                  console.log('print select working')
+                  const popup = document.createElement('div');
+                  popup.setAttribute('data-slot-id', e)
+                  popup.classList.value = 'popup absolute h-screen w-screen select-none top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-[rgba(0,0,0,0.1)] flex justify-center items-center';
+                  popup.innerHTML = `<div class="w-[500px] my-6 px-2 h-96 w-[calc(100%-10px)] bg-white shadow-2xl border py-2 rounded-xl flex flex-col">
+                    <div class='w-full flex'>
+                      <div role="tablist" class="tabs tabs-boxed w-[90%]">
+                        <a role="tab" class="media_selection_tab text-xs tab tab-active" data-name="banners">Banners</a>
+                      </div>
+                      <div class="w-[10%] flex justify-center items-center">
+                        <div class="close_btn h-8 w-8 rounded-lg duration-200 bg-red-600 hover:bg-red-700 cursor-pointer text-white flex justify-center items-center">
+                          <img class="h-6 w-6 " src="{% static "assets/images/icons/close_button.png" %}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="h-72 p-2">
+                      <div class="border rounded-xl h-full w-full px-2 py-3">
+                        <div class="media_selection_div h-full w-full overflow-y-scroll bg-white px-1">
+                        </div>                        
+                      </div>
+                      <div class="pagination_div p-1 flex justify-center ">
+                        <div class="join pagination">
+                        </div>
+                      </div>
+                    </div>
+                  </div>`
+
+                  document.body.prepend(popup)
+                  const close_btn = document.querySelector('.close_btn');
+                  close_btn.addEventListener('click',()=>{
+                    popup.remove()
+                  }) 
+                }
+
+
+
+                function fileSelectPopUp(e){
+                  const popup = document.createElement('div');
+                  popup.setAttribute('data-slot-id', e)
+                  popup.classList.value = 'popup absolute h-screen w-screen select-none top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-[rgba(0,0,0,0.1)] flex justify-center items-center';
+                  popup.innerHTML = `<div class="w-[500px] my-6 px-2 h-96 w-[calc(100%-10px)] bg-white shadow-2xl border py-2 rounded-xl flex flex-col">
+                    <div class='w-full flex'>
+                      <div role="tablist" class="tabs tabs-boxed w-[90%]">
+                        <a 
+                        {% comment %} href="?media_selection_tab=pre_wedding{% if dict_length > 0%}{% for k,v in request.GET.items %}{% if k != 'media_selection_tab' %}&{{k}}={{v}}{% endif %}{% endfor %}{% endif %}"  {% endcomment %}
+                        role="tab" class="media_selection_tab text-xs tab tab-active" data-name="pre_wedding">
+
+                        Pre Wedding</a>
+                        <a 
+                        {% comment %} href="?media_selection_tab=wedding{% if dict_length > 0%}{% for k,v in request.GET.items %}{% if k != 'media_selection_tab' %}&{{k}}={{v}}{% endif %}{% endfor %}{% endif %}"  {% endcomment %}
+                        role="tab" class="media_selection_tab text-xs tab" data-name="wedding">
+
+                        Wedding</a>
+                      
+                        <a 
+                        {% comment %} href="?media_selection_tab=events{% if dict_length > 0%}{% for k,v in request.GET.items %}{% if k != 'media_selection_tab' %}&{{k}}={{v}}{% endif %}{% endfor %}{% endif %}"  {% endcomment %}
+                        role="tab" class="media_selection_tab text-xs tab" data-name="events">
+
+                        Events</a>
+                      </div>
+                      <div class="w-[10%] flex justify-center items-center">
+                        <div class="close_btn h-8 w-8 rounded-lg duration-200 bg-red-600 hover:bg-red-700 cursor-pointer text-white flex justify-center items-center">
+                          <img class="h-6 w-6 " src="{% static "assets/images/icons/close_button.png" %}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="h-72 p-2">
+                      <div class="border rounded-xl h-full w-full px-2 py-3">
+                        <div class="media_selection_div h-full w-full overflow-y-scroll bg-white px-1">
+                        </div>                        
+                      </div>
+                      <div class="pagination_div p-1 flex justify-center ">
+                        <div class="join pagination">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  `
+                  document.body.prepend(popup)
+                  const close_btn = document.querySelector('.close_btn');
+                  close_btn.addEventListener('click',()=>{
+                    popup.remove()
+                  })
+                }
+
+
+                {% comment %} async function getBannerData(page){
+                  let token = JSON.parse(localStorage.getItem('token')).access
+                  let url = '{% url "get_banners_all" page=0 %}'.replaceAll(0,page)
+                  let a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},'')
+                  if (a.status === 200){
+                    console.log('a.data',a.data)
+
+                    const media_selection_div = document.querySelector('.media_selection_div');
+                    media_selection_div.innerHTML=''
+                    const ul = document.createElement('ul');
+                    if (a.data){
+                      a.data.data.forEach(e=>{
+                        const li = document.createElement('li');
+                        li.classList.value='h-16 media_slot_selection flex items-center rounded-xl hover:text-white hover:bg-indigo-700 px-2'
+                        li.setAttribute('data-selection-id', e.id)
+                        li.setAttribute('data-selection-table', a.data.table)
+                        li.innerHTML = `
+                        <div class="w-[20%] flex justify-center items-center">
+                          <img class="media_slot_selection_cover h-12 w-10" src="/static/${e.cover_picture}">
+                        </div>
+                        <div class="w-[80%] flex">
+                          <div class="w-[40%] text-sm">${e.date}</div>
+                          <div class="w-[60%] text-sm">${e.title}</div>
+                        </div>`
+                        ul.append(li)
+
+                      })
+
+                      media_selection_div.append(ul)
+                      const pagination = document.querySelector('.pagination');
+                      pagination.innerHTML=''
+                      for(let i=0; i<a.data.page_count; i++){
+                        const input = document.createElement('input')
+                        input.classList.value="join-item btn btn-square"
+                        input.setAttribute('type', 'radio')
+                        input.setAttribute('name', 'options')
+                        input.setAttribute('aria-label', '1')
+                        if (a.data.current_page == i+1){
+                          input.setAttribute('checked', 'true')
+                        }
+                        pagination.append(input) 
+                      }
+
+                      const media_slot_selection = document.querySelectorAll('.media_slot_selection');
+                      media_slot_selection.forEach(f=>{
+                        f.addEventListener('click',()=>{
+                          const img = f.querySelector('.media_slot_selection_cover')
+                          const popup = document.querySelector('.popup')
+                          popup.remove()
+                          console.log('f.src',img)
+                          e.innerHTML=`<img class="h-full w-full" src="${img.src}">`;
+                          e.setAttribute('data-selection-id', f.getAttribute('data-selection-id'))
+                          e.setAttribute('data-selection-table', f.getAttribute('data-selection-table'))
+                          e.classList.add('masterpiece_selected')
+                        })
+                      })
+                    }
+
+                  } else {
+                    poperFunction(a.status, a.message, false)
+                  }
+
+                } {% endcomment %}
+
+
+                {% comment %} const select_banner  = document.querySelectorAll('.select_banner');
+                select_banner.forEach((e,i)=>{
+                  e.addEventListener('click', ()=>{
+                    bannerSelectPopup(i)
+                    getBannerData(1)                  
+                  })
+                }) {% endcomment %}
+
+
+
+                const select_media = document.querySelectorAll('.select_media');
+                select_media.forEach((e,i)=>{
+                  e.addEventListener('click', ()=>{
+                    fileSelectPopUp(i)
+                    const media_selection_tab = document.querySelectorAll('.media_selection_tab');
+
+                    function removeActive(){
+                      media_selection_tab.forEach(e=>{
+                        if (e.classList.value.includes('tab-active')) {
+                          e.classList.remove('tab-active')
+                        }
+                      })
+                    }
+                    function addActive(e){
+                        e.classList.add('tab-active')
+                    }
+
+                    async function getTableData(table, page){
+                      console.log('a',table,page)
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      
+                      let url;
+
+                      if (table ==='pre_wedding' ){
+                        url = '{% url "get_pre_wedding_all" page=1 %}'
+                      } else if (table ==='wedding'){
+                        url = '{% url "get_wedding_all" page=1 %}'
+                      } else if (table ==='events'){
+                        url = '{% url "get_events_all" page=1 %}'
+                      }
+                      
+                      if(url){
+                        let a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},'')
+                        if (a.status === 200){
+                          const media_selection_div = document.querySelector('.media_selection_div');
+                          media_selection_div.innerHTML=''
+                          const ul = document.createElement('ul');
+                          if (a.data){
+                            a.data.data.forEach(e=>{
+                              const li = document.createElement('li');
+                              li.classList.value='h-16 media_slot_selection flex items-center rounded-xl hover:text-white hover:bg-indigo-700 px-2'
+                              li.setAttribute('data-selection-id', e.id)
+                              li.setAttribute('data-selection-table', a.data.table)
+                              li.innerHTML = `
+                              <div class="w-[20%] flex justify-center items-center">
+                                <img class="media_slot_selection_cover h-12 w-10" src="/media/${e.cover_picture}">
+                              </div>
+                              <div class="w-[80%] flex">
+                                <div class="w-[40%] text-sm">${e.date}</div>
+                                <div class="w-[60%] text-sm">${e.title}</div>
+                              </div>`
+                              ul.append(li)
+                            })
+
+                            media_selection_div.append(ul)
+                            const pagination = document.querySelector('.pagination');
+                            pagination.innerHTML=''
+                            for(let i=0; i<a.data.page_count; i++){
+                              const input = document.createElement('input')
+                              input.classList.value="join-item btn btn-square"
+                              input.setAttribute('type', 'radio')
+                              input.setAttribute('name', 'options')
+                              input.setAttribute('aria-label', '1')
+                              if (a.data.current_page == i+1){
+                                input.setAttribute('checked', 'true')
+                              }
+                              pagination.append(input) 
+                            }
+
+                            const media_slot_selection = document.querySelectorAll('.media_slot_selection');
+                            media_slot_selection.forEach(f=>{
+                              f.addEventListener('click',()=>{
+                                const img = f.querySelector('.media_slot_selection_cover')
+                                const popup = document.querySelector('.popup')
+                                popup.remove()
+                                console.log('f.src',img)
+                                e.innerHTML=`<img class="h-full w-full" src="${img.src}">`;
+                                e.setAttribute('data-selection-id', f.getAttribute('data-selection-id'))
+                                e.setAttribute('data-selection-table', f.getAttribute('data-selection-table'))
+                                e.classList.add('masterpiece_selected')
+                              })
+                            })
+                          }
+
+                        } else {
+                          poperFunction(a.status, a.message, false)
+                        }
+                      }
+                    }
+
+   
+                    getTableData(document.querySelector('.media_selection_tab').getAttribute('data-name'), 1)
+
+                    
+                    media_selection_tab.forEach(e=>{
+                      e.addEventListener('click', ()=>{
+                        removeActive()
+                        addActive(e)
+                        getTableData(e.getAttribute('data-name'), 1)
+                      })
+                    })
+                  })
+                })
+
+                  async function masterpieceUpdateFunction(){
+                    data = []
+                    const masterpiece_selected = document.querySelectorAll('.masterpiece_selected');
+                    masterpiece_selected.forEach(e=>{
+                      data.push({ 'file_id': Number(e.getAttribute('data-selection-id')), 'table': e.getAttribute('data-selection-table'), 'type': e.getAttribute('data-selection-type')})
+                    })
+
+                    // let token = JSON.parse(localStorage.getItem('token')).access
+                    let token = getCookies().access
+                    let url = '{% url "add_homepage_media" %}'
+                    let a = await ftN(url, 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify(data))
+                    if (a && a.status == 200){
+                      poperFunction(a.status, a.message, true)
+                    } else {
+                      poperFunction(a.status, a.message, false)
+                    }
+                  }
+
+                  const masterpieces_update = document.querySelector('.masterpieces_update');
+                  masterpieces_update.addEventListener('click', masterpieceUpdateFunction )
+
+                  const handpicked_update = document.querySelector('.handpicked_update');
+                  handpicked_update.addEventListener('click', masterpieceUpdateFunction )
+
+                  const latest_creations_update = document.querySelector('.latest_creations_update');
+                  latest_creations_update.addEventListener('click', masterpieceUpdateFunction )
+
+
+
+
+
+                  const image_gallery_upload = document.querySelectorAll('.image_gallery_upload');
+                  image_gallery_upload.forEach((e, i)=>{
+
+                    let file_input = e.querySelector(`#image_gallery${i+1}`)
+                    file_input.addEventListener('change', async ()=>{
+                      
+                      console.log(file_input.files[0].type)
+                      
+                      if (file_input.files[0].type.includes('image') ){
+                        
+                        const image_gallery_upload_inr = e.querySelector('.image_gallery_upload_inr');
+                        image_gallery_upload_inr.classList.add('hidden');
+                        e.classList.add('bg-slate-300')
+                        const span = document.createElement('span');
+                        span.classList.value = 'loading loading-dots loading-md';
+                        e.append(span)
+
+                        let formData = new FormData();
+                        formData.append('file', file_input.files[0]);
+                        
+                        // const token = JSON.parse(localStorage.getItem('token')).access
+                        const token = getCookies().access
+                        let url = '{% url "image_gallery_upload" %}'
+                        
+                        let a = await ftN(url, 'POST', { 'Authorization': 'Bearer '+ token}, formData)
+                        if (a){
+                          console.log('a',a)
+                          if (a.status == 200) {
+                            poperFunction(a.status, a.message, false)
+
+                            let fileurl = window.URL.createObjectURL(file_input.files[0]);
+                            const img = document.createElement('img');
+                            img.src = fileurl
+                            img.classList.value = 'w-full h-full'
+                            
+                            span.remove()
+                            e.classList.remove('bg-slate-300')
+                            
+                            e.append(img)
+
+                          } else {
+                            poperFunction(a.status, a.message, false)
+                            span.remove()
+                            image_gallery_upload_inr.classList.remove('hidden');
+                            e.classList.remove('bg-slate-300')
+                          }
+                        }
+                      } else {
+                        
+                        poperFunction(400,'file format not supported', false)
+                      }
+                    })
+                  
+                  })
+
+
+
+                {% comment %} const add_showcase_images = document.querySelector('.add_showcase_images');
+                add_showcase_images.addEventListener('click', ()=>{
+                  addPackagePopUp(id=null, 'Add Showcase Image')
+                  const confirm = document.querySelector('.confirm');
+                  confirm.addEventListener('click', async ()=>{
+
+                    const video_title = document.querySelector('.video_title')
+                    const video_file = document.querySelector('.video_file')
+                    // console.log(video_file.files[0].type, video_title.value)
+
+                    if (video_title.value === ''){
+                      poperFunction(400,'image title is required', false)
+                    }
+                    if (video_file.files.length === 0){
+                      poperFunction(400,'a image file is required for upload', false)
+                    } else if (!video_file.files[0].type.includes('image')){
+                      poperFunction(400,'only image file can be uploaded', false)
+                    } 
+
+                    let formdata = new FormData()
+                    formdata.append('file', video_file.files[0])
+                    formdata.append('title', video_title.value)
+
+
+                      let token = JSON.parse(localStorage.getItem('token')).access;
+                      let url = '{% url "add_showcase_image_admin" %}';
+                      let a = await ftN(url, 'POST', {'Authorization': `Bearer ${token}`}, formdata)
+                      if (a.status === 200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                      if (a && a.message && a.message.message && a.message.message == 'Token is invalid or expired'){ 
+                        poperFunction(a.status, a.message.message, true)
+                      }
+                  })
+                })
+
+                const delete_showcase_images = document.querySelectorAll('.delete_showcase_images');
+                delete_showcase_images.forEach(e=>{
+                  e.addEventListener('click',(f)=>{
+                    popupConfirmFun(Number(f.target.getAttribute('data-id')), 'delete showcase image', 'click confirm to delete this showcase image', f.target.getAttribute('data-file'))
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click',async (f)=>{
+                      let url = '{% url "delete_showcase_image_admin" id=0 %}'
+                      url = url.replaceAll(0, f.target.getAttribute('data-id'))
+                      let token = JSON.parse(localStorage.getItem('token')).access
+                      let a = await ftN(url,'DELETE', {'Content-Type': 'application/json', 'Authorization':  `Bearer ${token}`},'')
+                      if (a.status === 200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                    })
+                  })
+                }) {% endcomment %}
+
+
+
+
+                
+                // const service_edit = document.querySelectorAll('.service_edit');
+                // service_edit.forEach(e=>{
+                //   e.addEventListener('click',(f)=>{
+                //     addPackagePopUp(f.target.getAttribute('data-id'), 'Update Banner')
+                //     
+                //   })
+                // })
+              </script>
+
+              {% comment %} <script>
+
+
+                function bannerVideo(){
+                  const div = document.createElement('div');
+                  div.classList = ''
+                  div.innerHTML = ``
+                }
+
+
+                let homepage_tab = document.querySelectorAll('.homepage_tab');
+                const main_container = document.querySelector('.main_container');
+                homepage_tab.forEach(e=>{
+                  e.addEventListener('click',()=>{
+                    homepage_tab.forEach(e=>{
+                      e.classList.remove('tab-active')
+                    })
+                    e.classList.add('tab-active')
+
+                    if (e.getAttribute('data-tab') == 'banner_video'){
+
+                    }
+                    if (e.getAttribute('data-tab') == 'masterpiece_selection'){
+
+                    }
+                    if (e.getAttribute('data-tab') == 'handpicked_selection'){
+
+                    }
+                    if (e.getAttribute('data-tab') == 'latest_creations'){
+
+                    }
+                    if (e.getAttribute('data-tab') == 'image_creations'){
+
+                    }
+
+                  })
+                })
+              </script> {% endcomment %}
+
+              {% comment %} {% load custom_filters %} {% endcomment %}
+
+              
+              {% elif v == 'packages' %}
+              <div class="h-auto border-b-8	border-solid mt-2">
+                <div class="flex">
+                  <div class="w-1/4 text-xs">Package</div>
+                  <div class="w-3/4">
+                    <div class="flex justify-start mb-4"><button type="button" class="add_package py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Add Package</button></div>
+                    <div class="flex flex-col package_container">
+                      <script>
+                        const packages_segments = [
+                        {% for p in packages %}
+                        {
+                          'id': {{p.id}},
+                          'name': '{{p.package}}'.replaceAll('_',' '),
+                          'segment': '{{p.segment}}'.replaceAll('_',' '),
+                          'price': {{p.price}},
+                        },
+                        {% endfor %}
+                        ];
+                        {% comment %} console.log('packages_segments',packages_segments) {% endcomment %}
+                      </script>
+                      <div class='flex mb-2 justify-between'>
+                        <span class="w-1/4 text-xs font-bold mx-3 px-2 text-center w-32">Name</span>
+                        <span class="w-1/4 text-xs font-bold mx-2 text-center">Segment</span>
+                        <span class="w-1/4 text-xs font-bold mx-2 text-center">Price</span>
+
+                      </div>
+                      {% comment %} {% for p in packages %}
+                        <button type="button" data-id="{{p.id}}" class="package_main py-1  my-1 mx-3 px-2 w-32 capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">{{p}}</button>
+                        {% comment %} <span class="text-sm"> {{p.segment|replace_text:"old_value":"new_value"}}</span>{% endcomment %}
+                      {% comment %} </div> {% endcomment %}
+                    </div>
+                    <script>
+                      const package_container = document.querySelector('.package_container');
+                      packages_segments.forEach(p=>{
+                        const div = document.createElement('div')
+                        div.classList = 'flex mb-2 justify-between'
+                        div.innerHTML = `
+                        <button class="pl-0 pr-0 pt-0 pb-0 ! btn btn-outline btn-primary package_main w-28 h-auto min-h-[2rem]" data-id="${p.id}">${p.name}</button>
+                        <span class="capitalize text-xs mx-2 w-1/4 flex justify-center items-center">${p.segment}</span>
+                        <span class="capitalize text-xs mx-2 text-end w-1/4 font-bold flex justify-center items-center">${numberWithCommas(p.price)}</span>
+                        `
+                        package_container.append(div)
+                      })
+                      {% comment %} <button type="button" " class=" w-1/4 py-1  my-1 mx-3 px-2 w-32 capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">${p.name}</button> {% endcomment %}
+                    </script>
+
+                  </div>
+                </div>
+              </div>
+              <script>
+
+                function addPackagePopUp(id=null){
+                  const popup = document.createElement('div');
+                  popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-3';
+                  popup.innerHTML = `
+                      <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                      </div>
+                      <div class="absolute left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] card w-96 bg-slate-100 text-neutral-content">
+                        <div class="card-body items-center text-center">
+                          <h2 class="card-title text-slate-900 mb-6">Add Package</h2>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[25%] text-start">Package Name</span><span class="w-[75%]"><input class="package_name p-2 shadow-2xl rounded-md h-8 text-slate-900 text-xs w-[90%]" type="text"></span></div>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs text-xs w-[25%] text-start">Package Price</span><span class="w-[75%]"><input class="package_price p-2 shadow-2xl rounded-md h-8 text-slate-900 text-xs w-[90%]" type="number"></span></div>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[25%] text-start">Segment</span><span class="w-[75%] flex justify-center"><select class="service_segment text-xs capitalize text-slate-900 h-8 px-2 rounded-md w-[90%]"></select></span></div>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[25%] text-start">Service</span><span class="w-[75%] h-[150px] border p-2 overflow-y-scroll flex justify-start">
+                            <ul class="service_list text-xs">
+                              {% for s in deliverables %}
+                              <li class="flex justify-start my-1"><input class="package_services" data-id="{{s.id}}" type="checkbox"><span class="ml-2 text-slate-900 text-start">{{s}}</span></li>
+                              {% endfor %}
+                            </ul>
+                          </span></div>
+
+                          <div class="card-actions justify-end mt-3">
+                            <button data-id="${id}" class="confirm btn btn-primary btn-sm">Submit</button>
+                            <button class="cancle btn btn-ghost text-slate-900 btn-sm">Deny</button>
+                          </div>
+                        </div>
+                      </div>
+              
+                      <div class="close_btn_dv h-8 w-8 absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                          <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="/media/assets/images/icons/close_button.png">
+                      </div>
+                      `
+                  document.body.prepend(popup)
+
+                  const close_btn = document.querySelector('.close_btn_dv')
+                  const cancle = document.querySelector('.cancle')
+                  // const popup = document.querySelector('.popup')
+              
+                  cancle.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                  close_btn.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                }
+
+
+                async function getSegmentService(){
+                  // let token = JSON.parse(localStorage.getItem('token')).access
+                  let token = getCookies().access
+                  let segment = await ftN( '{% url "get_segment_service_admin" %}' , 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, '')
+                  if (segment.status === 200){
+                    const service_segment = document.querySelector('.service_segment')
+                    segment.data.forEach((e,i)=>{
+                      const opt = document.createElement('option')
+                      opt.value = e.id
+                      opt.innerText = e.segment.replaceAll('_', ' ')
+                      service_segment.append(opt)
+                    })
+                  } else {
+                    poperFunction(segment.status, segment.message, false)
+                  }
+                }
+
+                
+                function updateServiceSubmit(){
+                  const confirm = document.querySelector('.confirm');
+                  confirm.addEventListener('click', async ()=>{
+                    // let token = JSON.parse(localStorage.getItem('token')).access;
+                    let token = getCookies().access;
+                    let url = '{% url "update_package_admin" id=0 %}';
+                    url = url.replaceAll(0,confirm.getAttribute('data-id'));
+
+                    const package_name = document.querySelector('.package_name');
+                    const package_price = document.querySelector('.package_price');
+                    const service_segment = document.querySelector('.service_segment');
+                    console.log(service_segment.value)
+                    const package_services = document.querySelectorAll('.package_services');
+                    let package_service = [];
+                    package_services.forEach(e=>{
+                      if (e.checked){
+                        package_service.push(e.getAttribute('data-id'))
+                      }
+                    })
+                    let a = await ftN(url, 'PUT',{'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'package': package_name.value,'price': package_price.value,'segment': Number(service_segment.value), 'deliverables': package_service}));
+                    if(a.status === 200){
+                      poperFunction(a.status, a.message, true);
+                    } else {
+                      poperFunction(a.status, a.message, false);
+                    }
+                    
+                  })
+                }
+
+
+                function getPackageServices(){
+                  console.log('workin twice')
+                  const package_main = document.querySelectorAll('.package_main');
+                  package_main.forEach(e=>{
+                    
+                    e.addEventListener('click',async ()=>{
+                      addPackagePopUp(e.getAttribute('data-id'))
+                      getSegmentService()
+                      // let token = JSON.parse(localStorage.getItem('token')).access;
+                      let token = getCookies().access;
+                      let url = '{% url "get_package_admin" id=0 %}';
+                      url = url.replaceAll(0,e.getAttribute('data-id'))
+                      console.log(url)
+                      let a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},'')
+                      if (a.status===200){
+                        
+                          if (Number(e.getAttribute('data-id')) === a.data.id){
+
+                            const package_name = document.querySelector('.package_name');
+                            const package_price = document.querySelector('.package_price');
+                            package_name.value = a.data.package;
+                            package_price.value = a.data.price;
+                            a.data.deliverables.forEach(e=>{
+                              const package_services = document.querySelectorAll('.package_services')
+                              package_services.forEach(f=>{
+                                if (Number(f.getAttribute('data-id')) === e){
+                                  f.setAttribute('checked', true)
+                                }
+                              })
+                            })
+                            updateServiceSubmit()
+                            
+                          }
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                    })
+                  })
+                } getPackageServices()
+
+
+
+                // <div class="flex mb-1 w-full"><span class="text-slate-900 text-sm w-[40%] text-start">Trash</span><span class="w-[60%] flex justify-start"><input class="service_trash p-2 shadow-2xl rounded-md h-8 text-slate-900" type="checkbox"></span></div>
+
+                function addPackageFun(){
+                  const add_package = document.querySelector('.add_package');
+                  add_package.addEventListener('click', ()=>{
+                    // console.log('workingworkingworking')
+                    addPackagePopUp()
+                    getSegmentService()
+
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click',async ()=>{
+                      const package_name = document.querySelector('.package_name');
+                      const package_price = document.querySelector('.package_price');
+                      const service_segment = document.querySelector('.service_segment');
+                      const package_services = document.querySelectorAll('.package_services');
+                      // package_name.value
+                      let package_service = []
+                      package_services.forEach(e=>{
+                        if (e.checked){
+                          package_service.push(Number(e.getAttribute('data-id')))
+                        }
+                      })
+
+                      // let token = JSON.parse(localStorage.getItem('token')).access;
+                      let token = getCookies().access;
+                      let a = await ftN('{% url "add_package_admin" %}', 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'package': package_name.value, 'price': Number(package_price.value), 'segment': Number(service_segment.value), 'service': package_service}))
+                      if (a.status===200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+
+                    })
+                  })
+                }addPackageFun()
+
+
+              </script>
+
+
+              <div class="h-auto border-b-8	border-solid mt-2">
+                <div class="flex">
+                  <div class="w-1/4 text-xs">Services</div>
+                  <div class="w-3/4">
+                    <div class="flex justify-start mb-6 "><button type="button" class="add_service py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">add service</button></div>
+
+                    <div class="m-3 px-2">
+                      <ul>
+                        <li class="flex my-2">
+                          <span class="w-2/4 text-xs font-bold">Service Name</span> 
+                          <span class="w-1/4 text-xs font-bold">Segment</span> 
+                          <div class="w-1/4 text-xs font-bold">Actions</div>
+                        </li>
+                      {% for s in service %}
+                        <li class="flex">
+                          <span class="w-2/4 text-xs">{{s}}</span> 
+                          <span class="w-1/4 text-xs">{{s.segment}}</span> 
+                          <div class="w-1/4 flex">
+                            <button data-id="{{s.id}}" class="service_edit btn btn-xs bg-blue-700 text-xs text-white">Edit</button>
+                            {% if s.trash == False %}
+                              {% comment %} <button data-id="{{s.id}}" class="service_archive btn btn-xs bg-red-700  text-white">Move to Trash</button> {% endcomment %}
+                              <img class="service_archive h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-100 duration-300" data-id="{{s.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+
+                            {% elif s.trash == True %}
+                              {% comment %} <span class="btn btn-xs bg-slate-300 text-white text-xs">In Trash</span> {% endcomment %}
+                              <img class="h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-50 duration-300" data-id="{{s.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+                            {% endif %}
+                          </div>
+                        </li>
+                      {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <script>
+                function addServicePopUp(id=null){
+                  const popup = document.createElement('div');
+                  popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-3';
+                  popup.innerHTML = `
+                      <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                      </div>
+                      <div class="absolute left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] card w-96 bg-slate-100 text-neutral-content">
+                        <div class="card-body items-center text-center">
+                          <h2 class="card-title text-slate-900 mb-6">Add Services</h2>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Services Name</span><span class="w-[60%] flex justify-start"><input class="service_name text-xs p-2 shadow-2xl rounded-md h-8 text-slate-900" type="text"></span></div>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Segment</span><span class="w-[60%] flex justify-start flex justify-start"><select class="service_segment text-xs capitalize text-slate-900 h-8 px-2 rounded-md"></select></span></div>
+                          <div class="trash_cont flex mb-1 w-full"></div>
+                          <div class="card-actions justify-end mt-3">
+                            <button data-id="${id}" class="confirm btn btn-primary">Accept</button>
+                            <button class="cancle btn btn-ghost text-slate-900">Deny</button>
+                          </div>
+                        </div>
+                      </div>
+              
+                      <div class="close_btn_dv h-8 w-8 absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                          <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="/media/assets/images/icons/close_button.png">
+                      </div>
+                      `
+                  document.body.prepend(popup)
+
+                  const close_btn = document.querySelector('.close_btn_dv')
+                  const cancle = document.querySelector('.cancle')
+                  // const popup = document.querySelector('.popup')
+              
+                  cancle.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                  close_btn.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                }
+
+
+
+                const service_archive = document.querySelectorAll('.service_archive');
+                service_archive.forEach(e=>{
+                  e.addEventListener('click',  ()=>{
+
+                    popupConfirmFun(e.getAttribute('data-id'),'move to trash','click confirm to move this service to trash.', null);
+
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click',async ()=>{
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      let url = '{% url "trash_service_admin" id=0 %}';
+                      url = url.replaceAll('0', e.getAttribute('data-id'))
+                      console.log(url, e.getAttribute('data-id'))
+                      let a = await ftN(url, 'DELETE', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`})
+                      console.log(a)
+                      if (a.status ===200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                    })
+                  })
+                })
+
+                const service_edit = document.querySelectorAll('.service_edit');
+                service_edit.forEach(e=>{
+                  e.addEventListener('click', async()=>{
+                    // console.log(e.getAttribute('data-id'))
+                    addServicePopUp(e.getAttribute('data-id'))
+                    getSegmentService()
+                    // let token = JSON.parse(localStorage.getItem('token')).access
+                    let token = getCookies().access
+                    let url = '{% url "get_service_admin" id=0 %}';
+                    url = url.replaceAll('0', e.getAttribute('data-id'))
+                    const a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},'');
+                    if (a.status === 200){
+
+                      const service_name = document.querySelector('.service_name')
+                      const service_segment = document.querySelector('.service_segment')
+                      const service_trash = document.querySelector('.service_trash')
+                      // const card_body = document.querySelector('.card-body')
+
+                      service_name.value = a.data.service_name
+                      const opt = document.createElement('option')
+                      opt.value = a.data.segment.id
+                      opt.innerText = a.data.segment.segment
+                      opt.setAttribute('disabled', 'true')
+                      opt.setAttribute('selected', 'true')
+                      service_segment.prepend(opt)
+                      if (a.data.trash){
+                        const trash_cont = document.querySelector('.trash_cont');
+                        trash_cont.innerHTML = `
+                          <span class="text-slate-900 text-sm w-[40%] text-start">Trash</span><span class="w-[60%] flex justify-start"><input class="service_trash p-2 shadow-2xl rounded-md h-8 text-slate-900" type="checkbox" checked></span>
+                        `
+                        // card_body.append(trash_cont)
+                      }
+
+                      
+
+
+                      const confirm = document.querySelector('.confirm');
+                      confirm.addEventListener('click',async (e)=>{
+                        // let token = JSON.parse(localStorage.getItem('token')).access 
+                        let token = getCookies().access 
+                        let url = '{% url "update_service_admin" id=0 %}' 
+                        url = url.replaceAll(0 ,e.target.getAttribute('data-id'))
+
+                        const service_name = document.querySelector('.service_name')
+                        const service_segment = document.querySelector('.service_segment')
+                        let service_trash = document.querySelector('.service_trash')
+                        if (service_trash.checked){
+                          service_trash = true
+                        } else {
+                          service_trash = false
+                        }
+
+                        const a = await ftN(url, 'PUT', {'Content-Type': 'application/json', 'Authorization':  `Bearer ${token}`}, JSON.stringify({'service_name': service_name.value, 'segment': Number(service_segment.value), 'trash': service_trash }))
+                        if (a.status ===200){
+                          poperFunction(a.status, a.message, true)
+                        } else {
+                          poperFunction(a.status, a.message, false)
+                        }
+                      })
+
+
+                    } else {
+                      poperFunction(a.status, a.message, false)
+                    }
+
+                  })
+                })
+
+              </script>
+
+              <script>
+                const add_service = document.querySelector('.add_service');
+                add_service.addEventListener('click', ()=>{
+                    addServicePopUp()
+                    getSegmentService()
+ 
+
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click', async ()=>{
+
+                      const service_name = document.querySelector('.service_name');
+                      const service_segment = document.querySelector('.service_segment');
+
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      const a = await ftN('{% url "add_service_admin" %}', 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'service_name': service_name.value, 'segment': Number(service_segment.value)}))
+                      if(a.status === 200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                      
+                    })
+                }) 
+              </script>
+
+
+
+
+              <div class="h-auto border-b-8	border-solid mt-2">
+                <div class="flex">
+                  <div class="w-1/4 text-xs">Additional Services</div>
+                  <div class="w-3/4">
+                    <div class="flex justify-start mb-6 "><button type="button" class="add_additional_service py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">add additional service</button></div>
+
+                    <div class="m-3 px-2">
+                      <ul>
+                        <li class="flex my-2">
+                          <span class="w-1/4 text-xs font-bold">Service Name</span> 
+                          <span class="w-1/4 text-xs font-bold">Segment</span> 
+                          <span class="w-1/4 text-xs font-bold">Price</span> 
+                          <div class="w-1/4 text-xs font-bold">Actions</div>
+                        </li>
+                      {% for s in additional_service %}
+                        <li class="flex">
+                          <span class="w-1/4 text-xs">{{s}}</span> 
+                          <span class="w-1/4 text-xs">{{s.segment}}</span>
+                          <span id="additional_service_id{{s.id}}" class="w-1/4 text-xs additional_service_price"></span>
+                          <script>
+                            var additional_service_id = document.getElementById("additional_service_id{{s.id}}")
+                            additional_service_id.innerText = numberWithCommas({{s.price}})
+                          </script>
+                          <div class="w-1/4 flex">
+                            <button data-id="{{s.id}}" class="additional_service_edit btn btn-xs bg-blue-700 text-xs text-white">Edit</button>
+                            {% if s.trash == False %}
+                              {% comment %} <button data-id="{{s.id}}" class="additional_service_archive btn btn-xs bg-red-700  text-white">Move to Trash</button> {% endcomment %}
+                              <img class="additional_service_archive h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-100 duration-300" data-id="{{s.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+
+                            {% elif s.trash == True %}
+                              {% comment %} <span class="btn btn-xs bg-slate-300 text-white text-xs">In Trash</span> {% endcomment %}
+                              <img class="h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-50 duration-300" data-id="{{s.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+
+                            {% endif %}
+                          </div>
+                        </li>
+                      {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <script>
+                function addAdditionalServicePopUp(id=null){
+                  const popup = document.createElement('div');
+                  popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-3';
+                  popup.innerHTML = `
+                      <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                      </div>
+                      <div class="absolute left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] card w-96 bg-slate-100 text-neutral-content">
+                        <div class="card-body items-center text-center">
+                          <h2 class="card-title text-slate-900 mb-6">Add Additional Services</h2>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Services Name</span><span class="flex justify-start w-[60%]"><input class="additional_service_name text-xs p-2 shadow-2xl rounded-md h-8 text-slate-900" type="text"></span></div>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Services Price</span><span class="flex justify-start w-[45%]"><input class="additional_service_price text-xs w-full p-2 shadow-2xl rounded-md h-8 text-slate-900" type="number"></span><span class="text-xs w-[15%] text-slate-900 flex justify-center items-center">/day</span></div>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Segment</span><span class="flex justify-start w-[60%] flex justify-start"><select class="additional_service_segment text-xs capitalize text-slate-900 h-8 px-2 rounded-md"></select></span></div>
+                          <div class="trash_cont flex mb-1 w-full"></div>
+                          <div class="card-actions justify-end mt-3">
+                            <button data-id="${id}" class="confirm btn btn-primary">Accept</button>
+                            <button class="cancle btn btn-ghost text-slate-900">Deny</button>
+                          </div>
+                        </div>
+                      </div>
+              
+                      <div class="close_btn_dv h-8 w-8 absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                          <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="/media/assets/images/icons/close_button.png">
+                      </div>
+                      `
+                  document.body.prepend(popup)
+
+                  const close_btn = document.querySelector('.close_btn_dv')
+                  const cancle = document.querySelector('.cancle')
+                  // const popup = document.querySelector('.popup')
+              
+                  cancle.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                  close_btn.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                }
+
+                async function getSegment(){
+                  // let token = JSON.parse(localStorage.getItem('token')).access
+                  let token = getCookies().access
+                  let segment = await ftN( '{% url "get_segment_service_admin" %}' , 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, '')
+                  if (segment.status === 200){
+                    const additional_service_segment = document.querySelector('.additional_service_segment')
+                    console.log(additional_service_segment)
+                    segment.data.forEach((e,i)=>{
+                      const opt = document.createElement('option')
+                      opt.value = e.id
+                      opt.innerText = e.segment.replaceAll('_', ' ')
+                      additional_service_segment.append(opt)
+                    })
+                  } else {
+                    poperFunction(segment.status, segment.message, false)
+                  }
+                }
+
+                const additional_service_archive = document.querySelectorAll('.additional_service_archive');
+                additional_service_archive.forEach(e=>{
+                  e.addEventListener('click',  ()=>{
+
+                    popupConfirmFun(e.getAttribute('data-id'),'move to trash','click confirm to move this service to trash.', null);
+
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click',async ()=>{
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      let url = '{% url "trash_additional_service_admin" id=0 %}';
+                      url = url.replaceAll('0', e.getAttribute('data-id'))
+                      console.log(url, e.getAttribute('data-id'))
+                      let a = await ftN(url, 'DELETE', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`})
+                      console.log(a)
+                      if (a.status ===200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                    })
+                  })
+                })
+
+                const additional_service_edit = document.querySelectorAll('.additional_service_edit');
+                additional_service_edit.forEach(e=>{
+                  e.addEventListener('click', async()=>{
+                    // console.log(e.getAttribute('data-id'))
+                    addAdditionalServicePopUp(e.getAttribute('data-id'))
+                    getSegment()
+                    // let token = JSON.parse(localStorage.getItem('token')).access
+                    let token = getCookies().access
+                    let url = '{% url "get_additional_service_admin" id=0 %}';
+                    url = url.replaceAll('0', e.getAttribute('data-id'))
+                    const a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},'');
+                    if (a.status === 200){
+
+                      const additional_service_name = document.querySelector('.additional_service_name')
+                      const additional_service_price = document.querySelector('.additional_service_price')
+                      const additional_service_segment = document.querySelector('.additional_service_segment')
+                      const additional_service_trash = document.querySelector('.additional_service_trash')
+
+                      additional_service_name.value = a.data.service_name
+                      additional_service_price.value = a.data.price
+                      const opt = document.createElement('option')
+                      opt.value = a.data.segment.id
+                      opt.innerText = a.data.segment.segment
+                      opt.setAttribute('disabled', 'true')
+                      opt.setAttribute('selected', 'true')
+                      additional_service_segment.prepend(opt)
+                      if (a.data.trash){
+                        const trash_cont = document.querySelector('.trash_cont');
+                        trash_cont.innerHTML = `
+                        <span class="text-slate-900 text-sm w-[40%] text-start">Trash</span><span class="w-[60%] flex justify-start"><input class="additional_service_trash p-2 shadow-2xl rounded-md h-8 text-slate-900" type="checkbox" checked></span>
+                        `
+                      }
+
+
+                      const confirm = document.querySelector('.confirm');
+                      confirm.addEventListener('click',async (e)=>{
+                        // let token = JSON.parse(localStorage.getItem('token')).access 
+                        let token = getCookies().access 
+                        let url = '{% url "update_additional_service_admin" id=0 %}'
+                        url = url.replaceAll(0 ,e.target.getAttribute('data-id'))
+
+                        const additional_service_name = document.querySelector('.additional_service_name')
+                        const additional_service_price = document.querySelector('.additional_service_price')
+                        const additional_service_segment = document.querySelector('.additional_service_segment')
+                        let additional_service_trash = document.querySelector('.additional_service_trash')
+                        console.log('additional_service_trash',additional_service_trash)
+                        if (!additional_service_trash == null){
+
+                          if (additional_service_trash.checked){
+                            additional_service_trash = true
+                          } else {
+                            additional_service_trash = false
+                          }
+                        } else {
+                          console.log('this working')
+                          additional_service_trash = false
+                        }
+                          
+                        const a = await ftN(url, 'PUT', {'Content-Type': 'application/json', 'Authorization':  `Bearer ${token}`}, JSON.stringify({'service_name': additional_service_name.value, 'price': additional_service_price.value, 'segment': Number(additional_service_segment.value), 'trash': additional_service_trash }))
+                        if (a.status ===200){
+                          poperFunction(a.status, a.message, true)
+                        } else {
+                          poperFunction(a.status, a.message, false)
+                        }
+                      })
+
+                    } else {
+                      poperFunction(a.status, a.message, false)
+                    }
+
+                  })
+                })
+
+  
+                const add_additional_service = document.querySelector('.add_additional_service');
+                add_additional_service.addEventListener('click', ()=>{
+                    addAdditionalServicePopUp()
+                    getSegment()
+ 
+
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click', async ()=>{
+
+                      const additional_service_name = document.querySelector('.additional_service_name');
+                      const additional_service_price = document.querySelector('.additional_service_price');
+                      const additional_service_segment = document.querySelector('.additional_service_segment');
+
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+
+                      const a = await ftN('{% url "add_additional_service_admin" %}', 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'service_name': additional_service_name.value, 'price': Number(additional_service_price.value), 'segment': Number(additional_service_segment.value)}))
+                      if(a.status === 200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                      
+                    })
+                }) 
+              </script>
+
+
+              <div class="h-auto border-b-8	border-solid mt-2">
+                <div class="flex">
+                  <div class="w-1/4 text-xs">Camera Equipments</div>
+                  <div class="w-3/4">
+                    <div class="flex justify-start mb-6 "><button type="button" class="add_cameraequipments py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">add Camera Equipments</button></div>
+                    <div class="m-3 px-2">
+                      <ul>
+                        <li class="flex my-2">
+                          <span class="w-1/4 text-xs font-bold">Title</span>
+                          {% comment %} <span class="w-1/4 text-xs font-bold">Segment</span> {% endcomment %}
+
+                        </li>
+                      {% for s in cameraequipments %}
+                        <li class="flex">
+                          <span class="w-3/4 text-xs">{{s}}</span> 
+                          {% comment %} <span class="w-1/4 text-xs">{{s.segment}}</span> {% endcomment %}
+                          {% comment %} <span id="cameraequipments_id{{s.id}}" class="w-1/4 text-xs cameraequipments_price"></span> {% endcomment %}
+                          {% comment %} <script>
+                            var cameraequipments_id = document.getElementById("cameraequipments_id{{s.id}}")
+                            cameraequipments_id.innerText = numberWithCommas({{s.price}})
+                          </script> {% endcomment %}
+                          <div class="w-1/4 flex">
+                            <button data-id="{{s.id}}" class="cameraequipments_edit btn btn-xs bg-blue-700 text-xs text-white">Edit</button>
+                            {% if s.trash == False %}
+                              {% comment %} <button data-id="{{s.id}}" class="cameraequipments_archive btn btn-xs bg-red-700  text-white">Move to Trash</button> {% endcomment %}
+                              <img class="cameraequipments_archive h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-100 duration-300" data-id="{{s.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+
+                            {% elif s.trash == True %}
+                              {% comment %} <span class="btn btn-xs bg-slate-300 text-white text-xs">In Trash</span> {% endcomment %}
+                              <img class="h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-50 duration-300" data-id="{{s.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+                              
+                            {% endif %}
+                          </div>
+                        </li>
+                      {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <script>
+                function cameraequipmentsPopUp(id=null, message){
+                  const popup = document.createElement('div');
+                  popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-3';
+                  popup.innerHTML = `
+                      <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                      </div>
+                      <div class="absolute left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] card w-96 bg-slate-100 text-neutral-content">
+                        <div class="card-body items-center text-center">
+                          <h2 class="card-title text-slate-900 mb-6 capitalize text-lg">${message}</h2>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Title</span><span class="w-[60%]"><input class="cameraequipments_name text-xs p-2 shadow-2xl rounded-md h-8 text-slate-900" type="text"></span></div>
+
+                          {% comment %} <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Services Price</span><span class="w-[45%]"><input class="cameraequipments_price w-full p-2 shadow-2xl rounded-md h-8 text-slate-900" type="number"></span><span class="text-xs w-[15%] text-slate-900 flex justify-center items-center">/day</span></div> {% endcomment %}
+
+                          {% comment %} <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Segment</span><span class="w-[60%] flex justify-start"><select class="cameraequipments_segment text-sm capitalize text-slate-900 h-8 px-2 rounded-md"></select></span></div> {% endcomment %}
+
+                          <div class="trash_cont flex mb-1 w-full"></div>
+                          <div class="card-actions justify-end mt-3">
+                            <button data-id="${id}" class="confirm btn btn-primary">Accept</button>
+                            <button class="cancle btn btn-ghost text-slate-900">Deny</button>
+                          </div>
+                        </div>
+                      </div>
+              
+                      <div class="close_btn_dv h-8 w-8 absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                          <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="/media/assets/images/icons/close_button.png">
+                      </div>
+                      `
+                  document.body.prepend(popup)
+
+                  const close_btn = document.querySelector('.close_btn_dv')
+                  const cancle = document.querySelector('.cancle')
+                  // const popup = document.querySelector('.popup')
+              
+                  cancle.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                  close_btn.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                }
+
+                {% comment %} async function getSegment(){
+                  let token = JSON.parse(localStorage.getItem('token')).access
+                  let segment = await ftN( '{% url "get_segment_service_admin" %}' , 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, '')
+                  if (segment.status === 200){
+                    const cameraequipments_segment = document.querySelector('.cameraequipments_segment')
+                    console.log(cameraequipments_segment)
+                    segment.data.forEach((e,i)=>{
+                      const opt = document.createElement('option')
+                      opt.value = e.id
+                      opt.innerText = e.segment.replaceAll('_', ' ')
+                      cameraequipments_segment.append(opt)
+                    })
+                  } else {
+                    poperFunction(segment.status, segment.message, false)
+                  }
+                } {% endcomment %}
+
+                const cameraequipments_archive = document.querySelectorAll('.cameraequipments_archive');
+                cameraequipments_archive.forEach(e=>{
+                  e.addEventListener('click',  ()=>{
+
+                    popupConfirmFun(e.getAttribute('data-id'),'move to trash','click confirm to move this service to trash.', null);
+
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click',async ()=>{
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      let url = '{% url "trash_camera_equipments_admin" id=0 %}';
+                      url = url.replaceAll('0', e.getAttribute('data-id'))
+                      console.log(url, e.getAttribute('data-id'))
+                      let a = await ftN(url, 'DELETE', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`})
+                      console.log(a)
+                      if (a.status ===200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                    })
+                  })
+                })
+
+                const cameraequipments_edit = document.querySelectorAll('.cameraequipments_edit');
+                cameraequipments_edit.forEach(e=>{
+                  e.addEventListener('click', async()=>{
+                    // console.log(e.getAttribute('data-id'))
+                    cameraequipmentsPopUp(e.getAttribute('data-id'), 'Update camera equipments')
+                    // getSegment()
+                    // let token = JSON.parse(localStorage.getItem('token')).access
+                    let token = getCookies().access
+                    let url = '{% url "get_camera_equipments_admin" id=0 %}';
+                    url = url.replaceAll('0', e.getAttribute('data-id'))
+                    const a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},'');
+                    if (a.status === 200){
+
+                      console.log('a.data',a.data)
+
+                      const cameraequipments_name = document.querySelector('.cameraequipments_name')
+                      const cameraequipments_trash = document.querySelector('.cameraequipments_trash')
+
+                      cameraequipments_name.value = a.data.title
+                      if (a.data.trash){
+                        const trash_cont = document.querySelector('.trash_cont');
+                        trash_cont.innerHTML = `
+                        <span class="text-slate-900 text-sm w-[40%] text-start">Trash</span><span class="w-[60%] flex justify-start"><input class="cameraequipments_trash p-2 shadow-2xl rounded-md h-8 text-slate-900" type="checkbox" checked></span>
+                        `
+                      }
+
+
+                      const confirm = document.querySelector('.confirm');
+                      confirm.addEventListener('click',async (e)=>{
+                        // let token = JSON.parse(localStorage.getItem('token')).access 
+                        let token = getCookies().access 
+                        let url = '{% url "update_camera_equipments_admin" id=0 %}'
+                        url = url.replaceAll(0 ,e.target.getAttribute('data-id'))
+
+                        const cameraequipments_name = document.querySelector('.cameraequipments_name')
+                        //const cameraequipments_price = document.querySelector('.cameraequipments_price')
+                        // const cameraequipments_segment = document.querySelector('.cameraequipments_segment')
+                        let cameraequipments_trash = document.querySelector('.cameraequipments_trash')
+                        console.log('cameraequipments_trash',cameraequipments_trash)
+                        if (!cameraequipments_trash == null){
+
+                          if (cameraequipments_trash.checked){
+                            cameraequipments_trash = true
+                          } else {
+                            cameraequipments_trash = false
+                          }
+                        } else {
+                          cameraequipments_trash = false
+                        }
+                          
+                        const a = await ftN(url, 'PUT', {'Content-Type': 'application/json', 'Authorization':  `Bearer ${token}`}, JSON.stringify({'title': cameraequipments_name.value, 'trash': cameraequipments_trash }))
+                        if (a.status ===200){
+                          poperFunction(a.status, a.message, true)
+                        } else {
+                          poperFunction(a.status, a.message, false)
+                        }
+                      })
+                    } else {
+                      poperFunction(a.status, a.message, false)
+                    }
+
+                  })
+                })
+  
+                const add_cameraequipments = document.querySelector('.add_cameraequipments');
+                add_cameraequipments.addEventListener('click', ()=>{
+                    cameraequipmentsPopUp(null,'Add camera equipments')
+ 
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click', async ()=>{
+                      const cameraequipments_name = document.querySelector('.cameraequipments_name');
+
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      const a = await ftN('{% url "add_camera_equipments_admin" %}', 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'title': cameraequipments_name.value}))
+                      if(a.status === 200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                      
+                    })
+                }) 
+              </script>
+
+
+
+
+              <div class="h-auto border-b-8	border-solid mt-2">
+                <div class="flex">
+                  <div class="w-1/4 text-xs">Production Process</div>
+                  <div class="w-3/4">
+                    <div class="flex justify-start mb-6 "><button type="button" class="add_productionprocess py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">add Production Process</button></div>
+                    <div class="m-3 px-2">
+                      <ul>
+                        <li class="flex my-2">
+                          <span class="w-1/4 text-xs font-bold">Title</span>
+                          {% comment %} <span class="w-1/4 text-xs font-bold">Segment</span> {% endcomment %}
+
+                        </li>
+                      {% for s in production_process %}
+                        <li class="flex">
+                          <span class="w-3/4 text-xs">{{s}}</span> 
+                          {% comment %} <span class="w-1/4 text-xs">{{s.segment}}</span> {% endcomment %}
+                          {% comment %} <span id="productionprocess_id{{s.id}}" class="w-1/4 text-xs productionprocess_price"></span> {% endcomment %}
+                          {% comment %} <script>
+                            var productionprocess_id = document.getElementById("productionprocess_id{{s.id}}")
+                            productionprocess_id.innerText = numberWithCommas({{s.price}})
+                          </script> {% endcomment %}
+                          <div class="w-1/4 flex">
+                            <button data-id="{{s.id}}" class="productionprocess_edit btn btn-xs bg-blue-700 text-xs text-white">Edit</button>
+                            {% if s.trash == False %}
+                              {% comment %} <button data-id="{{s.id}}" class="productionprocess_archive btn btn-xs bg-red-700  text-white">Move to Trash</button> {% endcomment %}
+                              <img class="productionprocess_archive h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-100 duration-300" data-id="{{s.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+
+                            {% elif s.trash == True %}
+                              {% comment %} <span class="btn btn-xs bg-slate-300 text-white text-xs">In Trash</span> {% endcomment %}
+                              <img class="h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-50 duration-300" data-id="{{s.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+                              
+                            {% endif %}
+                          </div>
+                        </li>
+                      {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <script>
+                function productionprocessPopUp(id=null, message){
+                  const popup = document.createElement('div');
+                  popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-3';
+                  popup.innerHTML = `
+                      <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                      </div>
+                      <div class="absolute left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] card w-96 bg-slate-100 text-neutral-content">
+                        <div class="card-body items-center text-center">
+                          <h2 class="card-title text-slate-900 mb-6 capitalize">${message}</h2>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Title</span><span class="w-[60%]"><input class="productionprocess_name text-xs p-2 shadow-2xl rounded-md h-8 text-slate-900" type="text"></span></div>
+
+                          {% comment %} <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Services Price</span><span class="w-[45%]"><input class="productionprocess_price w-full p-2 shadow-2xl rounded-md h-8 text-slate-900" type="number"></span><span class="text-xs w-[15%] text-slate-900 flex justify-center items-center">/day</span></div> {% endcomment %}
+
+                          {% comment %} <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Segment</span><span class="w-[60%] flex justify-start"><select class="productionprocess_segment text-sm capitalize text-slate-900 h-8 px-2 rounded-md"></select></span></div> {% endcomment %}
+
+                          <div class="trash_cont flex mb-1 w-full"></div>
+                          <div class="card-actions justify-end mt-3">
+                            <button data-id="${id}" class="confirm btn btn-primary btn-sm">Accept</button>
+                            <button class="cancle btn btn-ghost text-slate-900 btn-sm">Deny</button>
+                          </div>
+                        </div>
+                      </div>
+              
+                      <div class="close_btn_dv h-8 w-8 absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                          <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="/media/assets/images/icons/close_button.png">
+                      </div>
+                      `
+                  document.body.prepend(popup)
+
+                  const close_btn = document.querySelector('.close_btn_dv')
+                  const cancle = document.querySelector('.cancle')
+                  // const popup = document.querySelector('.popup')
+              
+                  cancle.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                  close_btn.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                }
+
+                {% comment %} async function getSegment(){
+                  let token = JSON.parse(localStorage.getItem('token')).access
+                  let segment = await ftN( '{% url "get_segment_service_admin" %}' , 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, '')
+                  if (segment.status === 200){
+                    const productionprocess_segment = document.querySelector('.productionprocess_segment')
+                    console.log(productionprocess_segment)
+                    segment.data.forEach((e,i)=>{
+                      const opt = document.createElement('option')
+                      opt.value = e.id
+                      opt.innerText = e.segment.replaceAll('_', ' ')
+                      productionprocess_segment.append(opt)
+                    })
+                  } else {
+                    poperFunction(segment.status, segment.message, false)
+                  }
+                } {% endcomment %}
+
+                const productionprocess_archive = document.querySelectorAll('.productionprocess_archive');
+                productionprocess_archive.forEach(e=>{
+                  e.addEventListener('click',  ()=>{
+
+                    popupConfirmFun(e.getAttribute('data-id'),'move to trash','click confirm to move this service to trash.', null);
+
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click',async ()=>{
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      let url = '{% url "trash_production_process_admin" id=0 %}';
+                      url = url.replaceAll('0', e.getAttribute('data-id'))
+                      console.log(url, e.getAttribute('data-id'))
+                      let a = await ftN(url, 'DELETE', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`})
+                      console.log(a)
+                      if (a.status ===200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                    })
+                  })
+                })
+
+                const productionprocess_edit = document.querySelectorAll('.productionprocess_edit');
+                productionprocess_edit.forEach(e=>{
+                  e.addEventListener('click', async()=>{
+                    // console.log(e.getAttribute('data-id'))
+                    productionprocessPopUp(e.getAttribute('data-id'), 'Update production process')
+                    // getSegment()
+                    // let token = JSON.parse(localStorage.getItem('token')).access
+                    let token = getCookies().access
+                    let url = '{% url "get_production_process_admin" id=0 %}';
+                    url = url.replaceAll('0', e.getAttribute('data-id'))
+                    const a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},'');
+                    if (a.status === 200){
+
+                      console.log('a.data',a.data)
+
+                      const productionprocess_name = document.querySelector('.productionprocess_name')
+                      const productionprocess_trash = document.querySelector('.productionprocess_trash')
+
+                      productionprocess_name.value = a.data.title
+                      if (a.data.trash){
+                        const trash_cont = document.querySelector('.trash_cont');
+                        trash_cont.innerHTML = `
+                        <span class="text-slate-900 text-sm w-[40%] text-start">Trash</span><span class="w-[60%] flex justify-start"><input class="productionprocess_trash p-2 shadow-2xl rounded-md h-8 text-slate-900" type="checkbox" checked></span>
+                        `
+                      }
+
+
+                      const confirm = document.querySelector('.confirm');
+                      confirm.addEventListener('click',async (e)=>{
+                        // let token = JSON.parse(localStorage.getItem('token')).access 
+                        let token = getCookies().access 
+                        let url = '{% url "update_production_process_admin" id=0 %}'
+                        url = url.replaceAll(0 ,e.target.getAttribute('data-id'))
+
+                        const productionprocess_name = document.querySelector('.productionprocess_name')
+                        //const productionprocess_price = document.querySelector('.productionprocess_price')
+                        // const productionprocess_segment = document.querySelector('.productionprocess_segment')
+                        let productionprocess_trash = document.querySelector('.productionprocess_trash')
+                        console.log('productionprocess_trash',productionprocess_trash)
+                        if (!productionprocess_trash == null){
+
+                          if (productionprocess_trash.checked){
+                            productionprocess_trash = true
+                          } else {
+                            productionprocess_trash = false
+                          }
+                        } else {
+                          productionprocess_trash = false
+                        }
+                          
+                        const a = await ftN(url, 'PUT', {'Content-Type': 'application/json', 'Authorization':  `Bearer ${token}`}, JSON.stringify({'title': productionprocess_name.value, 'trash': productionprocess_trash }))
+                        if (a.status ===200){
+                          poperFunction(a.status, a.message, true)
+                        } else {
+                          poperFunction(a.status, a.message, false)
+                        }
+                      })
+                    } else {
+                      poperFunction(a.status, a.message, false)
+                    }
+
+                  })
+                })
+  
+                const add_productionprocess = document.querySelector('.add_productionprocess');
+                add_productionprocess.addEventListener('click', ()=>{
+                    productionprocessPopUp(null,'Add production process')
+ 
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click', async ()=>{
+                      const productionprocess_name = document.querySelector('.productionprocess_name');
+
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      const a = await ftN('{% url "add_production_process_admin" %}', 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'title': productionprocess_name.value}))
+                      if(a.status === 200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                      
+                    })
+                }) 
+              </script>
+
+
+
+
+
+              <div class="h-auto border-b-8	border-solid mt-2">
+                <div class="flex">
+                  <div class="w-1/4 text-xs">Deliverables</div>
+                  <div class="w-3/4">
+                    <div class="flex justify-start mb-6 "><button type="button" class="add_deliverables py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">add deliverables</button></div>
+                    <div class="m-3 px-2">
+                      <ul>
+                        <li class="flex my-2">
+                          <span class="w-1/4 text-xs font-bold">Title</span>
+                          {% comment %} <span class="w-1/4 text-xs font-bold">Segment</span> {% endcomment %}
+
+                        </li>
+                      {% for s in deliverables %}
+                        <li class="flex">
+                          <span class="w-3/4 text-xs">{{s}}</span> 
+                          {% comment %} <span class="w-1/4 text-xs">{{s.segment}}</span> {% endcomment %}
+                          {% comment %} <span id="deliverables_id{{s.id}}" class="w-1/4 text-xs deliverables_price"></span> {% endcomment %}
+                          {% comment %} <script>
+                            var deliverables_id = document.getElementById("deliverables_id{{s.id}}")
+                            deliverables_id.innerText = numberWithCommas({{s.price}})
+                          </script> {% endcomment %}
+                          <div class="w-1/4 flex">
+                            <button data-id="{{s.id}}" class="deliverables_edit btn btn-xs bg-blue-700 text-xs text-white">Edit</button>
+                            {% if s.trash == False %}
+                              {% comment %} <button data-id="{{s.id}}" class="deliverables_archive btn btn-xs bg-red-700  text-white">Move to Trash</button> {% endcomment %}
+                              <img class="deliverables_archive h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-100 duration-300" data-id="{{s.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+
+                            {% elif s.trash == True %}
+                              {% comment %} <span class="btn btn-xs bg-slate-300 text-white text-xs">In Trash</span> {% endcomment %}
+                              <img class="h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-50 duration-300" data-id="{{s.id}}" src="/medias/assets/images/icons/delete_gray.png" ></span>
+                              
+                            {% endif %}
+                          </div>
+                        </li>
+                      {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <script>
+                function deliverablesPopUp(id=null, message){
+                  const popup = document.createElement('div');
+                  popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-3';
+                  popup.innerHTML = `
+                      <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                      </div>
+                      <div class="absolute left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] card w-96 bg-slate-100 text-neutral-content">
+                        <div class="card-body items-center text-center">
+                          <h2 class="card-title text-slate-900 mb-6 capitalize">${message}</h2>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Title</span><span class="w-[60%]"><input class="deliverables_name text-xs p-2 shadow-2xl rounded-md h-8 text-slate-900" type="text"></span></div>
+
+                          {% comment %} <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Services Price</span><span class="w-[45%]"><input class="deliverables_price w-full p-2 shadow-2xl rounded-md h-8 text-slate-900" type="number"></span><span class="text-xs w-[15%] text-slate-900 flex justify-center items-center">/day</span></div> {% endcomment %}
+
+                          {% comment %} <div class="flex mb-1 w-full"><span class="text-slate-900 text-xs w-[40%] text-start">Segment</span><span class="w-[60%] flex justify-start"><select class="deliverables_segment text-sm capitalize text-slate-900 h-8 px-2 rounded-md"></select></span></div> {% endcomment %}
+
+                          <div class="trash_cont flex mb-1 w-full"></div>
+                          <div class="card-actions justify-end mt-3">
+                            <button data-id="${id}" class="confirm btn btn-primary btn-sm">Accept</button>
+                            <button class="cancle btn btn-ghost text-slate-900 btn-sm">Deny</button>
+                          </div>
+                        </div>
+                      </div>
+              
+                      <div class="close_btn_dv h-8 w-8 absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                          <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="/media/assets/images/icons/close_button.png">
+                      </div>
+                      `
+                  document.body.prepend(popup)
+
+                  const close_btn = document.querySelector('.close_btn_dv')
+                  const cancle = document.querySelector('.cancle')
+                  // const popup = document.querySelector('.popup')
+              
+                  cancle.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                  close_btn.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                }
+
+                {% comment %} async function getSegment(){
+                  let token = JSON.parse(localStorage.getItem('token')).access
+                  let segment = await ftN( '{% url "get_segment_service_admin" %}' , 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, '')
+                  if (segment.status === 200){
+                    const deliverables_segment = document.querySelector('.deliverables_segment')
+                    console.log(deliverables_segment)
+                    segment.data.forEach((e,i)=>{
+                      const opt = document.createElement('option')
+                      opt.value = e.id
+                      opt.innerText = e.segment.replaceAll('_', ' ')
+                      deliverables_segment.append(opt)
+                    })
+                  } else {
+                    poperFunction(segment.status, segment.message, false)
+                  }
+                } {% endcomment %}
+
+                const deliverables_archive = document.querySelectorAll('.deliverables_archive');
+                deliverables_archive.forEach(e=>{
+                  e.addEventListener('click',  ()=>{
+
+                    popupConfirmFun(e.getAttribute('data-id'),'move to trash','click confirm to move this service to trash.', null);
+
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click',async ()=>{
+                      //let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      let url = '{% url "trash_deliverables_admin" id=0 %}';
+                      url = url.replaceAll('0', e.getAttribute('data-id'))
+                      console.log(url, e.getAttribute('data-id'))
+                      let a = await ftN(url, 'DELETE', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`})
+                      console.log(a)
+                      if (a.status ===200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                    })
+                  })
+                })
+
+                const deliverables_edit = document.querySelectorAll('.deliverables_edit');
+                deliverables_edit.forEach(e=>{
+                  e.addEventListener('click', async()=>{
+                    // console.log(e.getAttribute('data-id'))
+                    deliverablesPopUp(e.getAttribute('data-id'), 'Update Deliverables')
+                    // getSegment()
+                    // let token = JSON.parse(localStorage.getItem('token')).access
+                    let token = getCookies().access
+                    let url = '{% url "get_deliverables_admin" id=0 %}';
+                    url = url.replaceAll('0', e.getAttribute('data-id'))
+                    const a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},'');
+                    if (a.status === 200){
+
+                      console.log('a.data',a.data)
+
+                      const deliverables_name = document.querySelector('.deliverables_name')
+                      const deliverables_trash = document.querySelector('.deliverables_trash')
+
+                      deliverables_name.value = a.data.title
+                      if (a.data.trash){
+                        const trash_cont = document.querySelector('.trash_cont');
+                        trash_cont.innerHTML = `
+                        <span class="text-slate-900 text-sm w-[40%] text-start">Trash</span><span class="w-[60%] flex justify-start"><input class="deliverables_trash p-2 shadow-2xl rounded-md h-8 text-slate-900" type="checkbox" checked></span>
+                        `
+                      }
+
+
+                      const confirm = document.querySelector('.confirm');
+                      confirm.addEventListener('click',async (e)=>{
+                        //let token = JSON.parse(localStorage.getItem('token')).access 
+                        let token = getCookies().access 
+                        let url = '{% url "update_deliverables_admin" id=0 %}'
+                        url = url.replaceAll(0 ,e.target.getAttribute('data-id'))
+
+                        const deliverables_name = document.querySelector('.deliverables_name')
+                        //const deliverables_price = document.querySelector('.deliverables_price')
+                        // const deliverables_segment = document.querySelector('.deliverables_segment')
+                        let deliverables_trash = document.querySelector('.deliverables_trash')
+                        console.log('deliverables_trash',deliverables_trash)
+                        if (!deliverables_trash == null){
+
+                          if (deliverables_trash.checked){
+                            deliverables_trash = true
+                          } else {
+                            deliverables_trash = false
+                          }
+                        } else {
+                          deliverables_trash = false
+                        }
+                          
+                        const a = await ftN(url, 'PUT', {'Content-Type': 'application/json', 'Authorization':  `Bearer ${token}`}, JSON.stringify({'title': deliverables_name.value, 'trash': deliverables_trash }))
+                        if (a.status ===200){
+                          poperFunction(a.status, a.message, true)
+                        } else {
+                          poperFunction(a.status, a.message, false)
+                        }
+                      })
+                    } else {
+                      poperFunction(a.status, a.message, false)
+                    }
+
+                  })
+                })
+  
+                const add_deliverables = document.querySelector('.add_deliverables');
+                add_deliverables.addEventListener('click', ()=>{
+                    deliverablesPopUp(null,'Add Deliverables')
+ 
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click', async ()=>{
+                      const deliverables_name = document.querySelector('.deliverables_name');
+
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      const a = await ftN('{% url "add_deliverables_admin" %}', 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'title': deliverables_name.value}))
+                      if(a.status === 200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                      
+                    })
+                }) 
+              </script>
+
+
+
+
+
+
+
+              <div class="h-auto border-b-8	border-solid mt-2">
+                <div class="flex">
+                  <div class="w-1/4 text-xs">Terms & Conditions</div>
+                  <div class="w-3/4">
+                    <div class="flex justify-start mb-6 "><button type="button" class="add_terms_conditions py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">add Terms & Conditions</button></div>
+                    <div class="m-3 px-2">
+                      <ul>
+                        <li class="flex my-2">
+                          <span class="w-1/4 text-xs font-bold">Title</span>
+                          {% comment %} <span class="w-1/4 text-xs font-bold">Segment</span> {% endcomment %}
+
+                        </li>
+                      {% for s in terms_conditions %}
+                        <li class="flex">
+                          <span class="w-3/4 text-xs">{{s}}</span> 
+                          {% comment %} <span class="w-1/4 text-xs">{{s.segment}}</span> {% endcomment %}
+                          {% comment %} <span id="deliverables_id{{s.id}}" class="w-1/4 text-xs deliverables_price"></span> {% endcomment %}
+                          {% comment %} <script>
+                            var deliverables_id = document.getElementById("deliverables_id{{s.id}}")
+                            deliverables_id.innerText = numberWithCommas({{s.price}})
+                          </script> {% endcomment %}
+                          <div class="w-1/4 flex">
+                            <button data-id="{{s.id}}" class="terms_conditions_edit btn btn-xs bg-blue-700 text-xs text-white">Edit</button>
+                            {% if s.trash == False %}
+                              {% comment %} <button data-id="{{s.id}}" class="terms_conditions_archive btn btn-xs bg-red-700  text-white">Move to Trash</button> {% endcomment %}
+                              <img class="terms_conditions_archive h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-100 duration-300" data-id="{{s.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+                              
+                              {% elif s.trash == True %}
+                              {% comment %} <span class="btn btn-xs bg-slate-300 text-white text-xs">In Trash</span> {% endcomment %}
+                              <img class="h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-50 duration-300" data-id="{{s.id}}" src="/media/assets/images/icons/delete_gray.png" ></span>
+                            {% endif %}
+                          </div>
+                        </li>
+                      {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <script>
+                function terms_conditionsPopUp(id=null, message){
+                  const popup = document.createElement('div');
+                  popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-3';
+                  popup.innerHTML = `
+                      <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                      </div>
+                      <div class="absolute left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] card w-96 bg-slate-100 text-neutral-content">
+                        <div class="card-body items-center text-center">
+                          <h2 class="card-title text-slate-900 mb-6">${message}</h2>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-sm w-[40%] text-start">Title</span><span class="w-[60%]"><input class="terms_conditions_name p-2 shadow-2xl rounded-md h-8 text-slate-900" type="text"></span></div>
+
+                          {% comment %} <div class="flex mb-1 w-full"><span class="text-slate-900 text-sm w-[40%] text-start">Services Price</span><span class="w-[45%]"><input class="terms_conditions_price w-full p-2 shadow-2xl rounded-md h-8 text-slate-900" type="number"></span><span class="text-sm w-[15%] text-slate-900 flex justify-center items-center">/day</span></div> {% endcomment %}
+
+                          {% comment %} <div class="flex mb-1 w-full"><span class="text-slate-900 text-sm w-[40%] text-start">Segment</span><span class="w-[60%] flex justify-start"><select class="terms_conditions_segment text-sm capitalize text-slate-900 h-8 px-2 rounded-md"></select></span></div> {% endcomment %}
+
+                          <div class="trash_cont flex mb-1 w-full"></div>
+                          <div class="card-actions justify-end mt-3">
+                            <button data-id="${id}" class="confirm btn btn-primary">Accept</button>
+                            <button class="cancle btn btn-ghost text-slate-900">Deny</button>
+                          </div>
+                        </div>
+                      </div>
+              
+                      <div class="close_btn_dv h-8 w-8 absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                          <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="/media/assets/images/icons/close_button.png">
+                      </div>
+                      `
+                  document.body.prepend(popup)
+
+                  const close_btn = document.querySelector('.close_btn_dv')
+                  const cancle = document.querySelector('.cancle')
+                  // const popup = document.querySelector('.popup')
+              
+                  cancle.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                  close_btn.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                }
+
+                {% comment %} async function getSegment(){
+                  let token = JSON.parse(localStorage.getItem('token')).access
+                  let segment = await ftN( '{% url "get_segment_service_admin" %}' , 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, '')
+                  if (segment.status === 200){
+                    const terms_conditions_segment = document.querySelector('.terms_conditions_segment')
+                    console.log(terms_conditions_segment)
+                    segment.data.forEach((e,i)=>{
+                      const opt = document.createElement('option')
+                      opt.value = e.id
+                      opt.innerText = e.segment.replaceAll('_', ' ')
+                      terms_conditions_segment.append(opt)
+                    })
+                  } else {
+                    poperFunction(segment.status, segment.message, false)
+                  }
+                } {% endcomment %}
+
+                const terms_conditions_archive = document.querySelectorAll('.terms_conditions_archive');
+                terms_conditions_archive.forEach(e=>{
+                  e.addEventListener('click',  ()=>{
+
+                    popupConfirmFun(e.getAttribute('data-id'),'move to trash','click confirm to move this service to trash.', null);
+
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click',async ()=>{
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      let url = '{% url "trash_terms_conditions_admin" id=0 %}';
+                      url = url.replaceAll('0', e.getAttribute('data-id'))
+                      console.log(url, e.getAttribute('data-id'))
+                      let a = await ftN(url, 'DELETE', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`})
+                      console.log(a)
+                      if (a.status ===200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                    })
+                  })
+                })
+
+                const terms_conditions_edit = document.querySelectorAll('.terms_conditions_edit');
+                terms_conditions_edit.forEach(e=>{
+                  e.addEventListener('click', async()=>{
+                    // console.log(e.getAttribute('data-id'))
+                    terms_conditionsPopUp(e.getAttribute('data-id'), 'Update Terms & Conditions')
+                    // getSegment()
+                    // let token = JSON.parse(localStorage.getItem('token')).access
+                    let token = getCookies().access
+                    let url = '{% url "get_terms_conditions_admin" id=0 %}';
+                    url = url.replaceAll('0', e.getAttribute('data-id'))
+                    const a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},'');
+                    if (a.status === 200){
+
+                      const terms_conditions_name = document.querySelector('.terms_conditions_name')
+                      const terms_conditions_trash = document.querySelector('.terms_conditions_trash')
+
+                      terms_conditions_name.value = a.data.title
+                      if (a.data.trash){
+                        const trash_cont = document.querySelector('.trash_cont');
+                        trash_cont.innerHTML = `
+                        <span class="text-slate-900 text-sm w-[40%] text-start">Trash</span><span class="w-[60%] flex justify-start"><input class="terms_conditions_trash p-2 shadow-2xl rounded-md h-8 text-slate-900" type="checkbox" checked></span>
+                        `
+                      }
+
+
+                      const confirm = document.querySelector('.confirm');
+                      confirm.addEventListener('click',async (e)=>{
+                        //let token = JSON.parse(localStorage.getItem('token')).access 
+                        let token = getCookies().access 
+                        let url = '{% url "update_terms_conditions_admin" id=0 %}'
+                        url = url.replaceAll(0 ,e.target.getAttribute('data-id'))
+
+                        const terms_conditions_name = document.querySelector('.terms_conditions_name')
+                        //const terms_conditions_price = document.querySelector('.terms_conditions_price')
+                        // const terms_conditions_segment = document.querySelector('.terms_conditions_segment')
+                        let terms_conditions_trash = document.querySelector('.terms_conditions_trash')
+                        if (!terms_conditions_trash == null){
+
+                          if (terms_conditions_trash.checked){
+                            terms_conditions_trash = true
+                          } else {
+                            terms_conditions_trash = false
+                          }
+                        } else {
+                          terms_conditions_trash = false
+                        }
+                          
+                        const a = await ftN(url, 'PUT', {'Content-Type': 'application/json', 'Authorization':  `Bearer ${token}`}, JSON.stringify({'title': terms_conditions_name.value, 'trash': terms_conditions_trash }))
+                        if (a.status ===200){
+                          poperFunction(a.status, a.message, true)
+                        } else {
+                          poperFunction(a.status, a.message, false)
+                        }
+                      })
+                    } else {
+                      poperFunction(a.status, a.message, false)
+                    }
+
+                  })
+                })
+  
+                const add_terms_conditions = document.querySelector('.add_terms_conditions');
+                add_terms_conditions.addEventListener('click', ()=>{
+                  terms_conditionsPopUp(null,'Add Terms & Conditions')
+ 
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click', async ()=>{
+                      const terms_conditions_name = document.querySelector('.terms_conditions_name');
+
+                      // let token = JSON.parse(localStorage.getItem('token')).access
+                      let token = getCookies().access
+                      const a = await ftN('{% url "add_terms_conditions_admin" %}', 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'title': terms_conditions_name.value}))
+                      if(a.status === 200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                      
+                    })
+                }) 
+              </script>
+
+
+              {% comment %} <div class="h-auto border-b-8	border-solid mt-2">
+                <div class="flex">
+                  <div class="w-1/4 text-xs">Shoot Category</div>
+                  <div class="w-3/4">
+                    <div class="flex justify-start mb-6 "><button type="button" class="add_shoot_category py-1 mx-3 px-2 w-auto capitalize flex justify-center items-center inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">add Terms & Conditions</button></div>
+                    <div class="m-3 px-2">
+                      <ul>
+                        <li class="flex my-2">
+                          <span class="w-1/4 text-xs font-bold">Title</span>
+                        </li>
+                      {% for s in shoot_category %}
+                        <li class="flex">
+                          <span class="w-3/4 text-xs capitalize">{{s}}</span> 
+                          <div class="w-1/4 flex">
+                            <button data-id="{{s.id}}" class="shoot_category_edit btn btn-xs bg-blue-700 text-xs text-white">Edit</button>
+                            {% if s.trash == False %}
+                              <img class="shoot_category_archive h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-100 duration-300" data-id="{{s.id}}" src="/static/assets/images/icons/delete_gray.png" ></span>
+                              
+                              {% elif s.trash == True %}
+                              <img class="h-6 w-6 cursor-pointer hover:opacity-[80%] opacity-50 duration-300" data-id="{{s.id}}" src="/static/assets/images/icons/delete_gray.png" ></span>
+                            {% endif %}
+                          </div>
+                        </li>
+                      {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <script>
+                function shoot_categoryPopUp(id=null, message){
+                  const popup = document.createElement('div');
+                  popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-3';
+                  popup.innerHTML = `
+                      <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                      </div>
+                      <div class="absolute left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] card w-96 bg-slate-100 text-neutral-content">
+                        <div class="card-body items-center text-center">
+                          <h2 class="card-title text-slate-900 mb-6">${message}</h2>
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-sm w-[40%] text-start">Title</span><span class="w-[60%]"><input class="shoot_category_name p-2 shadow-2xl rounded-md h-8 text-slate-900" type="text"></span></div>
+
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-sm w-[40%] text-start">Services Price</span><span class="w-[45%]"><input class="shoot_category_price w-full p-2 shadow-2xl rounded-md h-8 text-slate-900" type="number"></span><span class="text-sm w-[15%] text-slate-900 flex justify-center items-center">/day</span></div>
+
+                          <div class="flex mb-1 w-full"><span class="text-slate-900 text-sm w-[40%] text-start">Segment</span><span class="w-[60%] flex justify-start"><select class="shoot_category_segment text-sm capitalize text-slate-900 h-8 px-2 rounded-md"></select></span></div>
+
+                          <div class="trash_cont flex mb-1 w-full"></div>
+                          <div class="card-actions justify-end mt-3">
+                            <button data-id="${id}" class="confirm btn btn-primary">Accept</button>
+                            <button class="cancle btn btn-ghost text-slate-900">Deny</button>
+                          </div>
+                        </div>
+                      </div>
+              
+                      <div class="close_btn_dv h-8 w-8 absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                          <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="/static/assets/images/icons/close_button.png">
+                      </div>
+                      `
+                  document.body.prepend(popup)
+
+                  const close_btn = document.querySelector('.close_btn_dv')
+                  const cancle = document.querySelector('.cancle')
+              
+                  cancle.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                  close_btn.addEventListener('click', ()=>{
+                      popup.remove()
+                  })
+                }
+
+                const shoot_category_archive = document.querySelectorAll('.shoot_category_archive');
+                shoot_category_archive.forEach(e=>{
+                  e.addEventListener('click',  ()=>{
+
+                    popupConfirmFun(e.getAttribute('data-id'),'move to trash','click confirm to move this service to trash.', null);
+
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click',async ()=>{
+                      let token = JSON.parse(localStorage.getItem('token')).access
+                      let url = '{% url "trash_shoot_category_admin" id=0 %}';
+                      url = url.replaceAll('0', e.getAttribute('data-id'))
+                      console.log(url, e.getAttribute('data-id'))
+                      let a = await ftN(url, 'DELETE', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`})
+                      console.log(a)
+                      if (a.status ===200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                    })
+                  })
+                })
+
+                const shoot_category_edit = document.querySelectorAll('.shoot_category_edit');
+                shoot_category_edit.forEach(e=>{
+                  e.addEventListener('click', async()=>{
+                    shoot_categoryPopUp(e.getAttribute('data-id'), 'Update Shoot Category')
+                    let token = JSON.parse(localStorage.getItem('token')).access
+                    let url = '{% url "get_shoot_category_admin" id=0 %}';
+                    url = url.replaceAll('0', e.getAttribute('data-id'))
+                    const a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},'');
+                    if (a.status === 200){
+
+                      const shoot_category_name = document.querySelector('.shoot_category_name')
+                      const shoot_category_trash = document.querySelector('.shoot_category_trash')
+
+                      shoot_category_name.value = a.data.title
+                      if (a.data.trash){
+                        const trash_cont = document.querySelector('.trash_cont');
+                        trash_cont.innerHTML = `
+                        <span class="text-slate-900 text-sm w-[40%] text-start">Trash</span><span class="w-[60%] flex justify-start"><input class="shoot_category_trash p-2 shadow-2xl rounded-md h-8 text-slate-900" type="checkbox" checked></span>
+                        `
+                      }
+
+
+                      const confirm = document.querySelector('.confirm');
+                      confirm.addEventListener('click',async (e)=>{
+                        let token = JSON.parse(localStorage.getItem('token')).access 
+                        let url = '{% url "update_shoot_category_admin" id=0 %}'
+                        url = url.replaceAll(0 ,e.target.getAttribute('data-id'))
+
+                        const shoot_category_name = document.querySelector('.shoot_category_name')
+                        let shoot_category_trash = document.querySelector('.shoot_category_trash')
+                        if (!shoot_category_trash == null){
+
+                          if (shoot_category_trash.checked){
+                            shoot_category_trash = true
+                          } else {
+                            shoot_category_trash = false
+                          }
+                        } else {
+                          shoot_category_trash = false
+                        }
+                          
+                        const a = await ftN(url, 'PUT', {'Content-Type': 'application/json', 'Authorization':  `Bearer ${token}`}, JSON.stringify({'title': shoot_category_name.value, 'trash': shoot_category_trash }))
+                        if (a.status ===200){
+                          poperFunction(a.status, a.message, true)
+                        } else {
+                          poperFunction(a.status, a.message, false)
+                        }
+                      })
+                    } else {
+                      poperFunction(a.status, a.message, false)
+                    }
+
+                  })
+                })
+  
+                const add_shoot_category = document.querySelector('.add_shoot_category');
+                add_shoot_category.addEventListener('click', ()=>{
+                  shoot_categoryPopUp(null,'Add Shoot Category')
+ 
+                    const confirm = document.querySelector('.confirm');
+                    confirm.addEventListener('click', async ()=>{
+                      const shoot_category_name = document.querySelector('.shoot_category_name');
+
+                      let token = JSON.parse(localStorage.getItem('token')).access
+                      const a = await ftN('{% url "add_shoot_category_admin" %}', 'POST', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, JSON.stringify({'title': shoot_category_name.value}))
+                      if(a.status === 200){
+                        poperFunction(a.status, a.message, true)
+                      } else {
+                        poperFunction(a.status, a.message, false)
+                      }
+                      
+                    })
+                }) 
+              </script> {% endcomment %}
+
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+              <script>
+                const client_nav = document.querySelectorAll('.client_nav');
+                client_nav.forEach(e=>{
+                  e.addEventListener('click', ()=>{
+                    client_nav.forEach(f=>{
+                      if (f.getAttribute('data-status') ==='active'){
+                        f.classList.value = 'py-4 px-1 inline-flex items-center gap-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-blue-600 focus:outline-none focus:text-blue-600';  
+                        f.setAttribute('data-status','inactive');
+                      };
+                    })
+                    e.classList.value = 'py-4 px-1 inline-flex items-center gap-2 border-b-2 border-blue-500 text-sm font-medium whitespace-nowrap text-blue-600 focus:outline-none focus:text-blue-800';
+                    e.setAttribute('data-status','active');
+                    let url = window.location.search
+                    url = new URLSearchParams(url);
+                    console.log('url')
+                    url.set('sec', e.name);
+                    console.log(url.toString())
+                    window.location.href = window.location.pathname+'?'+url.toString()
+                  })
+                })
+              </script>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+  {% comment %} <div>
+    <div class="flex flex-col  bg-slate-100 rounded-xl p-4 mt-4">
+      <div class="-m-1.5 overflow-x-auto">
+        <div class="p-1.5 min-w-full inline-block align-middle">
+          <div class="w-full h-auto overflow-hidden p-2">
+            <div class='w-full h-auto bg-slate-400 flex justify-between items-center flex-wrap'>
+              {% for key, value in data.items %}
+              <span class="w-2/4 h-12 min-w-[350px] p-1 flex justify-start items-center flex-wrap"><span class="w-2/4 h-full flex items-center capitalize">{{ key }}</span><input class="rounded-xl w-2/4 h-full px-2" type='text' value="{{value}}" placeholder="name"></span>
+              {% endfor %}
+              
+          </div>
+        </div>
+      </div>
+  </div> {% endcomment %}
+
+
+
+{% comment %} </div> {% endcomment %}
+
+
+  
+  
+{% endblock  %}
+  
+  

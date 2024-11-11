@@ -1,0 +1,84 @@
+{% extends "console-layout/login.html" %}
+{% block form_title %}Console Login{% endblock  %}
+{% block login_link %}/api/admin_login{% endblock  %}
+{% block forget_password_link %}{% url "user_forgot_password" %}{% endblock  %}
+
+
+
+
+
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/assets/css/tw.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <script src="/static/assets/js/tw.js"></script>
+
+    <title>Login</title>
+</head>
+<body>
+
+
+    <div class="min-h-screen h-screen w-screen max-w-[1600px] max-w-full bg-slate-800 flex justify-center items-center">
+
+        <div class=" bg-slate-700 h-full w-2/4 ">
+        </div>
+
+        <div class=" bg-slate-100 h-full w-2/4 flex justify-center items-center ">
+            <div class="md:h-auto md:w-auto w-2/4 bg-white border p-8 rounded-2xl text-slate-100 shadow-2xl flex flex-col justify-center items-center hero-content flex-col  ">
+                <div class="relative h-24 w-24 bg-slate-900 mb-6 rounded-full flex justify-center items-center text-lg text-center text-wrap text-white" style="font-family: 'Dancing Script',cursive;">JRS STUDIOS</div>
+                <form class="relative" method="POST" action="/console/login">
+                    {% csrf_token %}
+                    <div class="relative my-4 border border-slate-400 rounded-lg">
+                        <input type="email" name="email" class="email text-slate-900 md:min-w-[300px] py-3 px-4 ps-11 block w-full bg-white border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-700 dark:border-transparent dark:text-gray-400 dark:focus:ring-gray-600" placeholder="Email">
+                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                          <svg class="flex-shrink-0 w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                    </div>
+                
+                    <div class="relative mt-4 border border-slate-400 rounded-lg">
+                        <input type="password" name="password" class=" password text-slate-900 md:min-w-[300px] py-3 px-4 ps-11 block w-full bg-white border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-700 dark:border-transparent dark:text-gray-400 dark:focus:ring-gray-600" placeholder="Password">
+                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                            <svg class="flex-shrink-0 w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r=".5"/></svg>
+                        </div>
+                    </div>
+                    <div class="relative text-sm my-2 text-slate-400 inline-flex items-start hover:text-slate-500 duration-300"><a href="#">Forgot password!</a></div>
+                </form>
+                <button type="submit" name="submit" value="Login" class="login_sub py-3 px-4 mt-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        const login_sub = document.querySelector('.login_sub')
+        login_sub.addEventListener('click', ()=>{
+
+            let email = document.querySelector('.email')
+            let password = document.querySelector('.password')
+
+            let csrf = document.querySelector('input[name=csrfmiddlewaretoken]')
+            if (csrf){csrf = csrf.value}
+            if (email){email = email.value}
+            if(password){password = password.value}
+
+            (async function ftN(){
+                let a = await fetch('/api/admin_login', {method: 'POST', headers: {'Content-Type': 'application/json', "X-CSRFToken": csrf}, body: JSON.stringify({email: email, password: password}) })
+                console.log(a)
+                a = await a.json()
+                if (a && a.data.token){
+                    localStorage.setItem('token', JSON.stringify({'access': a.data.token.access, 'refresh': a.data.token.refresh}))
+                    window.location.href = '/console/dashboard'
+                }
+            }())
+        })
+
+
+
+    </script>
+
+</body>
+</html> {% endcomment %}

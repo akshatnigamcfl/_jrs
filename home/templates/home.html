@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+    
+    <title>JRS Studios</title>
+
+    <style>
+        .prewedding_cards::-webkit-scrollbar{
+            display: none;
+          }
+
+        .card_description_dv::-webkit-scrollbar, .recent_cards::-webkit-scrollbar{
+            display: none;
+        }
+        
+         .item{
+            width: 200px;
+            height: 300px;
+            position: absolute;
+            top: 65%;
+            transform: translate(0, -50%);
+            border-radius: 20px;
+            box-shadow: 0 30px 50px #00000;
+            background-position: 50% 50%;
+            background-size: cover;
+            display: inline-block;
+            transition: 0.5s;
+        }
+        
+        
+        .slide .item:nth-child(1),
+        .slide .item:nth-child(2){
+            top: 0;
+            left: 0;
+            transform: translate(0, 0);
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+         
+        .slide .item:nth-child(3){
+            left: 65%;
+        }
+        
+        
+        .slide .item:nth-child(4){
+            left: calc(65% + 220px);
+        }
+                
+        .slide .item:nth-child(n + 5){
+            left: calc(50% + 660px);
+            opacity: 0;
+        }
+        
+        .item .content{
+            position: absolute;
+            top: 50%;
+            left: 100px;
+            width: 300px;
+            text-align: left;
+            color: #eee;
+            transform: translate(0, -50%);
+            font-family: system-ui;
+            display: none;
+        }
+        
+        .slide .item:nth-child(2) .content{
+            display: block;
+        }
+        
+        .content .name{
+            font-size: 40px;
+            text-transform: uppercase;
+            font-weight: bold;
+            opacity: 0;
+            animation: animate 1s ease-in-out 1 forwards;
+        }
+        
+        
+        
+        .content .des{
+            margin-top: 10px;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: animate 1s ease-in-out 0.3s 1 forwards;
+        }
+        
+        .content button{
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            opacity: 0;
+            animation: animate 1s ease-in-out 0.6s 1 forwards;
+        }
+        
+        
+        @keyframes animate {
+            from{
+                opacity: 0;
+                transform: translate(0, 100px);
+                filter: blur(33px);
+            }
+        
+            to{
+                opacity: 1;
+                transform: translate(0);
+                filter: blur(0);
+            }
+        }
+
+
+        @keyframes intro_animate {
+            from{
+                opacity: 0;
+                transform: translate(0, 100px);
+                filter: blur(33px);
+            }
+        
+            to{
+                opacity: 1;
+                transform: translate(0);
+                filter: blur(0);
+            }
+        }
+
+        
+        @keyframes rotate{
+            0%{
+                transform: perspective(1000px) rotateY(0deg)
+            }
+
+            100%{
+                transform: perspective(1000px) rotateY(360deg)
+            }
+        }
+        
+            
+    </style>
+
+</head>
+<body class="m-0 p-0 border-box overflow-hidden">
+{% comment %} 
+    <div class='container-2xl w-screen h-auto bg-blue-900 z-1'>
+    </div> {% endcomment %}
+
+
+    <div id="main_container" class=' max-w-full h-auto w-screen bg-blue-900 z-1 overflow-hidden'>
+        <header id="header" class="header h-25 flex p-5 top-0 left-0 fixed z-50 w-full max-w-screen">
+            <video autoplay muted loop id="banner_video" class="w-full fixed bg-stone-800 right-0 top-0 min-w-full min-h-full">
+                    <source src="/static/{{data.file}}">
+            </video> 
+            <div id="logo_dv" class="h-full flex-1 flex justify-center flex-initial w-2/5  items-center">
+                <h1 class="logo p-1 mx-3 text-[25px] text-slate-100 flex items-center relative">JRS STUDIOS</h1>
+            </div>
+            <div class="flex-2 flex items-center flex-initial w-3/5 z-50 justify-center">
+                <ul class="navbar flex">
+                    <li class=" navitems p-1 w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer text-[13px] text-slate-100 flex items-center"><a href="{% url 'wedding' %}">WEDDING</a></li>
+                    <li class=" navitems p-1 w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer text-[13px] text-slate-100 flex items-center"><a href="{% url 'pre-wedding' %}">PRE WEDDING</a></li>
+                    <li class=" navitems p-1 w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer text-[13px] text-slate-100 flex items-center"><a href="{% url 'events' %}">EVENT</a></li>
+                    <li class=" navitems p-1 w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer text-[13px] text-slate-100 flex items-center"><a href="{% url 'reels' %}">REELS</a></li>
+                    <li class=" navitems p-1 w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer text-[13px] text-slate-100 flex items-center"><a href="{% url 'team' %}">TEAM</a></li>
+                    <li class=" navitems p-1 w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer text-[13px] text-slate-100 flex items-center"><a href="{% url 'booking' %}">SAVE THE DATE</a></li>
+                    <li class=" navitems p-1 w-auto mx-4  hover:underline decoration-1 underline-offset-8 cursor-pointer text-[13px] text-slate-100 flex items-center"><a href="{% url 'contact' %}">CONTACT</a></li>
+                </ul> 
+
+            </div>
+        </header>
+        <div class='w-full h-screen flex justify-center items-end z-51 overscroll-none'>
+            <video autoplay muted loop id="banner_video" class="w-full fixed bg-stone-800 right-0 top-0 min-w-screen min-h-full">
+                <source src="/static/assets/videos/banner_video/banner_video.mp4">
+            </video>
+            <div class="h-full flex-1 flex justify-center flex-initial w-2/5  items-center"></div>
+            <div class="banner_hedding1 text-slate-100 h-auto w-auto z-50 relative antialiased justify-start text-[0px]">the perfectionist</div>
+
+        </div>
+    </div>
+
+
+
+        
+        <script>
+            gsap.registerPlugin(ScrollTrigger);
+
+                ScrollTrigger.create({
+                    trigger: '#main_container',
+                    start: 'top top',
+                    end: 'bottom top',
+                    markers: true,
+                    onLeave: (e)=>{
+                        let header = e.trigger.querySelector('#header')
+                        let banner_video = e.trigger.querySelector('#banner_video')
+                        header.classList.remove('fixed')
+                        header.classList.add('relative')
+                        banner_video.classList.remove('fixed')
+                        banner_video.classList.add('relative')
+                    },
+                    onEnterBack: (e)=>{
+                        let header = e.trigger.querySelector('#header')
+                        let banner_video = e.trigger.querySelector('#banner_video')
+                        header.classList.remove('relative')
+                        header.classList.add('fixed')
+                        banner_video.classList.remove('relative')
+                        banner_video.classList.add('fixed')
+                    }
+                })
+
+                ScrollTrigger.create({
+
+                })
+                
+            </script>
+            
+        <div class="w-screen h-screen sticky relative z-50 ">
+        
+            {% comment %} <img class="w-full h-full" src='static/assets/images/brightsun_parallax.jpg'> {% endcomment %}
+
+            {% comment %} <div class="parl_heading h-[100px] w-full bg-slate-800 absolute top-[120px] left-3/4">
+                <span></span>
+            </div> {% endcomment %}
+            {% comment %} <img class="w-full h-full" src='static/assets/images/brightsun_parallax.jpg'> {% endcomment %}
+            {% comment %} <img class="w-full h-full" src='static/assets/images/container_2_background.webp'> {% endcomment %}
+            {% comment %} <img class="prl_1 w-1/4 h-2/4 absolute bottom-0 left-0" src='static/assets/images/prl-1.png'>
+            <img class="prl_2 w-1/4 h-2/4 absolute bottom-0 right-0" src='static/assets/images/prl-2.png'> {% endcomment %}
+            {% comment %} <img class="h-2/4 w-1/4 absolute bottom-0 left-0" src='static/assets/images/cut_img_parallax.png'> {% endcomment %}
+            
+            {% comment %} working working {% endcomment %}
+
+
+
+        {% comment %} <div class="box-border w-screen h-screen sticky z-50">
+            <div class="intro_container_main h-full w-full opacity-0 blur">
+                <span class="intro_container_heading h-full w-full relative flex justify-center items-center text-[5em] text-nowrap">Capturing Magical Moments an Art</span> {% endcomment %}
+                {% comment %} <span class="h-1/4 w-full text-slate-900 flex justify-center items-center text-[2em]">and we are</span>
+                <span class="h-1/4 w-full text-slate-900 flex justify-center items-center text-[2em]">the Artist</span> {% endcomment %}
+            {% comment %} </div>
+        </div> {% endcomment %}
+
+
+
+        <div class='demo-wrapper sticky relative z-50 overflow-hidden bg-slate-100'>
+            <section class='demo-gallery pb-1'>
+              <ul class='wrapper flex pl-1 list-none'>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=82' width='1240'>
+                </li>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=128' width='1240'>
+                </li>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=156' width='1240'>
+                </li>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=191' width='1240'>
+                </li>
+              </ul>
+            </section>
+            <section class='demo-gallery pb-1'>
+              <ul class='wrapper flex pl-1 list-none'>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=191' width='1240'>
+                </li>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=201' width='1240'>
+                </li>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=80' width='1240'>
+                </li>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=173' width='1240'>
+                </li>
+              </ul>
+            </section>
+            <section class='demo-gallery pb-1'>
+              <ul class='wrapper flex pl-1 list-none'>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=41' width='1240'>
+                </li>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=110' width='1240'>
+                </li>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=40' width='1240'>
+                </li>
+                <li class="shrink-0	pr-1" style="width: clamp(500px, 60vw, 800px);">
+                  <img class="w-full h-auto bg-slate-200" height='874' src='https://source.unsplash.com/random/1240x874?sig=43' width='1240'>
+                </li>
+              </ul>
+            </section>
+
+            <section class='demo-text'>
+              <div class='wrapper flex text leading-none font-black' style="font-size: clamp(8rem, 15vw, 16rem);">
+                JRS STUDIOS
+              </div>
+            </section>
+        
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/5.0.0/imagesloaded.pkgd.min.js"></script>
+          <script>
+                gsap.registerPlugin(ScrollTrigger);
+        
+                const images = gsap.utils.toArray('img');
+        
+                const showDemo = () => {
+                document.body.style.overflow = 'auto';
+                document.scrollingElement.scrollTo(0, 0);
+                gsap.to(document.querySelector('.loader'), { autoAlpha: 0 });
+                
+                gsap.utils.toArray('section').forEach((section, index) => {
+                    const w = section.querySelector('.wrapper');
+                    const [x, xEnd] = (index % 2) ? ['100%', (w.scrollWidth - section.offsetWidth) * -1] : [w.scrollWidth * -1, 0];
+                    gsap.fromTo(w, {  x  }, {
+                    x: xEnd,
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top bottom',
+                        scrub: 3
+                    }
+                    });
+                });
+                }
+                
+                imagesLoaded(images).on('always', showDemo);
+          </script>
+        </div>
+
+
+        <div class="box-border w-screen h-screen sticky z-50">
+            <div class="slide">
+                <div class="item overflow-hidden" style="background-image: url(static/assets/images/card_7.webp);">
+                    <div class="bg-slate-900 rounded-2xl opacity-25 h-full w-full"></div>
+                    <div class="content">
+                        <div class="name">Groom weds bride</div>
+                        <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                        <button>See More</button>
+                    </div>
+                </div>
+                <div class="item overflow-hidden" style="background-image: url(static/assets/images/card_1.jpg);">
+                    <div class="bg-slate-900 rounded-2xl opacity-25 h-full w-full"></div>
+                        <div class="content">
+                            <div class="name">Groom weds bride</div>
+                            <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                            <button>See More</button>
+                        </div>
+                </div>
+                <div class="item overflow-hidden" style="background-image: url(static/assets/images/card_3.jpg);">
+                    <div class="bg-slate-900 rounded-2xl opacity-25 h-full w-full"></div>
+                    <div class="content">
+                        <div class="name">Groom weds bride</div>
+                        <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                        <button>See More</button>
+                    </div>
+                </div>
+                <div class="item overflow-hidden" style="background-image: url(static/assets/images/card_4.jpg);">
+                    <div class="bg-slate-900 rounded-2xl opacity-25 h-full w-full"></div>
+                    <div class="content">
+                        <div class="name">Groom weds bride</div>
+                        <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                        <button>See More</button>
+                    </div>
+                </div>
+                <div class="item overflow-hidden" style="background-image: url(static/assets/images/card_5.jpg);">
+                    <div class="bg-slate-900 rounded-2xl opacity-25 h-full w-full"></div>
+                    <div class="content">
+                        <div class="name">Groom weds bride</div>
+                        <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                        <button>See More</button>
+                    </div>
+                </div>
+                <div class="item overflow-hidden" style="background-image: url(static/assets/images/card_6.jpg);">
+                    <div class="bg-slate-900 rounded-2xl opacity-25 h-full w-full"></div>
+                    <div class="content">
+                        <div class="name">Groom weds bride</div>
+                        <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                        <button>See More</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button absolute bottom-[20px] w-full flex justify-center">
+            </div>
+
+    
+            <div class="button absolute bottom-[20px] w-full flex justify-center">
+                <button class="prev h-[50px] cursor-pointer duration-300 mx-[10px] hover:bg-slate-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 60 70" fill="none">
+                        <path d="M34.691 20L21.6001 35L34.691 50L39.6001 44.375L31.4183 35L39.6001 25.625L34.691 20Z" fill="white"/>
+                    </svg>
+                </button>
+                <button class="next h-[50px] cursor-pointer duration-300 mx-[10px] hover:bg-slate-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 60 70" fill="none">
+                        <path d="M27.0909 20L23 25.625L29.8182 35L23 44.375L27.0909 50L38 35L27.0909 20Z" fill="white"/>
+                    </svg>
+                </button>
+            </div>
+
+            <script>
+
+                let next = document.querySelector('.next')
+                let prev = document.querySelector('.prev')
+
+                next.addEventListener('click', function(){
+                    let items = document.querySelectorAll('.item')
+                    document.querySelector('.slide').appendChild(items[0])
+                })
+
+                setInterval(()=>{
+                    next.click()
+                }, 4000)
+
+                prev.addEventListener('click', function(){
+                    let items = document.querySelectorAll('.item')
+                    document.querySelector('.slide').prepend(items[items.length - 1]) // here the length of items = 6
+                })
+
+                </script>
+
+
+            {% comment %} <script></script {% endcomment %}
+            {% comment %} <img class="w-full h-full" src='static/assets/images/brightsun_parallax.jpg'> {% endcomment %}
+        </div>
+
+
+        <div class="swiper box-border w-screen h-screen max-w-full sticky bg-slate-100 relative z-50">
+            <div class="h-[70px] w-full bg-slate-100 flex justify-center items-center">
+                <span class="h-full w-[300px] text-[30px] flex justify-center items-center p-1">Most Recent</span>
+            </div>  
+            <div class=" swiper_cotainer pt-[1%] opacity-0"  style="animation: animate .5s ease-in-out 0.3s 1 forwards">
+                <div class="swiper-wrapper">
+                    <div data="0" class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500 ">
+                        <div class="card_play_button cursor-pointer  h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_7.webp')] bg-cover">
+                            <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                                <img class="h-[40%] w-[20%] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                            </div>
+                        </div>
+                        <div class="h-[280px] w-[480px] pt-1 overflow-hidden">
+                            <div class="h-full w-full p-1 flex flex-col ">
+                                <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                                <div class="h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div data="1" class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">
+                        <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_3.jpg')] bg-cover">
+                            <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                                <img class="h-[40%] w-[20%] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                            </div>
+                        </div>
+                        <div class="h-[280px] w-[480px] pt-1 overflow-hidden">
+                            <div class="h-full w-full p-1 flex flex-col ">
+                                <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                                <div class="h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div data="2" class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500 ">
+                        <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_5.jpg')] bg-cover">
+                            <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                                <img class="h-[40%] w-[20%] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                            </div>
+                        </div>
+                        <div class="h-[280px] w-[480px] pt-1 overflow-hidden">
+                            <div class="h-full w-full p-1 flex flex-col ">
+                                <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                                <div class="h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div data="3" class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500 ">
+                        <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_1.jpg')] bg-cover">
+                            <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                                <img class="h-[40%] w-[20%] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                            </div>
+                        </div>
+                        <div class="h-[280px] w-[480px] pt-1 overflow-hidden">
+                            <div class="h-full w-full p-1 flex flex-col ">
+                                <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                                <div class="h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div data="4" class="swiper-slide recent_card_main h-[500px] w-[500px] min-w-[500px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500 ">
+                        <div class="card_play_button cursor-pointer h-[250px] w-[480px] hover:w-[500px] duration-500 bg-slate-300 bg-[url('/static/assets/images/card_1.jpg')] bg-cover">
+                            <div class="hover:opacity-50 hover:bg-slate-900 duration-500 play_button hidden h-full w-full relative" >
+                                <img class="h-[40%] w-[20%] absolute top-2/4 left-2/4 translate-y-[-50%] translate-x-[-50%]" src="/static/assets/images/icons/play_button.png">
+                            </div>
+                        </div>
+                        <div class="h-[280px] w-[480px] pt-1 overflow-hidden">
+                            <div class="h-full w-full p-1 flex flex-col ">
+                                <div class="p-1"><span class="card_couple tracking-[5px] text-[18px] font-bold flex justify-start select-none">groom weds bride</span></div>
+                                <div class="h-[150px] w-full card_description_dv p-1 rounded-lg "><span class="card_description text-[13px] select-none">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur... <span class="text-[13px] font-bold">Read more</span> </span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-button-prev text-slate-900 hover:text-slate-100 hover:bg-slate-900 h-[10%] w-[3%] duration-500 opacity-75 rounded-lg"></div>
+                <div class="swiper-button-next text-slate-900 hover:text-slate-100 hover:bg-slate-900 h-[10%] w-[3%] duration-500 opacity-75 rounded-lg " ></div>
+            </div>  
+            <script>
+            const swiper = new Swiper('.swiper_cotainer', {
+              //direction: 'vertical',
+              loop: true,
+              slidesPerView:2,
+              spaceBetween:20,
+              centeredSlides: true,
+              autoplay: {
+                delay: 3500,
+                disableOnInteraction: false,
+              },
+              // centeredSlides: true,
+            
+              pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+              },
+              navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+              },
+            });
+                function popupFun(){
+                    const popup = document.createElement('div');
+                    popup.classList = 'popup h-full w-full fixed top-0 left-0 z-[51] p-6';
+                    popup.innerHTML = `
+                        <div class="h-full w-full opacity-75 bg-slate-900 absolute top-0 left-0">
+                        </div>
+                        <div class="h-[80%] w-[90%] video_playback opacity-100 absolute top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] overflow-hidden">
+                            <video autoplay preload muted loop id="myVideo" class="h-full w-full right-0 top-0 min-w-full min-h-full">
+                                <source src="/static/assets/videos/banner_video.mp4">
+                            </video>
+                        </div>
+                        <div class="close_btn_dv h-[5%] w-[3%] absolute top-[2%] right-[3%] rounded-full flex justify-center items-center">
+                            <img class="w-[90%] h-[90%] hover:h-full hover:w-full duration-300" src="static/assets/images/icons/close_button.png">
+                        </div>
+                        
+                        <div id="video_playback_previous_button" class="absolute bg-slate-700 opacity-25 hover:text-slate-100 hover:opacity-100 duration-700 top-2/4 h-[10%] w-[3%] flex justify-center items-center left-[1%] rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="70" viewBox="0 0 60 70" fill="none">
+                                <path d="M34.691 20L21.6001 35L34.691 50L39.6001 44.375L31.4183 35L39.6001 25.625L34.691 20Z" fill="white"/>
+                                </svg>
+                        </div>
+                        <div id="video_playback_next_button" class="absolute bg-slate-700 opacity-25 hover:text-slate-100 hover:opacity-100 duration-700 top-2/4 h-[10%] w-[3%] flex justify-center items-center right-[1%] rounded-lg" >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="70" viewBox="0 0 60 70" fill="none">
+                                <path d="M27.0909 20L23 25.625L29.8182 35L23 44.375L27.0909 50L38 35L27.0909 20Z" fill="white"/
+                            </svg>
+                        </div>
+                        `
+                    document.body.prepend(popup)
+                    const close_btn = document.querySelector('.close_btn_dv')
+                    close_btn.addEventListener('click', ()=>{
+                        const popup = document.querySelector('.popup')
+                        popup.remove()
+                    })
+                }
+                const card_play_button = document.querySelectorAll('.card_play_button');
+                const play_button = document.querySelectorAll('.play_button');
+                card_play_button.forEach((e, i)=>{
+                    e.addEventListener('click', (e)=>{
+                        const recent_card_main = document.querySelectorAll('.recent_card_main');
+                        const popupcheck = document.querySelector('.popup');
+                        if (!popupcheck){
+                            popupFun()
+                            
+                        } else {
+                            popupcheck.remove()
+                        }
+                    })
+                    e.addEventListener('mouseenter', ()=>{
+                        play_button[i].classList.remove('hidden')
+                    })
+                    e.addEventListener('mouseleave', ()=>{
+                        play_button[i].classList.add('hidden')
+                    })
+                })
+                {% comment %} const recent_cards_previous_button = document.getElementById('recent_cards_previous_button')
+                recent_cards_previous_button.addEventListener('click', ()=>{
+                    console.log(recent_cards_previous_button)
+                })
+                const recent_cards_next_button = document.getElementById('recent_cards_next_button')
+                recent_cards_next_button.addEventListener('click', ()=>{
+                    console.log(recent_cards_next_button)
+                }) {% endcomment %}
+
+            </script>
+        </div>
+
+
+
+        
+
+        <div class="box-border w-screen h-screen sticky z-50">
+            <div class="h-full w-full bg-[url('/static/assets/images/card_7.webp')] bg-cover bg-center	">
+            </div>
+        </div>
+
+
+        <div class="swiper box-border w-screen h-screen max-w-full sticky bg-slate-900 relative z-50 flex justify-center items-center">
+            <div class="rotating_card_main relative w-[200px] h-[200px]" style="transform-style:preserve-3d; animation: rotate 75s linear infinite;">
+                <span class="rotating_card cursor-pointer absolute top-0 left-0 w-full h-full" style="--i:1; transform-origin: center; transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); -webkit-box-reflect: below 0px linear-gradient(transparent, transparent, #0004);">
+                    
+                    <img class="rounded-2xl absolute top-0 left-0 w-full h-full object-cover" src="/static/assets/images/brightsun_parallax.jpg">
+                </span>
+                    {% comment %} <div class="absolute bg-slate-900 opacity-50 h-full w-full"></div> {% endcomment %}
+
+
+                <span class="rotating_card cursor-pointer absolute top-0 left-0 w-full h-full" style="--i:2; transform-origin: center; transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); -webkit-box-reflect: below 0px linear-gradient(transparent, transparent, #0004);">
+                    
+                    
+                    <img class="rounded-2xl absolute top-0 left-0 w-full h-full object-cover" src="/static/assets/images/card_2.jpg"></span>
+
+
+                <span class="rotating_card cursor-pointer absolute top-0 left-0 w-full h-full" style="--i:3; transform-origin: center; transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); -webkit-box-reflect: below 0px linear-gradient(transparent, transparent, #0004);">
+                    
+                    
+                    <img class="rounded-2xl absolute top-0 left-0 w-full h-full object-cover" src="/static/assets/images/card_3.jpg"></span>
+
+
+                <span class="rotating_card cursor-pointer absolute top-0 left-0 w-full h-full" style="--i:4; transform-origin: center; transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); -webkit-box-reflect: below 0px linear-gradient(transparent, transparent, #0004);">
+                    
+                    
+                    <img class="rounded-2xl absolute top-0 left-0 w-full h-full object-cover" src="/static/assets/images/card_4.jpg"></span>
+
+
+                <span class="rotating_card cursor-pointer absolute top-0 left-0 w-full h-full" style="--i:5; transform-origin: center; transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); -webkit-box-reflect: below 0px linear-gradient(transparent, transparent, #0004);">
+                    
+                    
+                    <img class="rounded-2xl absolute top-0 left-0 w-full h-full object-cover" src="/static/assets/images/card_5.jpg"></span>
+
+
+                <span class="rotating_card cursor-pointer absolute top-0 left-0 w-full h-full" style="--i:6; transform-origin: center; transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); -webkit-box-reflect: below 0px linear-gradient(transparent, transparent, #0004);">
+                    
+                    
+                    <img class="rounded-2xl absolute top-0 left-0 w-full h-full object-cover" src="/static/assets/images/card_6.jpg"></span>
+
+
+                <span class="rotating_card cursor-pointer absolute top-0 left-0 w-full h-full" style="--i:7; transform-origin: center; transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); -webkit-box-reflect: below 0px linear-gradient(transparent, transparent, #0004);">
+                    
+                    
+                    <img class="rounded-2xl absolute top-0 left-0 w-full h-full object-cover" src="/static/assets/images/card_7.webp"></span>
+
+
+                <span class="rotating_card cursor-pointer absolute top-0 left-0 w-full h-full" style="--i:8; transform-origin: center; transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); -webkit-box-reflect: below 0px linear-gradient(transparent, transparent, #0004);">
+                    
+                    
+                    <img class="rounded-2xl absolute top-0 left-0 w-full h-full object-cover" src="/static/assets/images/card_1.jpg"></span>
+
+            </div>
+        </div>
+
+
+
+        <div class="swiper box-border w-screen h-screen max-w-full sticky bg-slate-100 relative pt-[2%] z-50">
+            <div class="h-[70px] w-full bg-slate-100 flex justify-center items-center">
+                <span class='h-full w-[100px] bg-slate-900 text-slate-100 text-[40px] flex justify-center items-center p-1 rounded-lg'>Pre</span><span class="h-full w-[200px] text-[40px] flex justify-center items-center p-1">Wedding</span>
+            </div>
+
+            <div class="p-1 " style="height: calc(100% - 70px); width: calc(100% - 4px);">
+                <div class="prewedding_cards h-[95%] w-full ">
+                    <div class=" swiper_container_2 pt-[1%]">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">                        <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">
+                            <div class="h-[200px] w-[280px] bg-slate-300">
+                                <img class="h-full w-full" src="static/assets/images/card_7.webp">
+                            </div>
+                            <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                <div class="h-full w-full p-1 flex flex-col ">
+                                    <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                    <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                    <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                    <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+
+                                </div>
+                            </div>
+                        </div></div>
+                            <div class="swiper-slide">
+                                <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">
+                                    <div class="h-[200px] w-[280px] bg-slate-300">
+                                        <img class="h-full w-full" src="static/assets/images/card_1.jpg">
+                                    </div>
+                                    <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                        <div class="h-full w-full p-1 flex flex-col ">
+                                            <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                            <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                            <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                            <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">   
+                                    <div class="h-[200px] w-[280px] bg-slate-300">
+                                        <img class="h-full w-full" src="static/assets/images/card_2.jpg">
+                                    </div>
+                                    <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                        <div class="h-full w-full p-1 flex flex-col ">
+                                            <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                            <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                            <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                            <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">   
+                                    <div class="h-[200px] w-[280px] bg-slate-300">
+                                        <img class="h-full w-full" src="static/assets/images/card_3.jpg">
+                                    </div>
+                                    <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                        <div class="h-full w-full p-1 flex flex-col ">
+                                            <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                            <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                            <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                            <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">   
+                                    <div class="h-[200px] w-[280px] bg-slate-300">
+                                        <img class="h-full w-full" src="static/assets/images/card_4.jpg">
+                                    </div>
+                                    <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                        <div class="h-full w-full p-1 flex flex-col ">
+                                            <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                            <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                            <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                            <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                                <div class="swiper-slide">
+                                    <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] shadow-sm duration-500 hover:shadow-2xl">   
+                                        <div class="h-[200px] w-[280px] bg-slate-300">
+                                            <img class="h-full w-full" src="static/assets/images/card_5.jpg">
+                                        </div>
+                                        <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                            <div class="h-full w-full p-1 flex flex-col ">
+                                                <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                                <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                                <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                                <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] shadow-sm hover:shadow-2xl duration-500">   
+                                        <div class="h-[200px] w-[280px] bg-slate-300">
+                                            <img class="h-full w-full" src="static/assets/images/card_6.jpg">
+                                        </div>
+                                        <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                            <div class="h-full w-full p-1 flex flex-col ">
+                                                <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                                <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                                <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                                <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+
+
+        <script>
+            const swiper_2 = new Swiper('.swiper_container_2', {
+                //direction: 'vertical',
+                loop: true,
+                slidesPerView:4.25,
+            spaceBetween:10,
+            centeredSlides: true,
+            autoplay: {
+              delay: 3000,
+              disableOnInteraction: false,
+            },
+            // centeredSlides: true,
+          
+            pagination: {
+              el: '.swiper-pagination',
+              clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+
+        {% comment %} const rotating_card = document.querySelectorAll('.rotating_card');
+        rotating_card.forEach(e=>{
+            e.addEventListener('click',()=>{
+                console.log(e)
+            })
+        }) {% endcomment %}
+
+    </script>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        {% comment %} <div class="box-border w-screen h-screen max-w-full sticky bg-slate-100 relative flex justify-center items-end z-50"> {% endcomment %}
+            {% comment %} <div class="h-[97%] w-full  flex flex-col items-start"> {% endcomment %}
+                {% comment %} <div class="h-[70px] w-full bg-slate-100 flex justify-center items-center">
+
+                </div> {% endcomment %}
+                {% comment %} <div class="p-1 flex items-end" style="height: calc(100% - 70px); width: calc(100% - 4px);"> {% endcomment %}
+                    {% comment %} <div class="prewedding_cards h-[95%] w-full flex items-center overflow-x-scroll"> {% endcomment %}
+
+                        {% comment %} <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">
+                            <div class="h-[200px] w-[280px] bg-slate-300">
+                                <img class="h-full w-full" src="static/assets/images/card_7.webp">
+                            </div>
+                            <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                <div class="h-full w-full p-1 flex flex-col ">
+                                    <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                    <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                    <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                    <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
+                        {% comment %} <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">
+                            <div class="h-[200px] w-[280px] bg-slate-300">
+                                <img class="h-full w-full" src="static/assets/images/card_1.jpg">
+                            </div>
+                            <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                <div class="h-full w-full p-1 flex flex-col ">
+                                    <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                    <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                    <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                    <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
+                        {% comment %} <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">   
+                            <div class="h-[200px] w-[280px] bg-slate-300">
+                                <img class="h-full w-full" src="static/assets/images/card_2.jpg">
+                            </div>
+                            <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                <div class="h-full w-full p-1 flex flex-col ">
+                                    <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                    <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                    <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                    <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
+                        {% comment %} <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">   
+                            <div class="h-[200px] w-[280px] bg-slate-300">
+                                <img class="h-full w-full" src="static/assets/images/card_3.jpg">
+                            </div>
+                            <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                <div class="h-full w-full p-1 flex flex-col ">
+                                    <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                    <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                    <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                    <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
+                        {% comment %} <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] hover:shadow-2xl shadow-sm duration-500">   
+                            <div class="h-[200px] w-[280px] bg-slate-300">
+                                <img class="h-full w-full" src="static/assets/images/card_4.jpg">
+                            </div>
+                            <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                <div class="h-full w-full p-1 flex flex-col ">
+                                    <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                    <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                    <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                    <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
+                        {% comment %} <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] shadow-sm duration-500 hover:shadow-2xl">   
+                            <div class="h-[200px] w-[280px] bg-slate-300">
+                                <img class="h-full w-full" src="static/assets/images/card_5.jpg">
+                            </div>
+                            <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                <div class="h-full w-full p-1 flex flex-col ">
+                                    <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                    <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                    <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                    <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
+                        {% comment %} <div class="h-[500px] w-[300px] min-w-[300px] mx-2 flex flex-col items-center pt-[10px] shadow-sm hover:shadow-2xl duration-500">   
+                            <div class="h-[200px] w-[280px] bg-slate-300">
+                                <img class="h-full w-full" src="static/assets/images/card_6.jpg">
+                            </div>
+                            <div class="h-[280px] w-[280px] pt-2 overflow-hidden">
+                                <div class="h-full w-full p-1 flex flex-col ">
+                                    <div class=""><span class="card_date tracking-normal font-bold text-[18px]">06 jan 2023</span></div>
+                                    <div class=""><span class="card_location tracking-normal font-bold text-[16px]">indore</span></div>
+                                    <div class=""><span class="card_couple tracking-[5px] text-[18px] flex justify-center">groom weds bride</span></div>
+                                    <div class="overflow-scroll h-[200px] w-[260px] card_description_dv bg-slate-200 p-1 self-center rounded-lg shadow-inner shadow-gray-500/50 "><span class="card_description text-[13px] flex justify-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></div>
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
+                    {% comment %} </div> {% endcomment %}
+                {% comment %} </div> {% endcomment %}
+            {% comment %} </div> {% endcomment %}
+        {% comment %} </div>  {% endcomment %}
+
+
+
+    </div>
+
+
+
+    <script>
+
+        let logo_scroll = {fixed:false}
+        let total_container = window.document.documentElement.scrollHeight/window.innerHeight
+        let current_container;
+        let previousScroll = 0;
+        
+        
+        window.addEventListener('scroll', () => {
+            const logo = document.querySelector('.logo');
+            const header = document.getElementById('header');
+            const navitems = document.querySelectorAll('.navitems');
+            const navbar = document.querySelector('.navbar');
+            
+            // Use window.scrollY or document.documentElement.scrollTop to get the vertical scroll position
+            const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+            
+            
+            current_container = Math.floor((scrollY + innerHeight/2) / (document.documentElement.scrollHeight/total_container))
+            // console.log('container_number123', total_container, current_container)
+
+            if (!(current_container === 0)){
+                // logo_scroll.fixed = true
+             } else if (scrollY < window.innerHeight) {
+                // logo_scroll.fixed = false
+             }
+
+            logo.style.left =  logo_scroll.fixed === false ? `${scrollPosition/3}px` : logo.style.left
+
+            // console.log(scrollPosition , ((window.innerHeight * 2) - 50))
+
+            if (scrollPosition >= (window.innerHeight - 50)) {
+                // Change the text color when scrolled to 100vw
+                const logo = document.querySelector('.logo');
+                // logo.classList.remove('text-slate-100');
+                // logo.classList.add('text-slate-900');
+                header.classList = 'h-25 flex p-10 top-0 left-0 fixed z-50 w-full';
+                navbar.classList.add('hidden')
+                // navitems.forEach(e => {
+                //     e.classList = 'navitems p-1 w-auto mx-4 hover:underline decoration-1 underline-offset-8 cursor-pointer text-[13px] text-slate-900';
+                // });
+                // logo_scroll.fixed = true
+            } else if (scrollPosition >= ((window.innerHeight * 2))) {
+                // console.log('this working')
+                // Change the text color when scrolled to 100vw
+                const logo = document.querySelector('.logo');
+                logo.classList.remove('text-slate-100');
+                logo.classList.add('text-slate-900');
+                header.classList = 'h-25 flex p-10 top-0 left-0 fixed z-50 w-full';
+                navbar.classList.add('hidden')
+                logo_scroll.fixed = false
+                // navitems.forEach(e => {
+                //     e.classList = 'navitems p-1 w-auto mx-4 hover:underline decoration-1 underline-offset-8 cursor-pointer text-[13px] text-slate-900';
+                // });
+                // logo_scroll.fixed = true
+            } else {
+                // Reset styles when not scrolled to 100vw
+                logo.classList.remove('text-slate-900')
+                logo.classList.add('text-slate-100')
+                header.classList = 'h-25 flex p-10 top-0 left-0 fixed z-50 w-full';
+                // navbar.classList.remove('hidden')
+                navitems.forEach(e => {
+                    e.classList = 'navitems p-1 w-auto mx-4 hover:underline decoration-1 underline-offset-8 cursor-pointer text-[13px] text-slate-100';
+                });
+            }
+
+            const banner_hedding1 = document.querySelector('.banner_hedding1')
+
+
+
+            //intro scroll animation
+            // if ((window.innerHeight*2 <= window.scrollY + 50 && window.innerHeight*3 >= window.scrollY + 50)){
+            //     
+            //     const intro_container_main = document.querySelector('.intro_container_main');
+            //     intro_container_main.style.animation = 'intro_animate 1.35s ease-in-out 1 forwards';
+// 
+            //     const intro_container_heading = document.querySelector('.intro_container_heading');
+// 
+            //     
+            //     currentScroll = scrollY
+            //     
+            //     if (currentScroll > previousScroll){
+            //         
+            //         intro_container_heading.style.left = `${Number(intro_container_heading.style.left.replaceAll('px', '').replaceAll('%', '')) - 0.5 }%`
+            //     
+            //     } else {
+// 
+            //         console.log(intro_container_heading.style.left.replaceAll('px', '').replaceAll('%', '') - .5)
+            //         
+            //         intro_container_heading.style.left = `${(Number(intro_container_heading.style.left.replaceAll('px', '').replaceAll('%', '')) + 0.5 )}%`
+            //     
+            //     }
+// 
+            //     previousScroll = currentScroll;
+// 
+            //     // console.log('start')
+            // }
+// 
+
+            // const prl_1 = document.querySelector('.prl_1')
+            // const prl_2 = document.querySelector('.prl_2')
+// 
+            // if (scrollPosition * (.5) <= window.innerWidth/4){
+            //     console.log(window.innerWidth/4 , scrollPosition * (.5)); 
+// 
+            //         prl_1.style.left = scrollPosition * (.5) + 'px'
+            //         prl_2.style.right = scrollPosition * (.5) + 'px'
+// 
+            //         
+            //     if( (window.innerWidth/4) - (scrollPosition * (.5))  <= 25){
+// 
+            //         prl_1.style.left =  window.innerWidth/4+ 'px'
+            //         prl_2.style.right = window.innerWidth/4 + 'px'
+// 
+            //     }
+// 
+            // }   
+            // if (scrollPosition * (.5) <= window.innerWidth/4){console.log(window.innerWidth/4 , scrollPosition * (.5)); prl_2.style.left = scrollPosition * (.5) + 'px'}   
+            // prl_2.style.right = (scrollPosition * (.5)) + 'px'
+
+            
+            if (!(scrollPosition >= (window.innerHeight - 100))) {
+
+                if (scrollPosition >= (window.innerHeight - 200)) {
+                    // console.log('reduce')
+                    const navbar = document.querySelector('.navbar')
+                    const logo = document.querySelector('.logo')
+                    // logo.classList = `logo p-1 mx-3 text-[25px] text-slate-100 flex items-center relative`
+//                    logo.style.left = `${scrollPosition/6}px`
+                    navbar.classList.add('hidden')
+                    banner_hedding1.classList=`banner_hedding1 text-slate-900 h-auto w-auto z-50 mb-10 relative antialiased text-[${scrollPosition/6}px]` 
+    
+                } else{
+                    navbar.classList.remove('hidden')
+                    banner_hedding1.classList=`banner_hedding1 text-slate-100 h-auto w-auto z-50 mb-10 relative antialiased text-[${scrollPosition/6}px]` 
+                }
+
+            } 
+            //if ((window.innerHeight/4) > scrollPosition){
+            //     console.log('small')
+            //     banner_hedding1.classList=`banner_hedding1 text-slate-100 h-auto w-auto z-50 relative antialiased text-[${scrollPosition/5}]`
+            // }
+
+
+            // if (current_container === 1){
+            //     console.log('start event')
+            // }
+        });
+        
+
+    </script>
+    
+</body>
+</html>

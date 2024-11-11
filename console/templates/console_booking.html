@@ -1,0 +1,202 @@
+{% extends "console-layout/layout.html" %}
+ 
+{% block page_title %}
+    Bookings
+{% endblock  %}
+
+{% block main_body %}
+
+<script src="/static/assets/js/fetch.js"></script>
+<script src="/static/assets/js/poper.js"></script>
+
+    <div class="text-lg text-slate-900 border-b select-none w-full text-start p-2">Bookings</div>
+        <div class="w-full my-2 h-[40px] flex items-center justify-end">
+            <select class="date_selector w-40 h-9 rounded-lg px-3 text-xs">
+                <option disabled selected value="this_month">This Month</option>
+                <option value="today">Today</option>
+                <option value="this_month">This Month</option>
+                <option value="this_year">This Year</option>
+                {% comment %} <option value="this_month">Custom</option> {% endcomment %}
+            </select>
+        </div>
+
+        <div class="flex flex-col w-full bg-white rounded-xl p-4">
+            <div class="-m-1.5 overflow-x-auto">
+                <div class="p-1.5 min-w-full inline-block align-middle">
+                    <div class="overflow-hidden border p-2 py-3">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead>
+                              <tr>
+                                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Date</th>
+                                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Client Name</th>
+                                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Event Type</th>
+                                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Requirement</th>
+                                {% if user_type == 'admin' %}
+                                  <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase ">Action</th>
+                                {% endif %}
+                              </tr>
+                            </thead>
+                            <tbody class="booking_table_body divide-y divide-gray-200 dark:divide-gray-700">
+
+                            {% if data != 'no data' %}{%for p in data%}
+
+                            {% comment %} {{p.id}} {% endcomment %}
+
+                            {% comment %} {% if p.booking_status.title == 'confirmed' %} {% endcomment %}
+
+
+                              {% comment %} {% for s in p.shoot_date.all %} {% endcomment %}
+                                
+                                  {% comment %} {{s}} {% endcomment %}
+                                
+
+                              {% comment %} {% endfor %} {% endcomment %}
+
+
+                              {% comment %} {% for s in p.shoot_date.all %} {% endcomment %}
+                                
+                                {% comment %} {% if s.date.month == date %} {% endcomment %}
+                                
+                                  {% comment %} {% if user.user_type == 'admin' or user.user_type == 'team' %}
+
+                                    {% if user.user_type == 'team'  %}
+                                      {% for ads in s.additional_service.all %}
+                                        {% for tm in ads.team.all %}
+                                          {% if tm.team == user.user %}
+                                            {{tm.team}}, {{user.user}}
+                                          {% endif %}
+                                        {% endfor %}
+                                      {% endfor %}
+                                    {% endif %} {% endcomment %}
+
+                                    <tr>
+                                      <td class="px-6 py-2 whitespace-nowrap text-xs font-medium text-gray-800 dark:text-gray-200">{{ p.date }}</br></td>
+                                      <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 capitalize">{{p.client_name}}</td>
+                                      <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 capitalize">{{p.event_type}}
+                                          {% comment %} {% with first_service=p.service.first %}
+                                              {{ first_service.segment }}
+                                          {% endwith %} {% endcomment %}
+                                      </td>
+
+                                      <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 capitalize">{%for r in p.requirement %}{{r}}</br> {%endfor%}
+                                      </td>
+
+                                    {% if user_type == 'admin' %}
+                                        <td class="px-6 py-2 whitespace-nowrap text-end text-sm font-medium">
+                                            {% comment %} <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"> {% endcomment %}
+                                            <a href="/console/client-edit?id={{p.booking_id}}&booking_id={{p.booking_id}}&sec=booking"><button type="button" data-id={{p.user_id}} class="edit btn-xs text-xs py-2 px-2 w-16 flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Edit</button></a>
+                                          {% comment %} </button> {% endcomment %}
+                                        </td>
+                                      {% endif %}
+                                    </tr>
+
+
+                                  {% comment %} {% endif %} {% endcomment %}
+                                {% comment %} {% endif %} {% endcomment %}
+
+                              {% comment %} {% endfor %} {% endcomment %}
+                              {% comment %} {% endif %} {% endcomment %}
+                              {%endfor%}
+                              {% else %}
+                              <tr>
+                                <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{{ data }}</td>
+                                <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ data }}</td>
+                                <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ data }}</td>
+                                {% comment %} <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 flex"> </td> {% endcomment %}
+                                <td class="px-6 py-2 whitespace-nowrap text-end text-sm font-medium">
+                                  <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">{{data}}</button>
+                                </td>
+                              </tr>
+        
+                              {% endif %}
+                              
+                            </tbody>
+                        </table>
+
+                        {% if data != 'no data' %}
+                            {% include 'console-layout/pagination.html' with pages=data %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+          const date_selector= document.querySelector('.date_selector');
+          date_selector.addEventListener('change',async ()=>{
+            console.log(date_selector.value, 'working')
+            // let token = JSON.parse(localStorage.getItem('token')).access
+            let token = getCookies().access
+            let url = '{% url "get_bookings" date=0 page=1 %}'.replace(0,date_selector.value).replace(1,1)
+
+            let a = await ftN(url, 'GET', {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`})
+            if (a){
+              //console.log('a',a)
+              if (a.status === 200){
+                console.log('a.data',a.data)
+
+                const booking_table_body = document.querySelector('.booking_table_body');
+                booking_table_body.innerHTML = ''
+
+                a.data.forEach(e=>{
+
+                  const tr = document.createElement('tr');
+                  tr.innerHTML=`
+                  <td class="px-6 py-2 whitespace-nowrap text-xs font-medium text-gray-800 dark:text-gray-200">${e.date}</td>
+                  <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 capitalize">${e.client_name}</td>
+                  <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 capitalize">${e.event_type}</td>
+                  <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 capitalize">${e.additional_service.map(f=>`${f}</br>`) }</td>
+                  {% if user_type == 'admin' %}
+                    <td class="px-6 py-2 whitespace-nowrap text-end text-sm font-medium">
+                      <a href="/console/client-edit?id=${e.booking_id}&booking_id=${e.booking_id}&sec=booking">
+                        <button type="button" data-id=${e.id} class="edit btn-xs text-xs py-2 px-2 w-16 flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Edit</button>
+                      </a>
+                    </td>
+                  {% endif %}
+                  `
+
+                  
+                  // const td1 = document.createElement('td');
+                  // td1.classList = 'px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200'
+                  // td1.innerText=e.date
+                  // tr.append(td1)
+
+                  // const td2 = document.createElement('td');
+                  // td2.classList = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 capitalize'
+                  // td2.innerText= e.client_name
+                  // tr.append(td2) 
+                  // const td3 = document.createElement('td');
+                  // td2.classList = `px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`
+                  // td3.innerText=`e.client_name`
+                  // tr.append(td3)
+
+                 // const td4 = document.createElement('td');
+                 // td4.classList = `px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 additional_service_view`;
+                 // // td4.innerText=`<td class="">${e.additional_service}</br></td>`
+                 // // console.log(td4)
+                 // //const additional_service_view = td4.querySelector('.additional_service_view');
+                 // e.additional_service.forEach(f=>{
+                 //     td4.innerHTML += `${f}</br>`;
+                 // })
+                 //   tr.append(td4)
+
+                  // const td5 = document.createElement('td');
+                  // td5.classList = 'px-6 py-4 whitespace-nowrap text-end text-sm font-medium'
+                  // td5.innerHTML=`<button type="button" data-id=${e.id} class="edit py-2 px-2 w-16 flex justify-center items-center inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Edit</button>`
+                  // tr.append(td5)
+                  
+                  //tr.innerHTML = `
+                  //`
+                  booking_table_body.append(tr);
+                })
+
+                // poperFunction(a.status,a.message,false)
+              } else {
+                poperFunction(a.status,a.message,false)
+              }
+            }
+          })
+
+        </script>
+        
+{% endblock  %}

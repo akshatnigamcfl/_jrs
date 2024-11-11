@@ -1,0 +1,364 @@
+{% extends "console-layout/layout.html" %}
+
+{% block page_title %}Team Member Profile{{data.name}} {% endblock  %}
+
+{% block main_body %}
+{% load poll_extras %}
+
+{% comment %} {{token}} {% endcomment %}
+<script>
+  var popup_check=false;
+  var package_data;
+</script>
+<script src="/static/assets/js/number_with_commas.js"></script>
+<script src="/static/assets/js/loader.js"></script>
+<script src="/static/assets/js/fetch.js"></script>
+<script src="/static/assets/js/poper.js"></script>
+
+
+{% with sec=request.GET.sec %}
+<div class="text-lg text-slate-900 border-b select-none w-full text-start p-2 flex justify-between">
+    <span>Team Member Profile</span>
+</div>
+{% endwith %}
+
+{% comment %} <div class="text-lg text-slate-900 border-b select-none w-full text-start p-2">Team</div> {% endcomment %}
+{% comment %} <div class="w-full h-[50px] flex items-center justify-end"> {% endcomment %}
+
+<div class="flex flex-col h-full bg-white w-full rounded-xl p-4 pb-0 mt-4">
+  <div class="-m-1.5 overflow-x-auto h-full">
+    <div class="main_container p-1.5 min-w-full h-full inline-block align-middle">
+
+      <div class="h-full">
+        <div class="flex flex-col w-full rounded-xl h-full">
+            <div class="my-1.5 overflow-x-auto w-full h-full">
+              <div class="min-w-full h-full inline-block align-middle flex">
+                
+                <div class="w-52 h-full border-r shadow-[0_35px_30px_-15px_rgba(0,0,0,0.3)]">
+                  <nav class="p-2">
+                    <ul class="px-2 py-4">
+                      <li class="p-2 profile_nav_items text-xs bg-slate-300 duration-200 hover:bg-slate-200 cursor-pointer rounded-lg">Profile Picture</li>
+                      <li class="p-2 profile_nav_items text-xs duration-200 hover:bg-slate-200 cursor-pointer rounded-lg">Personal Details</li>
+                      <li class="p-2 profile_nav_items text-xs duration-200 hover:bg-slate-200 cursor-pointer rounded-lg">Description</li>
+                      <li class="p-2 profile_nav_items text-xs duration-200 hover:bg-slate-200 cursor-pointer rounded-lg">Skills</li>
+                    </ul>
+                  </nav>
+                </div>
+                <div class="h-full w-[calc(100%-208px)] p-8 ">
+
+                  
+                  <div class='profile_picture_dv t_buttons w-full h-full flex justify-center' data-name="profile_picture">
+                    <div class="flex items-center flex-col" >
+                      {% comment %} <form method="POST" enctype="multipart/form-data"> {% endcomment %}
+                        {% csrf_token %}
+                        <div class="h-auto w-full flex justify-center items-center p-2 flex-col">
+                          <div class="relative profile_div w-44 h-44 rounded-full bg-[url('/media/{{data.user.profile_picture}}')] bg-cover bg-center overflow-hidden border">
+                            <div class="profile absolute bottom-0 left-0 w-full h-full bg-slate-900 text-slate-100 text-xs flex justify-center items-center opacity-0 hover:opacity-80 duration-300 cursor-pointer">update picture</div>
+                          </div>
+                          <input class="update_profile_picture hidden" data-key="{{key}}" type="file">
+                          <span class="capitalize text-base p-1">{{data.user.name}}</span>
+                        </div>
+                        <div class="flex justify-center">
+                           <button class="update_picture btn btn-success my-2 text-white ">Update</button>
+                          {% comment %} <input type="submit" value="submit" class="update_picture hidden btn btn-success my-2 text-white bg-teal-600 "> {% endcomment %}
+                        </div>
+                      {% comment %} </form> {% endcomment %}
+                    </div>
+                  </div>
+
+
+
+                  
+                  <div class='personal_details_dv t_buttons hidden w-full h-full' data-name="personal_details" >
+                    <div class="flex items-center justify-center flex-col w-full" >
+                        {% comment %} <form class="w-full" method="POST"> {% endcomment %}
+                          {% comment %} {% csrf_token %} {% endcomment %}
+                          <div class="w-full h-auto p-1">
+                            <div class="w-full flex">
+                              <div class="w-1/4 flex items-center select-none text-xs">Name</div>
+                              <div class="w-3/4">
+                                <input type="text" value="{{data.user.name}}" class="title capitalize border text-xs py-3 px-4 block my-1 w-full border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" required>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="w-full h-auto p-1">
+                            <div class="w-full flex">
+                              <div class="w-1/4 flex items-center select-none text-xs">Contact Number</div>
+                              <div class="w-3/4">
+                                <input type="number" value="{{data.user.contact_number}}" class="contact_number border text-xs py-3 px-4 block my-1 w-full border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" required>
+                              </div>
+                            </div>
+                          </div>                
+                          <div class="w-full h-auto p-1">
+                            <div class="w-full flex">
+                              <div class="w-1/4 flex items-center select-none text-xs">Email</div>
+                              <div class="w-3/4">
+                                <input type="email" value="{{data.user.email}}" class="email_id border text-xs py-3 px-4 block my-1 w-full border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" required>
+                              </div>
+                            </div>
+                          </div>
+
+                        {% comment %} </form> {% endcomment %}
+
+                      <div class="flex justify-center">
+                       <button class="update_personal_details btn btn-success my-2 text-white ">Update</button>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class='description_dv t_buttons hidden w-full h-full' data-name="description" >
+                    <div class="flex items-center justify-center flex-col w-full" >
+                      
+                      <div class="w-full h-auto p-1">
+                        <div class="w-full flex">
+                          <div class="w-1/4 flex items-center select-none text-xs">Description</div>
+                          <div class="w-3/4">
+                            <textarea type="email" name="description" class="description border text-xs py-3 px-4 block my-1 w-full h-48 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600 resize-none">{{data.description}}</textarea>
+
+                            {% comment %} <input type="email" class="email_id border text-xs py-3 px-4 block my-1 w-full border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" required> {% endcomment %}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="flex justify-center">
+                        <button class="update_description btn btn-success my-2 text-white ">Update</button>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <div class='skills_dv t_buttons hidden w-full h-full' data-name="skills" >
+                    <div class="flex items-center flex-col w-full" >
+                      
+                      <div class="w-full h-auto p-1">
+                        <div class="w-full flex">
+                          <div class="w-1/4 flex items-center select-none text-xs">Shoot Category</div>
+                          <div class="w-3/4">
+                            <div class="skills_cont border rounded-lg w-full h-auto flex flex-col p-3 text-xs">
+                              
+                              {% for as in additional_service %}
+                                <div class='w-full h-6'>
+                                  <label class="cursor-pointer skills_item"><input class="skills" type="checkbox" data-service-id={{as.id}} {% for d in data.skills.all %} {% if d.id == as.id %}checked{% endif %}{% endfor %}><span class="ml-2 capitalize select-none">{{as.service_name|customreplacespace:'_'}}<span></label>
+                                </div>
+                              {% endfor %}
+                                
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button class="update_skills btn btn-success my-2 text-white ">Update</button>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  
+
+    </div>
+  </div>
+</div>
+
+
+{{data.id}}
+
+
+<script>
+
+
+  // profile picture
+
+
+  const update_picture = document.querySelector('.update_picture');
+  update_picture.addEventListener('click', ()=>{
+    addLoader()
+    const inp_data = document.querySelectorAll('.inp_data')
+    let formData = new FormData()
+
+    const profile = document.querySelector('.update_profile_picture');
+    formData.append('profile_picture', profile.files[0])
+
+      // let token = getCoo
+      // if (token){
+          (async function rlUpl(){
+            let url = "{% url 'update_user_profile_picture' user_id=data.user.id %}";
+              let a = await fetch(url, {method: 'PUT', headers:{ 'Authorization': `Bearer ${getCookies().access}`}, body: formData})
+              a = await a.json()
+              if (a && a.status === 200){
+                removeLoader()
+                  // const popup = document.querySelector('.popup');
+                  // popup.remove()
+                  poperFunction(a.status,a.message,true)
+                }  else {
+                  removeLoader()
+                  poperFunction(a.status,a.message,true)
+              } 
+          }())
+        //}
+  })
+
+    
+    const update_profile_picture = document.querySelector('.update_profile_picture');
+      update_profile_picture.addEventListener('change', ()=>{
+      const update_picture = document.querySelector('.update_picture');
+      update_picture.classList.remove('hidden')
+    })
+
+
+
+    const profile = document.querySelector('.profile');
+    profile.addEventListener('click', ()=>{
+      const update_profile_picture = document.querySelector('.update_profile_picture');
+
+      update_profile_picture.click()
+      update_profile_picture.addEventListener('change',()=>{
+        let bloburl = URL.createObjectURL(update_profile_picture.files[0])
+        const profile_div = document.querySelector('.profile_div');
+        profile_div_class_string = profile_div.classList.value.split(' ')
+        profile_div_class_string.forEach((e,i)=>{
+          if (e.includes('bg-[')){
+            profile_div_class_string[i] = `bg-[url('${bloburl}')]`
+          }
+        })
+
+        profile_div.classList.value = profile_div_class_string.join(' ')
+      })
+    })
+
+
+
+    //personal details
+
+
+
+    function validateUploadForm(){
+      let title = document.querySelector('.title');
+      let contact_number = document.querySelector('.contact_number');
+      let email_id = document.querySelector('.email_id');
+      const error_message = document.querySelector('.error_message');
+    
+      function success(el, message){
+          error_message.innerText = message
+          if (el != 0) {
+              el.classList.remove('outline')
+              el.classList.remove('outline-1')
+              el.classList.remove('outline-red-600')
+              el.classList.remove('outline-offset-0')
+          }
+      }
+      function failed(el, message){
+          error_message.innerText = message
+          if (el != 0) {
+              el.classList.add('outline')
+              el.classList.add('outline-1')
+              el.classList.add('outline-red-600')
+              el.classList.add('outline-offset-0')
+          }
+      }
+    
+      title.addEventListener('blur', ()=>{
+          if (title.value.length < 1) {
+              failed(title, 'title should not be blank')
+          } else {
+              success(title, '')
+          }
+      })
+    
+      contact_number.addEventListener('blur', ()=>{
+          if (contact_number.value.length < 10) {
+              failed(contact_number, 'contact number should not be blank')
+          } else {
+              success(contact_number, '')
+          }
+      })
+
+      email_id.addEventListener('blur', ()=>{
+        if (email_id.value.length < 1) {
+            failed(email_id, 'email id should not be blank')
+        } else {
+            success(email_id, '')
+        }
+    })
+
+    return {title: title, contact_number: contact_number, email: email_id}
+
+    }
+
+
+
+
+    async function UpdateData(data){
+
+      let url = '{% url "update_team_member_admin" id=data.id %}'
+      let a = await ftN(url, 'PUT', {'Content-Type': 'application/json','Authorization': 'Bearer '+ getCookies().access}, JSON.stringify(data))
+      if (a.status == 200 ){
+        poperFunction(a.status, a.message, true)
+      } else {
+        poperFunction(a.status, a.message, false)
+      }  
+
+    }
+
+
+    const update_personal_details = document.querySelector('.update_personal_details');
+    const update_skills = document.querySelector('.update_skills');
+    const update_description = document.querySelector('.update_description');
+    
+
+    {% comment %} update_personal_details.addEventListener() {% endcomment %}
+    {% comment %} const submit = document.querySelector('.submit'); {% endcomment %}
+
+    update_personal_details.addEventListener('click', async ()=>{
+      data = validateUploadForm()
+      UpdateData({'name': data.title.value.toLocaleLowerCase(), 'contact_number': data.contact_number.value, 'email': data.email.value.toLocaleLowerCase()})
+    })
+
+    update_skills.addEventListener('click', async ()=>{
+      const skills = document.querySelectorAll('.skills');
+      let skills_list = []
+      skills.forEach(e=>{
+        if (e.checked){
+          skills_list.push(e.getAttribute('data-service-id'))
+        }
+       })
+      UpdateData({'skills': skills_list})
+    })
+
+    
+    update_description.addEventListener('click', async ()=>{
+      const description = document.querySelector('.description')
+      UpdateData({'description': description.value})
+    })
+
+
+
+
+
+
+  // navigation
+  const profile_nav_items = document.querySelectorAll('.profile_nav_items')
+  profile_nav_items.forEach((e, i)=>{
+    e.addEventListener('click',()=>{
+    profile_nav_items.forEach(e=>{
+        e.classList.remove('bg-slate-300')
+    })      
+      const t_buttons = document.querySelectorAll('.t_buttons');
+      t_buttons.forEach(e=>{
+        e.classList.add('hidden')
+      })
+        t_buttons[i].classList.remove('hidden')
+        e.classList.add('bg-slate-300')
+    })
+  })
+
+</script>
+  
+  
+{% endblock  %}
+  
+  
