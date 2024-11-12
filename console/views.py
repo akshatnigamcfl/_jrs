@@ -107,7 +107,8 @@ def first_login_check(validation):
         if validation['user'] == None:
             return redirect('/console/team/login')
         if validation['user'].first_login == True:
-            return redirect(f'/console/generate_password/{validation['user'].user.id}/{validation['user'].user_token}')
+            user = validation['user']
+            return redirect(f'/console/generate_password/{user.user.id}/{user.user_token}')
 
 
 # def getUserType(user_id):
