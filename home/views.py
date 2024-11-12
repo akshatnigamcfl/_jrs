@@ -86,7 +86,8 @@ def first_login_check(validation):
         if validation['user'].first_login == True:
             print('((()))', validation)
             print('((()))', validation)
-            return redirect(f'/reset_password/{validation['user'].id}/{validation['user'].client_token}')
+            user = validation['user']
+            return redirect(f'/reset_password/{user.id}/{user.client_token}')
     else:
         return None
     
