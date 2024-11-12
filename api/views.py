@@ -2959,7 +2959,9 @@ def quotationGenerateFun(client, discount, additional_price, booking, booking_da
         page_height = drawStringsCustom({'x':60, 'y':page_height, 'gap': content_gap_in, 'font_style':"Judson-Regular", 'font_size': 13, 'content': 'As per your requirement for Wedding Event Shoot, I ‘ve shared below the detailed', 'bullets': False, 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
         page_height = drawStringsCustom({'x':60, 'y':page_height, 'gap': content_gap_in, 'font_style':"Judson-Regular", 'font_size': 13, 'content': 'quotation for the same', 'bullets': False, 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
 
-        page_height = drawStringsCustom({'x':60, 'y':page_height, 'gap': content_gap_out, 'font_style':"Judson-Bold", 'font_size': 16, 'content': f'Package: {booking_data['package_name'].upper()}/-', 'bullets': False, 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
+
+        booking_data_package_name = booking_data['package_name']
+        page_height = drawStringsCustom({'x':60, 'y':page_height, 'gap': content_gap_out, 'font_style':"Judson-Bold", 'font_size': 16, 'content': f'Package: {booking_data_package_name.upper()}/-', 'bullets': False, 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
         page_height = drawStringsCustom({'x':60, 'y':page_height, 'gap': content_gap_out, 'font_style':"Judson-Bold", 'font_size': 18, 'content': f'Cost: {formatted_price}/-', 'bullets': False, 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
         page_height = drawStringsCustom({'x':60, 'y':page_height, 'gap': content_gap_out, 'font_style':"Judson-Bold", 'font_size': 13, 'content': 'The package is inclusive of:', 'bullets': False, 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
         for b in booking.first().shoot_date.all().order_by('date'):
@@ -2969,17 +2971,23 @@ def quotationGenerateFun(client, discount, additional_price, booking, booking_da
         drawStringsCustom({'x':250, 'y':page_height, 'gap': content_gap_in, 'font_style':"Judson-Regular", 'font_size': 11, 'content': camera_equipment_2, 'bullets': True , 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
         page_height = drawStringsCustom({'x':75, 'y':page_height, 'gap': content_gap_in, 'font_style':"Judson-Regular", 'font_size': 11, 'content': camera_equipment_1, 'bullets': True , 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
         page_height = drawStringsCustom({'x':60, 'y':page_height, 'gap': content_gap_out, 'font_style':"Judson-Bold", 'font_size': 13, 'content': 'Production Process:', 'bullets': False,'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
-        page_height = drawStringsCustom({'x':75, 'y':page_height, 'gap': content_gap_in, 'font_style':"Judson-Regular", 'font_size': 11, 'content': booking_data['production_process'], 'bullets': True , 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
+
+        booking_data_production_process = booking_data['production_process']
+        page_height = drawStringsCustom({'x':75, 'y':page_height, 'gap': content_gap_in, 'font_style':"Judson-Regular", 'font_size': 11, 'content': booking_data_production_process , 'bullets': True , 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
 
 
         page_height = drawStringsCustom({'x':60, 'y':page_height, 'gap': content_gap_out, 'font_style':"Judson-Bold", 'font_size': 13, 'content': 'What you get:', 'bullets': False,'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
-        page_height = drawStringsCustom({'x':75, 'y':page_height, 'gap': content_gap_in, 'font_style':"Judson-Regular", 'font_size': 11, 'content': booking_data['deliverables'], 'bullets': True , 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
+
+        booking_data_deliverables = booking_data['deliverables']
+        page_height = drawStringsCustom({'x':75, 'y':page_height, 'gap': content_gap_in, 'font_style':"Judson-Regular", 'font_size': 11, 'content': booking_data_deliverables, 'bullets': True , 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
 
 
         print('page_height',page_height, content_gap_out)
 
         page_height = drawStringsCustom({'x':60, 'y':page_height, 'gap': content_gap_out, 'font_style':"Judson-Bold", 'font_size': 13, 'content': 'Terms & Condition:', 'bullets': False,'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
-        page_height = drawStringsCustom({'x':75, 'y':page_height, 'gap': content_gap_in, 'font_style':"Judson-Regular", 'font_size': 11, 'content': booking_data['terms_conditions'], 'bullets': True , 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
+
+        booking_data_terms_conditions = booking_data['terms_conditions']
+        page_height = drawStringsCustom({'x':75, 'y':page_height, 'gap': content_gap_in, 'font_style':"Judson-Regular", 'font_size': 11, 'content': booking_data_terms_conditions, 'bullets': True , 'pdf_canvas':pdf_canvas, "r":102/255,'g':102/255,'b':102/255})
         text_width = pdf_canvas.stringWidth('we will be glad to create memories for you too', "JuliusSansOne", 13)
         
         x_center = (pdf_canvas._pagesize[0] - text_width) / 2
